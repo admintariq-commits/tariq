@@ -1,3 +1,4 @@
+cat > Dockerfile << 'EOF'
 FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
@@ -8,15 +9,18 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    libonig-dev \
+    libxml2-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo_mysql mysqli
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli mbstring fileinfo
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html/
 WORKDIR /var/www/html
 
-RUN composer install --no-dev
+RUN composer install --no-interaction --no-progress --no-dev --ignore-platform-reqs
+
 RUN php artisan key:generate
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
@@ -24,3 +28,4 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
 CMD ["apache2-foreground"]
+EOF
