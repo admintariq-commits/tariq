@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
     <div class="min-h-screen bg-slate-950 py-10">
         <div class="max-w-7xl mx-auto px-4">

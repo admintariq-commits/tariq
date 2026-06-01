@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
     <div class="flex justify-between items-center mb-6">

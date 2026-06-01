@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('content'); ?>
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
     <h1 class="text-2xl font-bold mb-4">🗺️ Regional Unemployment Heatmap</h1>
