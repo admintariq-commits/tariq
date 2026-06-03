@@ -10,11 +10,13 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
-        value: 'false'
-      - key: APP_URL
-        value: 'https://tariq-lnqr.onrender.com'
+        value: 'true'
       - key: LOG_CHANNEL
         value: stack
+      - key: LOG_LEVEL
+        value: debug
+      - key: APP_URL
+        value: 'https://tariq-1nqr.onrender.com'
       - key: SESSION_DRIVER
         value: file
       - key: SESSION_SECURE_COOKIE
