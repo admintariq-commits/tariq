@@ -29,14 +29,20 @@ RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sess
 RUN composer install --no-interaction --no-progress --no-dev --ignore-platform-reqs
 
 RUN if [ ! -f .env ]; then cp .env.example .env; fi \
+    && php -r "file_put_contents('.env', preg_replace('/^DB_CONNECTION=.*$/m', 'DB_CONNECTION=sqlite', file_get_contents('.env')));" \
+    && php -r "file_put_contents('.env', preg_replace('/^DB_DATABASE=.*$/m', 'DB_DATABASE=/var/www/html/database/database.sqlite', file_get_contents('.env')));" \
+    && mkdir -p database \
+    && touch database/database.sqlite \
+    && chmod 777 database/database.sqlite \
     && php artisan key:generate --ansi --force \
+    && php artisan migrate --force \
     && php artisan config:clear \
     && php artisan route:clear \
     && php artisan view:clear \
     && php artisan optimize:clear
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 EXPOSE 80
 CMD ["apache2-foreground"]
