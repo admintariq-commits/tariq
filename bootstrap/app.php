@@ -5,14 +5,22 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 $basePath = dirname(__DIR__);
-$cachePath = $basePath.'/bootstrap/cache';
+$requiredDirectories = [
+    $basePath.'/bootstrap/cache',
+    $basePath.'/storage/framework/cache/data',
+    $basePath.'/storage/framework/sessions',
+    $basePath.'/storage/framework/views',
+    $basePath.'/storage/logs',
+];
 
-if (! is_dir($cachePath)) {
-    mkdir($cachePath, 0775, true);
-}
+foreach ($requiredDirectories as $dir) {
+    if (! is_dir($dir)) {
+        @mkdir($dir, 0775, true);
+    }
 
-if (is_dir($cachePath) && ! is_writable($cachePath)) {
-    @chmod($cachePath, 0775);
+    if (is_dir($dir) && ! is_writable($dir)) {
+        @chmod($dir, 0775);
+    }
 }
 
 return Application::configure(basePath: $basePath)

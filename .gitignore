@@ -6,6 +6,10 @@
 /storage/*.key
 /storage/*.sqlite
 /storage/*.sqlite3
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
 /bootstrap/cache/
 .env
 !.env.example

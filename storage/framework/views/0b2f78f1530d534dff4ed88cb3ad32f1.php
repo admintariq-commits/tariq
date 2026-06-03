@@ -1,8 +1,0 @@
-<?php $__env->startSection('content'); ?>
-<div class="container">
-    <h1>Admin Profile</h1>
-    <p>Welcome, <?php echo e(Auth::user()->name); ?></p>
-    <p>Email: <?php echo e(Auth::user()->email); ?></p>
-</div>
-<?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\tariq\resources\views/admin/profile.blade.php ENDPATH**/ ?>
