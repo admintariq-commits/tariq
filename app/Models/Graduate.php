@@ -150,8 +150,15 @@ class Graduate extends Model
 
     public function getMonthsUnemployedAttribute()
     {
-        if ($this->employment_status !== 'unemployed') return 0;
+        if ($this->employment_status !== 'unemployed') {
+            return 0;
+        }
+
         $start = $this->last_employment_date ?? $this->graduation_date;
+        if (!$start) {
+            return 0;
+        }
+
         return max(0, now()->diffInMonths($start));
     }
 }
