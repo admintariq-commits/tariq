@@ -1,7 +1,8 @@
-﻿@extends('layouts.app')
+﻿@extends('layouts.guest')
+@section('title', 'Login - TARIQ')
 @section('content')
-<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
-<h2 class="text-xl font-bold mb-4">Login</h2>
+<div class="bg-white p-6 rounded-xl shadow-xl ring-1 ring-slate-200"> 
+    <h2 class="text-2xl font-bold mb-4">Login</h2>
 <form method="POST" action="{{ route('login.post', [], false) }}">
 @csrf
 @if ($errors->any())
@@ -17,5 +18,8 @@
 <input type="password" name="password" placeholder="Password" class="w-full border p-2 mb-2 rounded">
 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Login</button>
 </form>
+<div class="mt-4 text-sm text-center">
+    <a href="{{ route('password.request') }}" class="text-blue-600 hover:underline">Forgot your password?</a>
+</div>
 </div>
 @endsection
