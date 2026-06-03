@@ -23,15 +23,15 @@ class AppServiceProvider extends ServiceProvider
     {
         try {
             if (Schema::hasTable('settings')) {
-                $mailFromAddress = Setting::get('mail_from_address');
-                $mailFromName = Setting::get('mail_from_name');
-                $smtpHost = Setting::get('smtp_host');
-                $smtpPort = Setting::get('smtp_port');
-                $smtpEncryption = Setting::get('smtp_encryption');
-                $smtpUsername = Setting::get('smtp_username');
-                $smtpPassword = Setting::get('smtp_password');
-                $smtpTimeout = Setting::get('smtp_timeout');
-                $sessionTimeout = Setting::get('session_timeout_minutes');
+                $mailFromAddress = Setting::get('mail_from_address') ?? null;
+                $mailFromName = Setting::get('mail_from_name') ?? null;
+                $smtpHost = Setting::get('smtp_host') ?? null;
+                $smtpPort = Setting::get('smtp_port') ?? null;
+                $smtpEncryption = Setting::get('smtp_encryption') ?? null;
+                $smtpUsername = Setting::get('smtp_username') ?? null;
+                $smtpPassword = Setting::get('smtp_password') ?? null;
+                $smtpTimeout = Setting::get('smtp_timeout') ?? null;
+                $sessionTimeout = Setting::get('session_timeout_minutes') ?? null;
 
                 if ($mailFromAddress) {
                     config(['mail.from.address' => $mailFromAddress]);
@@ -61,9 +61,9 @@ class AppServiceProvider extends ServiceProvider
                     config(['session.lifetime' => (int) $sessionTimeout]);
                 }
             }
-        } catch (\Exception $e) {
-            // Database not available (e.g., during build-time artisan commands).
-            // Silently skip loading settings from the database.
+        } catch (\Throwable $e) {
+            // Database not available or query failed
+            // Silently skip loading settings from database
         }
     }
 }
