@@ -23,7 +23,8 @@ RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sess
 
 RUN composer install --no-interaction --no-progress --no-dev --ignore-platform-reqs
 
-RUN php artisan key:generate
+RUN if [ ! -f .env ]; then cp .env.example .env; fi \
+    && php artisan key:generate --ansi --force
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
