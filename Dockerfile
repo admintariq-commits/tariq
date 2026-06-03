@@ -38,6 +38,7 @@ RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && chmod 777 database/database.sqlite \
     && php artisan key:generate --ansi --force \
     && php artisan migrate --force \
+    && php artisan db:seed --force \
     && php artisan config:clear \
     && php artisan route:clear \
     && php artisan view:clear \
