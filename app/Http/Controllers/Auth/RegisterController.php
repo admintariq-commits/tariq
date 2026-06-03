@@ -11,14 +11,28 @@ use App\Services\LocationService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use App\Mail\AdminUserRegistered;
 class RegisterController extends Controller
 {
     public function showGraduateRegisterForm()
     {
-        $universities = University::orderBy('name')->get();
-        $courses = Course::orderBy('name')->get();
+        $universities = collect();
+        $courses = collect();
+
+        try {
+            if (Schema::hasTable('universities')) {
+                $universities = University::orderBy('name')->get();
+            }
+            if (Schema::hasTable('courses')) {
+                $courses = Course::orderBy('name')->get();
+            }
+        } catch (\Throwable $e) {
+            // Database may not be available yet during initial deploy or maintenance.
+            $universities = collect();
+            $courses = collect();
+        }
 
         return view('auth.graduate-register', compact('universities', 'courses'));
     }
@@ -125,6 +139,6 @@ class RegisterController extends Controller
         // clear OTP session flag
         session()->forget('otp_verified_'.$phoneKey);
 
-        return redirect()->route('verification.notice')->with('success', 'Registration successful. Please verify your email before login.');
+        return redirect()->route('login')->with('success', 'Registration successful. Please login to continue.');
     }
 }
