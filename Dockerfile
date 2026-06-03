@@ -1,4 +1,3 @@
-
 FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
@@ -18,6 +17,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html/
 WORKDIR /var/www/html
+
+RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views \
+    && chown -R www-data:www-data bootstrap/cache storage
 
 RUN composer install --no-interaction --no-progress --no-dev --ignore-platform-reqs
 
