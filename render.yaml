@@ -25,5 +25,9 @@ services:
         value: file
       - key: DB_CONNECTION
         value: sqlite
+      - key: DB_DATABASE
+        value: /var/www/html/database/database.sqlite
+      - key: APP_KEY
+        value: base64:7EXD3OMomubbovehVLk4WlGjzTkaZsULTBuJ8IcaL1U=
       - key: ADMIN_EMAIL
         value: 'admin@tariq.go.tz'
