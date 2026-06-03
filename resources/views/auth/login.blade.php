@@ -2,7 +2,7 @@
 @section('content')
 <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
 <h2 class="text-xl font-bold mb-4">Login</h2>
-<form method="POST" action="{{ route('login.post') }}">
+<form method="POST" action="{{ route('login.post', [], false) }}">
 @csrf
 @if ($errors->any())
     <div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded mb-4">

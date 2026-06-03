@@ -12,7 +12,7 @@
         <div class="bg-white p-8 rounded-lg shadow-md max-w-md text-center">
             <h1 class="text-xl font-bold mb-4">Verify your email address</h1>
             <p class="mb-4">A verification link was sent to your email address. Please check your inbox and click the link to verify.</p>
-            <form method="POST" action="{{ route('verification.send') }}">@csrf
+            <form method="POST" action="{{ route('verification.send', [], false) }}">@csrf
                 <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded">Resend verification email</button>
             </form>
         </div>
