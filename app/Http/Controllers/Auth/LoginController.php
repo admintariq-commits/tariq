@@ -59,7 +59,7 @@ class LoginController extends Controller
             if ($user->role && $user->role->name === 'graduate') {
                 return redirect('/graduate/profile');
             }
-            return redirect('/dashboard');
+            return redirect()->route('home');
         }
         return back()->withErrors([
             'email' => 'Invalid credentials',

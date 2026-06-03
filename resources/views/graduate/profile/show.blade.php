@@ -72,7 +72,7 @@
                 <div class="space-y-3 text-sm">
                     <div>
                         <p class="text-slate-500 font-semibold">Full Name</p>
-                        <p class="text-slate-900">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</p>
+                        <p class="text-slate-900">{{ $graduate->full_name ?? Auth::user()->name }}</p>
                     </div>
                     <div>
                         <p class="text-slate-500 font-semibold">Email</p>
