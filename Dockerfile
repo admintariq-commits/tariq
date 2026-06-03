@@ -10,8 +10,10 @@ RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     libxml2-dev \
+    libsqlite3-dev \
+    sqlite3 \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli mbstring fileinfo \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli mbstring fileinfo pdo_sqlite \
     && a2enmod rewrite \
     && sed -ri -e 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
