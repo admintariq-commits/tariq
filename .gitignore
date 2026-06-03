@@ -13,6 +13,9 @@
 /bootstrap/cache/
 .princeadmin
 /princeadmin
+/login.html
+/post.html
+/scripts/
 .env
 !.env.example
 .env.backup
