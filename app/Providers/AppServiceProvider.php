@@ -21,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS URLs in production
+        if (app()->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         try {
             if (Schema::hasTable('settings')) {
                 $mailFromAddress = Setting::get('mail_from_address') ?? null;
