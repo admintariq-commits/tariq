@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\AlertController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\JobMarketController;
+use App\Http\Controllers\Admin\UniversityController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Ministry\DashboardController as MinistryDashboardController;
 use App\Http\Controllers\Ministry\AlertController as MinistryAlertController;
 use App\Http\Controllers\Ministry\AnalyticsController as MinistryAnalyticsController;
@@ -134,6 +136,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{trend}', [JobMarketController::class, 'show'])->name('show');
             Route::post('/bulk-import', [JobMarketController::class, 'bulkImport'])->name('bulk-import');
         });
+        
+        // Universities routes
+        Route::resource('universities', UniversityController::class);
+        
+        // Courses routes
+        Route::resource('courses', CourseController::class);
     });
     
     // Graduate routes: only graduate users can manage their profile and applications.
