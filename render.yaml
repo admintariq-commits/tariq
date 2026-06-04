@@ -6,6 +6,15 @@ services:
     dockerfilePath: Dockerfile
     plan: free
     autoDeploy: true
+    buildCommand: composer install --no-interaction --no-dev
+    postBuildCommand: |
+      mkdir -p database storage/framework/sessions storage/logs bootstrap/cache
+      touch database/database.sqlite
+      chmod -R 775 database storage bootstrap/cache
+      php artisan migrate --force
+      php artisan db:seed --force
+      php artisan config:cache
+      php artisan optimize:clear
     envVars:
       - key: APP_ENV
         value: production
