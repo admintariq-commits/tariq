@@ -24,7 +24,16 @@
                         <td>{{ $alert->type->name ?? 'N/A' }}</td>
                         <td><span class="px-2 py-1 rounded-full text-xs bg-gray-500 text-white">{{ $alert->status }}</span></td>
                         <td>{{ $alert->created_at->format('Y-m-d H:i') }}</td>
-                        <td>@if($alert->status == 'pending')<form method="POST" action="{{ route('admin.alerts.send', $alert) }}">@csrf<button type="submit">Send</button></form>@endif</td>
+                        <td>
+                            @if($alert->status == 'pending')
+                                <form method="POST" action="{{ route('admin.alerts.send', $alert) }}">
+                                    @csrf
+                                    <button type="submit" class="inline-flex items-center justify-center px-3 py-1 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition">Send</button>
+                                </form>
+                            @else
+                                <span class="text-xs px-2 py-1 rounded-full bg-slate-200 text-slate-700">{{ ucfirst($alert->status) }}</span>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

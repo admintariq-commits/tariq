@@ -47,6 +47,51 @@
         </div>
     </div>
 
+    <div class="max-w-7xl mx-auto px-4 mb-6">
+        <form method="GET" action="{{ route('ministry.dashboard') }}" class="flex gap-3 items-end flex-wrap">
+            <div>
+                <label class="block text-sm text-slate-400">Region</label>
+                <select name="region" class="mt-1 rounded-lg bg-slate-50 px-3 py-2">
+                    <option value="">All regions</option>
+                    @foreach($regions ?? [] as $r)
+                        <option value="{{ $r }}" {{ request('region') === $r ? 'selected' : '' }}>{{ $r }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm text-slate-400">Degree level</label>
+                <select name="degree" class="mt-1 rounded-lg bg-slate-50 px-3 py-2">
+                    <option value="">Any level</option>
+                    @foreach($degrees ?? [] as $d)
+                        <option value="{{ $d }}" {{ request('degree') === $d ? 'selected' : '' }}>{{ $d }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm text-slate-400">Course / Program</label>
+                <select name="course" class="mt-1 rounded-lg bg-slate-50 px-3 py-2">
+                    <option value="">Any course</option>
+                    @foreach($courses ?? [] as $c)
+                        <option value="{{ $c }}" {{ request('course') === $c ? 'selected' : '' }}>{{ $c }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm text-slate-400">University</label>
+                <select name="university" class="mt-1 rounded-lg bg-slate-50 px-3 py-2">
+                    <option value="">All universities</option>
+                    @foreach($universities ?? [] as $u)
+                        <option value="{{ $u }}" {{ request('university') === $u ? 'selected' : '' }}>{{ $u }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="ml-auto flex gap-2">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg">Apply filters</button>
+                <button type="submit" formaction="{{ route('ministry.export.graduates') }}" class="bg-emerald-600 text-white px-4 py-2 rounded-lg">Export CSV</button>
+            </div>
+        </form>
+    </div>
+
     <div class="grid gap-6 lg:grid-cols-4 mb-8">
         <a href="{{ route('ministry.analytics.dashboard') }}" class="rounded-[2rem] border border-slate-800/70 bg-slate-900/95 p-6 shadow-2xl shadow-slate-900/20 hover:border-indigo-400 transition hover:-translate-y-1">
             <p class="text-sm uppercase tracking-[0.18em] text-indigo-300">Analytics</p>
@@ -147,7 +192,13 @@
         </div>
 
         <div class="bg-slate-900/95 rounded-[2rem] p-6 shadow-2xl shadow-slate-900/20 border border-white/10">
-            <h2 class="text-xl font-semibold text-white mb-4">Recent Ministry Alerts</h2>
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <h2 class="text-xl font-semibold text-white">Recent Ministry Alerts</h2>
+                <a href="{{ route('ministry.alerts.index') }}" class="inline-flex items-center gap-2 rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-amber-400 transition">
+                    <i class="fas fa-bell"></i>
+                    View all alerts
+                </a>
+            </div>
             @if($recentAlerts->isEmpty())
                 <p class="text-slate-400">No alerts have been generated yet.</p>
             @else

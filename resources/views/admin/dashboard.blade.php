@@ -185,6 +185,48 @@
         </div>
     </div>
 
+    <!-- Action Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 flex flex-col gap-4">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-gray-500 text-sm">Verification Queue</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">Review pending records</p>
+                    <p class="text-sm text-gray-500 mt-2">Open the admin verification queue for academic and document checks.</p>
+                </div>
+                <a href="{{ route('admin.security.documents') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition">
+                    <i class="fas fa-check-circle"></i>
+                    Verify now
+                </a>
+            </div>
+            <div class="rounded-2xl bg-slate-50 dark:bg-gray-900 p-4">
+                <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300">
+                    <div><strong>{{ $pendingRecords ?? 0 }}</strong> pending academic reviews</div>
+                    <div><strong>{{ $verifiedRecords ?? 0 }}</strong> already verified</div>
+                    <div><strong>{{ $rejectedRecords ?? 0 }}</strong> rejected records</div>
+                    <div><strong>{{ $manualReviewRecords ?? 0 }}</strong> manual review cases</div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 flex flex-col gap-4">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-gray-500 text-sm">Alerts Management</p>
+                    <p class="text-2xl font-semibold text-gray-900 dark:text-white">Open alert dashboard</p>
+                    <p class="text-sm text-gray-500 mt-2">See the full government alert queue and send intervention messages.</p>
+                </div>
+                <a href="{{ route('admin.alerts.index') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-600 text-white hover:bg-purple-700 transition">
+                    <i class="fas fa-bell"></i>
+                    Go to alerts
+                </a>
+            </div>
+            <div class="rounded-2xl bg-slate-50 dark:bg-gray-900 p-4 text-sm text-gray-600 dark:text-gray-300">
+                <p><strong>{{ $alertsSent ?? 0 }}</strong> alerts previously sent</p>
+                <p class="mt-2">Use the alerts page to send or review pending notifications.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Charts Row -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Unemployment Trend Chart -->

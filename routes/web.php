@@ -28,6 +28,18 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Temporary public route to view sample graduates (for dev/testing)
+Route::get('/sample-graduates', function () {
+    $faker = \Faker\Factory::create();
+    $grads = \App\Models\Graduate::with(['user','course','university'])->orderBy('id', 'desc')->take(100)->get();
+    $grads = $grads->map(function ($grad) use ($faker) {
+        $grad->sample_password = 'password123';
+        $grad->sample_zip = $faker->numerify('####');
+        return $grad;
+    });
+    return view('sample-graduates', compact('grads'));
+});
+
 
 // Public pages
 Route::get('/terms', function () {
@@ -50,18 +62,13 @@ Route::get('/privacy-sw', function () {
     return view('legal.privacy_sw');
 });
 
-// Public geojson file endpoint (safe debug helper)
+// Public geojson file endpoint
 Route::get('/geojson/{filename}', function ($filename) {
     $path = public_path('geojson/' . $filename);
     if (!file_exists($path)) {
         abort(404);
     }
     return response()->file($path, ['Content-Type' => 'application/json']);
-});
-
-// Temporary public debug route for heatmap (no auth) — remove in production
-Route::get('/debug/heatmap', function () {
-    return view('admin.heatmap');
 });
 
 // Graduate registration
@@ -177,6 +184,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/analytics/salary-analysis', [MinistryAnalyticsController::class, 'salaryAnalysis'])->name('analytics.salary-analysis');
         Route::get('/analytics/skills-gap', [MinistryAnalyticsController::class, 'skillsGap'])->name('analytics.skills-gap');
         Route::get('/analytics/profile-completeness', [MinistryAnalyticsController::class, 'profileCompleteness'])->name('analytics.profile-completeness');
+        Route::get('/export/graduates', [MinistryDashboardController::class, 'exportGraduates'])->name('export.graduates');
     });
 
     // Notification routes (available to all authenticated users)
