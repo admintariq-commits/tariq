@@ -17,7 +17,7 @@ class AdminUserSeeder extends Seeder
     {
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
-        User::firstOrCreate(
+        User::updateOrCreate(
             ['email' => 'admin@tariq.go.tz'],
             [
                 'name' => 'TARIQ Admin',

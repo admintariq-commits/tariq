@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             AlertTypeSeeder::class,
             AdminUserSeeder::class,
             MinistryUserSeeder::class,
+            RegisteredStudentsSeeder::class,
         ]);
     }
 }

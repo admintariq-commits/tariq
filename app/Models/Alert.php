@@ -19,4 +19,14 @@ class Alert extends Model
     {
         return $this->belongsTo(AlertType::class, 'alert_type_id');
     }
+
+    public function getTitleAttribute()
+    {
+        return $this->attributes['title'] ?? $this->type?->name ?? 'Alert';
+    }
+
+    public function getMessageAttribute()
+    {
+        return $this->attributes['message'] ?? $this->response_message ?? ($this->type?->description ?? 'No details available.');
+    }
 }

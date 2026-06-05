@@ -53,3 +53,11 @@ yarn-error.log*
 Homestead.json
 Homestead.yaml
 Thumbs.db
+# Archive temporary scripts moved out of webroot
+tools/tmp-archive/
+# Prevent accidental inclusion of old public tmp scripts
+public/tmp-*.php
+# Temporary debug/migration helper scripts
+tmp-*.php
+tmp-*.txt
+tmp-*.out

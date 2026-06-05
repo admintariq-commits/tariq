@@ -33,30 +33,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function estimateRegion(lat, lng) {
-        if (lat >= 6.4 && lat <= 7.2 && lng >= 39.0 && lng <= 39.5) {
-            return 'Dar es Salaam';
+        const regions = [
+            { name: 'Arusha', lat: [-4.0, -3.0], lng: [36.0, 37.0] },
+            { name: 'Dar es Salaam', lat: [-7.0, -6.5], lng: [39.0, 39.5] },
+            { name: 'Dodoma', lat: [-6.5, -5.5], lng: [35.5, 36.5] },
+            { name: 'Geita', lat: [-3.5, -2.5], lng: [32.0, 33.0] },
+            { name: 'Iringa', lat: [-8.5, -7.5], lng: [35.0, 36.0] },
+            { name: 'Kagera', lat: [-2.5, -1.0], lng: [31.0, 32.0] },
+            { name: 'Katavi', lat: [-7.0, -6.0], lng: [31.0, 32.0] },
+            { name: 'Kigoma', lat: [-5.5, -4.5], lng: [29.5, 30.5] },
+            { name: 'Kilimanjaro', lat: [-4.0, -3.0], lng: [37.0, 38.0] },
+            { name: 'Lindi', lat: [-10.0, -9.0], lng: [39.0, 40.0] },
+            { name: 'Manyara', lat: [-5.0, -4.0], lng: [36.0, 37.0] },
+            { name: 'Mara', lat: [-2.5, -1.5], lng: [34.0, 35.0] },
+            { name: 'Mbeya', lat: [-9.5, -8.5], lng: [33.0, 34.0] },
+            { name: 'Morogoro', lat: [-7.5, -6.5], lng: [37.0, 38.0] },
+            { name: 'Mtwara', lat: [-11.0, -10.0], lng: [39.5, 40.5] },
+            { name: 'Mwanza', lat: [-3.5, -2.5], lng: [32.5, 33.5] },
+            { name: 'Njombe', lat: [-10.0, -9.0], lng: [34.5, 35.5] },
+            { name: 'Pemba Kaskazini', lat: [-5.0, -4.9], lng: [39.7, 39.8] },
+            { name: 'Pemba Kusini', lat: [-5.4, -5.3], lng: [39.7, 39.8] },
+            { name: 'Pwani', lat: [-8.0, -7.0], lng: [38.5, 39.5] },
+            { name: 'Rukwa', lat: [-9.0, -8.0], lng: [31.5, 32.5] },
+            { name: 'Ruvuma', lat: [-11.5, -10.5], lng: [35.5, 36.5] },
+            { name: 'Shinyanga', lat: [-4.5, -3.5], lng: [33.0, 34.0] },
+            { name: 'Simiyu', lat: [-3.5, -2.5], lng: [34.0, 35.0] },
+            { name: 'Singida', lat: [-6.0, -5.0], lng: [34.5, 35.5] },
+            { name: 'Songwe', lat: [-10.0, -9.0], lng: [31.0, 32.0] },
+            { name: 'Tabora', lat: [-6.0, -5.0], lng: [32.5, 33.5] },
+            { name: 'Tanga', lat: [-6.0, -5.0], lng: [38.0, 39.0] },
+            { name: 'Unguja Kaskazini', lat: [-6.0, -5.9], lng: [39.2, 39.3] },
+            { name: 'Unguja Kusini', lat: [-6.2, -6.1], lng: [39.3, 39.4] },
+            { name: 'Unguja Mjini', lat: [-6.2, -6.1], lng: [39.1, 39.2] }
+        ];
+
+        for (const region of regions) {
+            if (lat >= region.lat[0] && lat <= region.lat[1] && lng >= region.lng[0] && lng <= region.lng[1]) {
+                return region.name;
+            }
         }
-        if (lat >= -3.5 && lat <= -2.0 && lng >= 36.4 && lng <= 37.2) {
-            return 'Arusha';
-        }
-        if (lat >= -6.4 && lat <= -5.6 && lng >= 35.4 && lng <= 36.6) {
-            return 'Dodoma';
-        }
-        if (lat >= -9.0 && lat <= -7.9 && lng >= 32.5 && lng <= 34.0) {
-            return 'Mbeya';
-        }
-        if (lat >= -4.5 && lat <= -2.5 && lng >= 37.0 && lng <= 38.5) {
-            return 'Kilimanjaro';
-        }
-        if (lat >= -7.3 && lat <= -5.5 && lng >= 37.0 && lng <= 38.7) {
-            return 'Morogoro';
-        }
-        if (lat >= -3.5 && lat <= -1.0 && lng >= 31.0 && lng <= 33.0) {
-            return 'Mwanza';
-        }
-        if (lat >= -6.0 && lat <= -4.0 && lng >= 37.5 && lng <= 39.5) {
-            return 'Tanga';
-        }
+
         return null;
     }
 

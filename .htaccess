@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /tariq/
+
+    # If the request is not already for public/, redirect into public/
+    RewriteCond %{REQUEST_URI} !^/tariq/public/
+    RewriteRule ^(.*)$ public/$1 [L,R=302]
+</IfModule>

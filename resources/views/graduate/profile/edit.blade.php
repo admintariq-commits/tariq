@@ -54,35 +54,58 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Phone *</label>
-                        <input type="text" name="phone" value="{{ old('phone', $graduate->phone) }}" 
+                        <input type="text" name="phone" value="{{ old('phone', $graduate->phone ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">National ID</label>
-                        <input type="text" name="national_id" value="{{ old('national_id', $graduate->national_id) }}" 
+                        <input type="text" name="national_id" value="{{ old('national_id', $graduate->national_id ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Gender</label>
                         <select name="gender" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                             <option value="">Select...</option>
-                            <option value="male" {{ old('gender', $graduate->gender) === 'male' ? 'selected' : '' }}>Male</option>
-                            <option value="female" {{ old('gender', $graduate->gender) === 'female' ? 'selected' : '' }}>Female</option>
-                            <option value="other" {{ old('gender', $graduate->gender) === 'other' ? 'selected' : '' }}>Other</option>
+                            <option value="male" {{ old('gender', $graduate->gender ?? '') === 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender', $graduate->gender ?? '') === 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender', $graduate->gender ?? '') === 'other' ? 'selected' : '' }}>Other</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Region</label>
                         <select name="region" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                             <option value="">Select Region...</option>
-                            <option value="Dar es Salaam" {{ old('region', $graduate->region) === 'Dar es Salaam' ? 'selected' : '' }}>Dar es Salaam</option>
-                            <option value="Arusha" {{ old('region', $graduate->region) === 'Arusha' ? 'selected' : '' }}>Arusha</option>
-                            <option value="Dodoma" {{ old('region', $graduate->region) === 'Dodoma' ? 'selected' : '' }}>Dodoma</option>
-                            <option value="Mbeya" {{ old('region', $graduate->region) === 'Mbeya' ? 'selected' : '' }}>Mbeya</option>
-                            <option value="Kilimanjaro" {{ old('region', $graduate->region) === 'Kilimanjaro' ? 'selected' : '' }}>Kilimanjaro</option>
-                            <option value="Morogoro" {{ old('region', $graduate->region) === 'Morogoro' ? 'selected' : '' }}>Morogoro</option>
-                            <option value="Mwanza" {{ old('region', $graduate->region) === 'Mwanza' ? 'selected' : '' }}>Mwanza</option>
-                            <option value="Tanga" {{ old('region', $graduate->region) === 'Tanga' ? 'selected' : '' }}>Tanga</option>
+                            <option value="Dar es Salaam" {{ old('region', $graduate->region ?? '') === 'Dar es Salaam' ? 'selected' : '' }}>Dar es Salaam</option>
+                            <option value="Arusha" {{ old('region', $graduate->region ?? '') === 'Arusha' ? 'selected' : '' }}>Arusha</option>
+                            <option value="Dodoma" {{ old('region', $graduate->region ?? '') === 'Dodoma' ? 'selected' : '' }}>Dodoma</option>
+                            <option value="Geita" {{ old('region', $graduate->region ?? '') === 'Geita' ? 'selected' : '' }}>Geita</option>
+                            <option value="Iringa" {{ old('region', $graduate->region ?? '') === 'Iringa' ? 'selected' : '' }}>Iringa</option>
+                            <option value="Kagera" {{ old('region', $graduate->region ?? '') === 'Kagera' ? 'selected' : '' }}>Kagera</option>
+                            <option value="Katavi" {{ old('region', $graduate->region ?? '') === 'Katavi' ? 'selected' : '' }}>Katavi</option>
+                            <option value="Kigoma" {{ old('region', $graduate->region ?? '') === 'Kigoma' ? 'selected' : '' }}>Kigoma</option>
+                            <option value="Kilimanjaro" {{ old('region', $graduate->region ?? '') === 'Kilimanjaro' ? 'selected' : '' }}>Kilimanjaro</option>
+                            <option value="Lindi" {{ old('region', $graduate->region ?? '') === 'Lindi' ? 'selected' : '' }}>Lindi</option>
+                            <option value="Manyara" {{ old('region', $graduate->region ?? '') === 'Manyara' ? 'selected' : '' }}>Manyara</option>
+                            <option value="Mara" {{ old('region', $graduate->region ?? '') === 'Mara' ? 'selected' : '' }}>Mara</option>
+                            <option value="Mbeya" {{ old('region', $graduate->region ?? '') === 'Mbeya' ? 'selected' : '' }}>Mbeya</option>
+                            <option value="Morogoro" {{ old('region', $graduate->region ?? '') === 'Morogoro' ? 'selected' : '' }}>Morogoro</option>
+                            <option value="Mtwara" {{ old('region', $graduate->region ?? '') === 'Mtwara' ? 'selected' : '' }}>Mtwara</option>
+                            <option value="Mwanza" {{ old('region', $graduate->region ?? '') === 'Mwanza' ? 'selected' : '' }}>Mwanza</option>
+                            <option value="Njombe" {{ old('region', $graduate->region ?? '') === 'Njombe' ? 'selected' : '' }}>Njombe</option>
+                            <option value="Pemba Kaskazini" {{ old('region', $graduate->region ?? '') === 'Pemba Kaskazini' ? 'selected' : '' }}>Pemba Kaskazini</option>
+                            <option value="Pemba Kusini" {{ old('region', $graduate->region ?? '') === 'Pemba Kusini' ? 'selected' : '' }}>Pemba Kusini</option>
+                            <option value="Pwani" {{ old('region', $graduate->region ?? '') === 'Pwani' ? 'selected' : '' }}>Pwani</option>
+                            <option value="Rukwa" {{ old('region', $graduate->region ?? '') === 'Rukwa' ? 'selected' : '' }}>Rukwa</option>
+                            <option value="Ruvuma" {{ old('region', $graduate->region ?? '') === 'Ruvuma' ? 'selected' : '' }}>Ruvuma</option>
+                            <option value="Shinyanga" {{ old('region', $graduate->region ?? '') === 'Shinyanga' ? 'selected' : '' }}>Shinyanga</option>
+                            <option value="Simiyu" {{ old('region', $graduate->region ?? '') === 'Simiyu' ? 'selected' : '' }}>Simiyu</option>
+                            <option value="Singida" {{ old('region', $graduate->region ?? '') === 'Singida' ? 'selected' : '' }}>Singida</option>
+                            <option value="Songwe" {{ old('region', $graduate->region ?? '') === 'Songwe' ? 'selected' : '' }}>Songwe</option>
+                            <option value="Tabora" {{ old('region', $graduate->region ?? '') === 'Tabora' ? 'selected' : '' }}>Tabora</option>
+                            <option value="Tanga" {{ old('region', $graduate->region ?? '') === 'Tanga' ? 'selected' : '' }}>Tanga</option>
+                            <option value="Unguja Kaskazini" {{ old('region', $graduate->region ?? '') === 'Unguja Kaskazini' ? 'selected' : '' }}>Unguja Kaskazini</option>
+                            <option value="Unguja Kusini" {{ old('region', $graduate->region ?? '') === 'Unguja Kusini' ? 'selected' : '' }}>Unguja Kusini</option>
+                            <option value="Unguja Mjini" {{ old('region', $graduate->region ?? '') === 'Unguja Mjini' ? 'selected' : '' }}>Unguja Mjini</option>
                         </select>
                     </div>
                 </div>
@@ -96,32 +119,32 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">University</label>
-                        <input type="text" name="university" value="{{ old('university', $graduate->university) }}" 
+                        <input type="text" name="university" value="{{ old('university', $graduate->university ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Course</label>
-                        <input type="text" name="course" value="{{ old('course', $graduate->course) }}" 
+                        <input type="text" name="course" value="{{ old('course', $graduate->course ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Degree Type</label>
                         <select name="degree" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                             <option value="">Select...</option>
-                            <option value="diploma" {{ old('degree', $graduate->degree) === 'diploma' ? 'selected' : '' }}>Diploma</option>
-                            <option value="bachelor" {{ old('degree', $graduate->degree) === 'bachelor' ? 'selected' : '' }}>Bachelor's</option>
-                            <option value="master" {{ old('degree', $graduate->degree) === 'master' ? 'selected' : '' }}>Master's</option>
-                            <option value="phd" {{ old('degree', $graduate->degree) === 'phd' ? 'selected' : '' }}>PhD</option>
+                            <option value="diploma" {{ old('degree', $graduate->degree ?? '') === 'diploma' ? 'selected' : '' }}>Diploma</option>
+                            <option value="bachelor" {{ old('degree', $graduate->degree ?? '') === 'bachelor' ? 'selected' : '' }}>Bachelor's</option>
+                            <option value="master" {{ old('degree', $graduate->degree ?? '') === 'master' ? 'selected' : '' }}>Master's</option>
+                            <option value="phd" {{ old('degree', $graduate->degree ?? '') === 'phd' ? 'selected' : '' }}>PhD</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Graduation Date</label>
-                        <input type="date" name="graduation_date" value="{{ old('graduation_date', $graduate->graduation_date?->format('Y-m-d')) }}" 
+                        <input type="date" name="graduation_date" value="{{ old('graduation_date', $graduate->graduation_date?->format('Y-m-d') ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">GPA</label>
-                        <input type="number" name="gpa" value="{{ old('gpa', $graduate->gpa) }}" step="0.01" min="0" max="4"
+                        <input type="number" name="gpa" value="{{ old('gpa', $graduate->gpa ?? '') }}" step="0.01" min="0" max="4"
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. 3.5">
                     </div>
                     <div>
@@ -129,7 +152,7 @@
                         <select name="graduation_year" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                             <option value="">Select...</option>
                             @for ($year = date('Y'); $year >= 2015; $year--)
-                                <option value="{{ $year }}" {{ old('graduation_year', $graduate->graduation_year) == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                <option value="{{ $year }}" {{ old('graduation_year', $graduate->graduation_year ?? '') == $year ? 'selected' : '' }}>{{ $year }}</option>
                             @endfor
                         </select>
                     </div>
@@ -154,22 +177,22 @@
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Job Title</label>
-                        <input type="text" name="job_title" value="{{ old('job_title', $graduate->job_title) }}" 
+                        <input type="text" name="job_title" value="{{ old('job_title', $graduate->job_title ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Years of Experience</label>
-                        <input type="number" name="experience_years" value="{{ old('experience_years', $graduate->experience_years) }}" min="0"
+                        <input type="number" name="experience_years" value="{{ old('experience_years', $graduate->experience_years ?? '') }}" min="0"
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Expected Salary (TZS)</label>
-                        <input type="number" name="expected_salary" value="{{ old('expected_salary', $graduate->expected_salary) }}" 
+                        <input type="number" name="expected_salary" value="{{ old('expected_salary', $graduate->expected_salary ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. 2000000">
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-slate-700 text-sm font-semibold mb-2">LinkedIn Profile</label>
-                        <input type="url" name="linkedin" value="{{ old('linkedin', $graduate->linkedin) }}" 
+                        <input type="url" name="linkedin" value="{{ old('linkedin', $graduate->linkedin ?? '') }}" 
                             class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="https://linkedin.com/in/...">
                     </div>
                 </div>
@@ -183,19 +206,19 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Skills (comma-separated)</label>
-                        <textarea name="skills" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. Python, Data Analysis, Project Management">{{ old('skills', $graduate->skills) }}</textarea>
+                        <textarea name="skills" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. Python, Data Analysis, Project Management">{{ old('skills', $graduate->skills ?? '') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Languages</label>
-                        <textarea name="languages" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. Swahili, English, French">{{ old('languages', $graduate->languages) }}</textarea>
+                        <textarea name="languages" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. Swahili, English, French">{{ old('languages', $graduate->languages ?? '') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Certifications</label>
-                        <textarea name="certifications" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. AWS Certified, PMP, CPA">{{ old('certifications', $graduate->certifications) }}</textarea>
+                        <textarea name="certifications" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. AWS Certified, PMP, CPA">{{ old('certifications', $graduate->certifications ?? '') }}</textarea>
                     </div>
                     <div>
                         <label class="block text-slate-700 text-sm font-semibold mb-2">Job Preferences</label>
-                        <textarea name="job_preferences" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. Remote work, Full-time, Relocatable">{{ old('job_preferences', $graduate->job_preferences) }}</textarea>
+                        <textarea name="job_preferences" rows="3" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. Remote work, Full-time, Relocatable">{{ old('job_preferences', $graduate->job_preferences ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -208,7 +231,7 @@
                 <div>
                     <label class="block text-slate-700 text-sm font-semibold mb-2">Upload CV / Resume (PDF, DOC, DOCX)</label>
                     <input type="file" name="resume" accept=".pdf,.doc,.docx" class="w-full border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    <p class="text-xs text-slate-500 mt-2">Max 5MB. Current: {{ $graduate->resume ? 'On file' : 'Not uploaded' }}</p>
+                    <p class="text-xs text-slate-500 mt-2">Max 5MB. Current: {{ ($graduate->resume ?? false) ? 'On file' : 'Not uploaded' }}</p>
                 </div>
             </div>
 

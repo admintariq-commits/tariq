@@ -12,8 +12,9 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libsqlite3-dev \
     sqlite3 \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli mbstring fileinfo pdo_sqlite \
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli mbstring fileinfo pdo_sqlite pdo_pgsql \
     && a2enmod rewrite \
     && sed -ri -e 's!DocumentRoot /var/www/html!DocumentRoot /var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri -e 's!<Directory /var/www/>!<Directory /var/www/html/public>!g' /etc/apache2/apache2.conf \
@@ -31,11 +32,8 @@ RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sess
 RUN composer install --no-interaction --no-progress --no-dev --ignore-platform-reqs
 
 RUN if [ ! -f .env ]; then cp .env.example .env; fi \
-    && php -r "file_put_contents('.env', preg_replace('/^DB_CONNECTION=.*$/m', 'DB_CONNECTION=sqlite', file_get_contents('.env')));" \
-    && php -r "file_put_contents('.env', preg_replace('/^DB_DATABASE=.*$/m', 'DB_DATABASE=/var/www/html/database/database.sqlite', file_get_contents('.env')));" \
     && mkdir -p database \
-    && touch database/database.sqlite \
-    && chmod 777 database/database.sqlite \
+    && if [ "$(grep -E '^DB_CONNECTION=' .env | cut -d'=' -f2)" = "sqlite" ]; then touch database/database.sqlite && chmod 777 database/database.sqlite; fi \
     && php artisan key:generate --ansi --force \
     && php artisan migrate --force \
     && php artisan db:seed --force \

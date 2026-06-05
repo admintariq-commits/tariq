@@ -151,21 +151,21 @@
                 @elseif(Auth::check() && Auth::user()->role && Auth::user()->role->name === 'ministry')
                     <!-- Ministry Menu -->
                     <li>
-                        <a href="{{ route('ministry.dashboard') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                            <i class="fas fa-landmark w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
-                            <span class="ml-3">Ministry Dashboard</span>
+                        <a href="{{ route('ministry.dashboard') }}" class="sidebar-item flex items-center p-3 text-gray-900 dark:text-white hover:bg-indigo-50 dark:hover:bg-gray-700 group">
+                            <i class="fas fa-landmark w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                            <span class="ml-3 text-sm font-medium">Ministry Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('ministry.analytics.dashboard') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                            <i class="fas fa-chart-line w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
-                            <span class="ml-3">Employment Intelligence</span>
+                        <a href="{{ route('ministry.analytics.dashboard') }}" class="sidebar-item flex items-center p-3 text-gray-900 dark:text-white hover:bg-indigo-50 dark:hover:bg-gray-700 group">
+                            <i class="fas fa-chart-line w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                            <span class="ml-3 text-sm font-medium">Employment Intelligence</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('ministry.alerts.index') }}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                            <i class="fas fa-bell w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
-                            <span class="ml-3">Ministry Alerts</span>
+                        <a href="{{ route('ministry.alerts.index') }}" class="sidebar-item flex items-center p-3 text-gray-900 dark:text-white hover:bg-indigo-50 dark:hover:bg-gray-700 group">
+                            <i class="fas fa-bell w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                            <span class="ml-3 text-sm font-medium">Ministry Alerts</span>
                         </a>
                     </li>
                 @endif
@@ -211,19 +211,25 @@
     </aside>
 
     <!-- ========== MAIN CONTENT ========== -->
-    <main class="p-4 mt-16 transition-all duration-300" :class="sidebarOpen ? 'ml-64' : 'ml-0'">
-        <div class="container mx-auto">
+    <main class="pt-20 pb-8 transition-all duration-300" :class="sidebarOpen ? 'pl-64' : 'pl-0'">
+        <div class="px-6 max-w-7xl mx-auto">
             <!-- Flash Messages -->
             @if(session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded mb-4 flex justify-between items-center">
-                    <span>{{ session('success') }}</span>
-                    <button type="button" class="flash-close text-green-700">&times;</button>
+                <div class="flash-message bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 border-l-4 border-green-500 text-green-700 dark:text-green-100 p-5 rounded-lg mb-6 flex justify-between items-center shadow-md">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-3 text-green-600 dark:text-green-400"></i>
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                    <button type="button" class="flash-close text-green-700 dark:text-green-100 hover:text-green-900 dark:hover:text-green-200 text-xl leading-none">&times;</button>
                 </div>
             @endif
             @if(session('error'))
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-4 flex justify-between items-center">
-                    <span>{{ session('error') }}</span>
-                    <button type="button" class="flash-close text-red-700">&times;</button>
+                <div class="flash-message bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900 dark:to-pink-900 border-l-4 border-red-500 text-red-700 dark:text-red-100 p-5 rounded-lg mb-6 flex justify-between items-center shadow-md">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle mr-3 text-red-600 dark:text-red-400"></i>
+                        <span class="font-medium">{{ session('error') }}</span>
+                    </div>
+                    <button type="button" class="flash-close text-red-700 dark:text-red-100 hover:text-red-900 dark:hover:text-red-200 text-xl leading-none">&times;</button>
                 </div>
             @endif
 
