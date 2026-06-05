@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html/
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 WORKDIR /var/www/html
 
 RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views \
@@ -40,8 +41,9 @@ RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && php artisan view:clear \
     && php artisan optimize:clear
 
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
 EXPOSE 80
-CMD ["apache2-foreground"]
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
