@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
 use App\Models\Setting;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -66,9 +69,24 @@ class AppServiceProvider extends ServiceProvider
                     config(['session.lifetime' => (int) $sessionTimeout]);
                 }
             }
+
+            if (Schema::hasTable('users') && Schema::hasTable('roles')) {
+                $adminRole = Role::firstOrCreate(['name' => 'admin']);
+
+                User::firstOrCreate(
+                    ['email' => 'admin@tariq.go.tz'],
+                    [
+                        'name' => 'TARIQ Admin',
+                        'password' => Hash::make('Admin1234!'),
+                        'role_id' => $adminRole->id,
+                        'email_verified_at' => now(),
+                    ]
+                );
+            }
         } catch (\Throwable $e) {
             // Database not available or query failed
             // Silently skip loading settings from database
+            logger()->warning('AppServiceProvider boot fallback failed: ' . $e->getMessage());
         }
     }
 }
