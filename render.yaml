@@ -34,6 +34,8 @@ services:
         value: lax
       - key: CACHE_DRIVER
         value: file
+      - key: LOG_CHANNEL
+        value: stderr
       - key: DB_CONNECTION
         value: pgsql
       - key: APP_KEY
