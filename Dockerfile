@@ -35,8 +35,6 @@ RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && mkdir -p database \
     && if [ "$(grep -E '^DB_CONNECTION=' .env | cut -d'=' -f2)" = "sqlite" ]; then touch database/database.sqlite && chmod 777 database/database.sqlite; fi \
     && php artisan key:generate --ansi --force \
-    && php artisan migrate --force \
-    && php artisan db:seed --force \
     && php artisan config:clear \
     && php artisan route:clear \
     && php artisan view:clear \
