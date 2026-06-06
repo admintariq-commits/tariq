@@ -45,5 +45,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
+# Render injects a dynamic $PORT. Default to 80 for local runs.
+ENV PORT=80
 EXPOSE 80
 CMD ["/usr/local/bin/docker-entrypoint.sh"]
