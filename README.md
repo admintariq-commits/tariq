@@ -9,9 +9,8 @@ git init
 git add .
 git commit -m "Initial commit"
 git branch -M main
-# replace <URL> with your GitHub repo HTTPS URL, e.g. https://github.com/you/tariq.git
-git remote add origin <URL>
-git push -u origin main
+git remote add admintariq https://github.com/admintariq-commits/tariq.git
+git push -u admintariq main
 ```
 
 Important notes:

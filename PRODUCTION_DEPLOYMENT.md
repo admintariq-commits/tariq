@@ -1,5 +1,29 @@
 # Production Deployment Guide
 
+## Deployment on Render (Recommended)
+
+1. **Environment Variables**: In your Render Web Service dashboard, go to **Environment** and add:
+   - `DATABASE_URL`: Weka Internal URL yako. (Ukishaweka hii, huna haja ya kuweka DB_HOST, DB_PORT, au DB_DATABASE pembeni).
+   - `APP_KEY`: Your generated Laravel key.
+   - `NODE_VERSION`: `20` (or your preferred version).
+2. **Build Command**: `composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache && npm install && npm run build`
+3. **Start Command**: `php artisan migrate --force && apache2-foreground` (or your specific start command).
+
+## Updating the App
+
+Whenever you make changes to the code:
+1. `git add .`
+2. `git commit -m "Your update message"`
+3. `git push origin main`
+Render will automatically detect the push and start a new deployment.
+
+### How to verify deployment on Render:
+1. Go to the **Dashboard** and select your Web Service.
+2. Check the **Status Badge**: If it says **Live** (green), the deployment is finished.
+3. Check **Events**: Look for "Deploy live for v...".
+4. Check **Logs**: Ensure there are no errors in the startup logs.
+5. Open your **App URL** to see the changes live.
+
 ## 1. Clone or update the repo on production server
 
 If the project is not yet on the server:
