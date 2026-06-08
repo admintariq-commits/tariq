@@ -56,18 +56,56 @@
                 </button>
 
                 <!-- Notifications Bell -->
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white relative">
-                        <i class="fas fa-bell text-xl"></i>
-                        <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
-                    </button>
-                    <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
-                        <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 font-bold">Notifications</div>
-                        <div class="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">🔔 New job match found for you</div>
-                        <div class="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">⚠️ Unemployment alert: Dar es Salaam</div>
-                        <div class="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">📝 Your profile is 80% complete</div>
+                @auth
+                    @php
+                        $notifications = \App\Models\Notification::where('user_id', auth()->id())
+                            ->where(function ($query) {
+                                $query->whereNull('expires_at')
+                                    ->orWhere('expires_at', '>', now());
+                            })
+                            ->orderBy('created_at', 'desc')
+                            ->limit(5)
+                            ->get();
+                        $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+                            ->where('is_read', false)
+                            ->where(function ($query) {
+                                $query->whereNull('expires_at')
+                                    ->orWhere('expires_at', '>', now());
+                            })
+                            ->count();
+                    @endphp
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white relative">
+                            <i class="fas fa-bell text-xl"></i>
+                            @if($unreadCount > 0)
+                                <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadCount }}</span>
+                            @endif
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
+                            <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 font-bold">Notifications</div>
+                            @if($notifications->isEmpty())
+                                <div class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">No new notifications.</div>
+                            @else
+                                @foreach($notifications as $notification)
+                                    <a href="{{ $notification->action_url ?? '#' }}" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                                        {!! $notification->title !!}<br>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ \Illuminate\Support\Str::limit($notification->message, 60) }}</span>
+                                    </a>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white relative">
+                            <i class="fas fa-bell text-xl"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
+                            <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 font-bold">Notifications</div>
+                            <div class="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">Login to see your notifications.</div>
+                        </div>
+                    </div>
+                @endauth
 
                 <!-- User Dropdown -->
                 <div class="relative" x-data="{ open: false }">
