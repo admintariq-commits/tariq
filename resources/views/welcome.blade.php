@@ -62,7 +62,7 @@
                 <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-white/90 mb-4">
                     <span>🇹🇿</span> Tanzania Graduate Intelligence
                 </span>
-                <h1 class="text-5xl sm:text-6xl md:text-[72px] hero-title leading-tight mb-4">Welcome to <span class="text-pink-200">TARIQ</span> — Tanzania Graduate Intelligence</h1>
+                <h1 class="text-4xl sm:text-5xl md:text-[56px] hero-title leading-tight mb-4">Welcome to <span class="text-pink-200">TARIQ</span> — Tanzania Graduate Intelligence</h1>
                 <p class="mx-auto max-w-3xl text-base sm:text-lg hero-subtle mb-6">A refined graduate employment and skills intelligence platform for Tanzanian youth, employers, and policy makers.</p>
                 <div class="mx-auto max-w-4xl grid gap-3 sm:grid-cols-3 mb-6 text-left">
                     <div class="rounded-lg bg-white/6 border border-white/10 p-3 backdrop-blur-xl feature-spot">
