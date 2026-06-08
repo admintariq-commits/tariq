@@ -6,12 +6,22 @@ if [ ! -f .env ]; then
   cp .env.example .env
 fi
 
-# If DATABASE_URL is set in environment (from Render), ensure DB_CONNECTION is set to pgsql
-if [ -n "$DATABASE_URL" ]; then
-  echo "DATABASE_URL detected - using PostgreSQL connection"
-  # Make sure DB_CONNECTION is set to pgsql to match the DATABASE_URL
-  if ! grep -q "^DB_CONNECTION=pgsql" .env; then
+# If Render provides a database URL (DATABASE_URL or DB_URL), force PostgreSQL
+# settings in the generated .env so runtime doesn't pick up old MySQL values.
+if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
+  echo "Render database URL detected - enforcing PostgreSQL settings"
+  # Ensure DB_CONNECTION is pgsql
+  if grep -q "^DB_CONNECTION=" .env; then
     sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
+  else
+    echo "DB_CONNECTION=pgsql" >> .env
+  fi
+
+  # Force DB_PORT to 5432 (PostgreSQL). This overrides any leftover 3306 value.
+  if grep -q "^DB_PORT=" .env; then
+    sed -i 's/^DB_PORT=.*/DB_PORT=5432/' .env
+  else
+    echo "DB_PORT=5432" >> .env
   fi
 fi
 
