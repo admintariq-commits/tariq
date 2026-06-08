@@ -39,7 +39,7 @@ RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && php artisan config:clear \
     && php artisan route:clear \
     && php artisan view:clear \
-    && php artisan optimize:clear
+    && php artisan optimize:clear --no-ansi
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database

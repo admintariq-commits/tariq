@@ -1,9 +1,18 @@
 #!/bin/sh
 set -e
 
-# Ensure the default app key exists and the SQLite database file exists if used.
+# Create .env from .env.example if it doesn't exist
 if [ ! -f .env ]; then
   cp .env.example .env
+fi
+
+# If DATABASE_URL is set in environment (from Render), ensure DB_CONNECTION is set to pgsql
+if [ -n "$DATABASE_URL" ]; then
+  echo "DATABASE_URL detected - using PostgreSQL connection"
+  # Make sure DB_CONNECTION is set to pgsql to match the DATABASE_URL
+  if ! grep -q "^DB_CONNECTION=pgsql" .env; then
+    sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
+  fi
 fi
 
 mkdir -p database
@@ -13,6 +22,7 @@ if [ "$(grep -E '^DB_CONNECTION=' .env | cut -d'=' -f2)" = "sqlite" ]; then
 fi
 
 php artisan key:generate --ansi --force
+php artisan config:cache
 
 RETRY_COUNT=0
 until php artisan migrate --force && php artisan db:seed --force; do
