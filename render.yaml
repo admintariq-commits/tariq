@@ -6,7 +6,7 @@ services:
     dockerfilePath: Dockerfile
     plan: free
     autoDeploy: true
-    buildCommand: composer install --no-interaction --no-dev
+    buildCommand: composer install --no-interaction --ignore-platform-reqs
     postBuildCommand: |
       mkdir -p database storage/framework/sessions storage/logs bootstrap/cache
       if [ "$DB_CONNECTION" = "sqlite" ]; then
