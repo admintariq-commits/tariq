@@ -30,7 +30,7 @@ WORKDIR /var/www/html
 RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views \
     && chown -R www-data:www-data bootstrap/cache storage
 
-RUN composer install --no-interaction --no-progress --no-dev --ignore-platform-reqs
+RUN composer install --no-interaction --no-progress --ignore-platform-reqs
 
 RUN if [ ! -f .env ]; then cp .env.example .env; fi \
     && mkdir -p database \
