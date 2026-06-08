@@ -14,13 +14,6 @@ fi
 
 php artisan key:generate --ansi --force
 
-# Render assigns a dynamic port via $PORT. Make Apache listen on it.
-# Falls back to 80 for local Docker runs.
-APACHE_LISTEN_PORT="${PORT:-80}"
-echo "Configuring Apache to listen on port ${APACHE_LISTEN_PORT}"
-sed -ri "s!Listen 80!Listen ${APACHE_LISTEN_PORT}!g" /etc/apache2/ports.conf
-sed -ri "s!<VirtualHost \*:80>!<VirtualHost *:${APACHE_LISTEN_PORT}>!g" /etc/apache2/sites-available/000-default.conf
-
 RETRY_COUNT=0
 until php artisan migrate --force && php artisan db:seed --force; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
