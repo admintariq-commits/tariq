@@ -73,10 +73,38 @@ class OtpController extends Controller
         $otpTtl = config('otp.otp_ttl_minutes', 10);
         Cache::put('otp:'.$phone, $code, now()->addMinutes($otpTtl));
 
+        $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'twilio'));
         $twilioSid = env('TWILIO_SID');
         $twilioToken = env('TWILIO_AUTH_TOKEN');
         $twilioFrom = env('TWILIO_FROM');
+        $infobipApiKey = config('otp.infobip_api_key', env('INFOBIP_API_KEY'));
+        $infobipBaseUrl = config('otp.infobip_base_url', env('INFOBIP_BASE_URL', 'https://api.infobip.com'));
+        $infobipFrom = config('otp.infobip_from', env('INFOBIP_FROM'));
         $otpDev = config('otp.dev_fallback', false);
+
+        if ($provider === 'infobip' && $infobipApiKey && $infobipBaseUrl && $infobipFrom) {
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => 'App ' . $infobipApiKey,
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->post(rtrim($infobipBaseUrl, '/') . '/sms/2/text/advanced', [
+                    'from' => $infobipFrom,
+                    'to' => [$phone],
+                    'text' => "Your TARIQ verification code is: {$code}",
+                ]);
+
+                if ($response->successful()) {
+                    return response()->json(['status' => 'ok']);
+                }
+
+                Log::warning('Infobip send failed', ['phone' => $phone, 'resp' => $response->body()]);
+                return response()->json(['status' => 'error', 'message' => 'SMS provider error'], 500);
+            } catch (Exception $e) {
+                Log::error('Infobip exception', ['phone' => $phone, 'error' => $e->getMessage()]);
+                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
+            }
+        }
 
         if ($twilioSid && $twilioToken && $twilioFrom) {
             try {

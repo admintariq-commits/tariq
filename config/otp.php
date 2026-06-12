@@ -12,6 +12,11 @@ return [
     'max_attempts' => env('OTP_MAX_ATTEMPTS', 5),
     // Attempt counter TTL in minutes
     'attempt_ttl_minutes' => env('OTP_ATTEMPT_TTL_MINUTES', 30),
+    // SMS provider to use for OTP delivery
+    'sms_provider' => env('SMS_PROVIDER', 'twilio'),
+    'infobip_api_key' => env('INFOBIP_API_KEY'),
+    'infobip_base_url' => env('INFOBIP_BASE_URL', 'https://api.infobip.com'),
+    'infobip_from' => env('INFOBIP_FROM'),
     // Developer fallback: if true, return codes in API responses
     'dev_fallback' => env('OTP_DEV', false),
     // Email alerting for abuse attempts
