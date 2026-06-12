@@ -521,64 +521,66 @@
             return { ok: response.ok, status: response.status, data };
         }
 
-        const sendOtpBtn = document.getElementById('sendOtpBtn');
-        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-        const otpInput = document.getElementById('otpInput');
-        const phoneInput = document.getElementById('phoneInput');
+        function initOtpHandlers() {
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            const otpInput = document.getElementById('otpInput');
+            const phoneInput = document.getElementById('phoneInput');
 
-        if (sendOtpBtn) {
-            sendOtpBtn.addEventListener('click', async function () {
-                const phone = phoneInput ? phoneInput.value.trim() : '';
+            if (!sendOtpBtn || !verifyOtpBtn || !otpInput || !phoneInput) {
+                return;
+            }
+
+            const handleSendOtp = async function () {
+                const phone = phoneInput.value.trim();
 
                 if (!phone) {
                     setOtpMessage('Please enter your phone number before requesting OTP.', true);
-                    phoneInput?.focus();
+                    phoneInput.focus();
                     return;
                 }
 
-                this.disabled = true;
-                this.textContent = 'Sending...';
+                sendOtpBtn.disabled = true;
+                sendOtpBtn.textContent = 'Sending...';
                 setOtpMessage('Sending OTP...', false);
 
                 const result = await postOtpRequest(otpSendUrl, { phone });
 
                 if (result.ok && result.data.status === 'ok') {
                     otpVerified = false;
-                    if (otpInput) otpInput.disabled = false;
-                    if (verifyOtpBtn) verifyOtpBtn.disabled = false;
+                    otpInput.disabled = false;
+                    verifyOtpBtn.disabled = false;
                     const devHint = result.data.dev ? ` Dev code: ${result.data.code}` : '';
                     setOtpMessage(`OTP request sent successfully.${devHint} Enter the code and verify it to enable registration.`, false);
                 } else {
                     const message = result.data?.message || 'Unable to send OTP. Please try again.';
                     setOtpMessage(message, true);
-                    if (otpInput) otpInput.disabled = true;
-                    if (verifyOtpBtn) verifyOtpBtn.disabled = true;
+                    otpInput.disabled = true;
+                    verifyOtpBtn.disabled = true;
                 }
 
-                this.disabled = false;
-                this.textContent = 'Send OTP';
-            });
-        }
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = 'Send OTP';
+            };
 
-        if (verifyOtpBtn) {
-            verifyOtpBtn.addEventListener('click', async function () {
-                const phone = phoneInput ? phoneInput.value.trim() : '';
-                const code = otpInput ? otpInput.value.trim() : '';
+            const handleVerifyOtp = async function () {
+                const phone = phoneInput.value.trim();
+                const code = otpInput.value.trim();
 
                 if (!phone) {
                     setOtpMessage('Enter your phone number before verifying OTP.', true);
-                    phoneInput?.focus();
+                    phoneInput.focus();
                     return;
                 }
 
                 if (!code) {
                     setOtpMessage('Enter the 6-digit OTP code to verify your phone number.', true);
-                    otpInput?.focus();
+                    otpInput.focus();
                     return;
                 }
 
-                this.disabled = true;
-                this.textContent = 'Verifying...';
+                verifyOtpBtn.disabled = true;
+                verifyOtpBtn.textContent = 'Verifying...';
                 setOtpMessage('Verifying OTP...', false);
 
                 const result = await postOtpRequest(otpVerifyUrl, { phone, code });
@@ -586,22 +588,28 @@
                 if (result.ok && result.data.status === 'ok') {
                     otpVerified = true;
                     setOtpMessage('Phone number verified successfully. You can now complete registration.', false);
-                    if (otpInput) otpInput.disabled = true;
-                    this.disabled = true;
-                    this.textContent = 'Verified';
+                    otpInput.disabled = true;
+                    verifyOtpBtn.disabled = true;
+                    verifyOtpBtn.textContent = 'Verified';
                 } else {
                     otpVerified = false;
                     const message = result.data?.message || 'OTP verification failed. Please try again.';
                     setOtpMessage(message, true);
+                    verifyOtpBtn.disabled = false;
+                    verifyOtpBtn.textContent = 'Verify';
                 }
+            };
 
-                this.disabled = false;
-                if (this.textContent === 'Verified') {
-                    this.disabled = true;
-                } else {
-                    this.textContent = 'Verify';
-                }
-            });
+            sendOtpBtn.addEventListener('click', handleSendOtp);
+            sendOtpBtn.onclick = handleSendOtp;
+            verifyOtpBtn.addEventListener('click', handleVerifyOtp);
+            verifyOtpBtn.onclick = handleVerifyOtp;
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initOtpHandlers);
+        } else {
+            initOtpHandlers();
         }
 
         const registrationForm = document.getElementById('regForm');
