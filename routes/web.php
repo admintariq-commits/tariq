@@ -79,6 +79,23 @@ Route::post('/graduate/register', [RegisterController::class, 'registerGraduate'
 Route::post('/otp/send', [OtpController::class, 'send'])->name('otp.send');
 Route::post('/otp/verify', [OtpController::class, 'verify'])->name('otp.verify');
 
+// Temporary dev-only test route to trigger OTP send without CSRF (only in non-production)
+if (env('APP_ENV') !== 'production') {
+    Route::get('/otp/send-test/{phone}', function ($phone) {
+        request()->merge(['phone' => $phone]);
+        return app(\App\Http\Controllers\Auth\OtpController::class)->send(request());
+    })->name('otp.send-test');
+
+    Route::get('/otp/clear/{phone}', function ($phone) {
+        $phoneKey = preg_replace('/\s+/', '', $phone);
+        \Illuminate\Support\Facades\Cache::forget('otp:send_count:'.$phoneKey);
+        \Illuminate\Support\Facades\Cache::forget('otp:cooldown:'.$phoneKey);
+        \Illuminate\Support\Facades\Cache::forget('otp:'.$phoneKey);
+        \Illuminate\Support\Facades\Cache::forget('otp:attempts:'.$phoneKey);
+        return response()->json(['status' => 'cleared']);
+    })->name('otp.clear');
+}
+
 // Academic verification (before registration or standalone)
 Route::get('/verify-academic', [AcademicVerificationController::class, 'show'])->name('verify-academic');
 Route::post('/verify-academic', [AcademicVerificationController::class, 'verify']);

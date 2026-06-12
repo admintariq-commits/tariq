@@ -17,6 +17,10 @@ return [
     'infobip_api_key' => env('INFOBIP_API_KEY'),
     'infobip_base_url' => env('INFOBIP_BASE_URL', 'https://api.infobip.com'),
     'infobip_from' => env('INFOBIP_FROM'),
+    'beem_api_key' => env('BEEM_API_KEY'),
+    'beem_api_secret' => env('BEEM_SECRET_KEY', env('BEEM_API_SECRET')),
+    'beem_base_url' => env('BEEM_BASE_URL', 'https://apisms.beem.africa/v1/send'),
+    'beem_sender' => env('BEEM_SENDER', 'TARIQ'),
     // Developer fallback: if true, return codes in API responses
     'dev_fallback' => env('OTP_DEV', false),
     // Email alerting for abuse attempts

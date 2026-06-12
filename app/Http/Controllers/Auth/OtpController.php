@@ -11,6 +11,25 @@ use Exception;
 
 class OtpController extends Controller
 {
+    private function normalizeBeemSecret($secret)
+    {
+        if (!is_string($secret) || trim($secret) === '') {
+            return $secret;
+        }
+
+        $candidate = trim($secret);
+        if (!preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $candidate) || (strlen($candidate) % 4) !== 0) {
+            return $secret;
+        }
+
+        $decoded = base64_decode($candidate, true);
+        if ($decoded === false) {
+            return $secret;
+        }
+
+        return base64_encode($decoded) === $candidate ? $decoded : $secret;
+    }
+
     /**
      * Send email alert for abuse attempts if threshold exceeded
      */
@@ -80,21 +99,32 @@ class OtpController extends Controller
         $infobipApiKey = config('otp.infobip_api_key', env('INFOBIP_API_KEY'));
         $infobipBaseUrl = config('otp.infobip_base_url', env('INFOBIP_BASE_URL', 'https://api.infobip.com'));
         $infobipFrom = config('otp.infobip_from', env('INFOBIP_FROM'));
+        $beemApiKey = config('otp.beem_api_key', env('BEEM_API_KEY'));
+        $beemApiSecret = $this->normalizeBeemSecret(config('otp.beem_api_secret', env('BEEM_SECRET_KEY', env('BEEM_API_SECRET'))));
+        $beemBaseUrl = config('otp.beem_base_url', env('BEEM_BASE_URL', 'https://apisms.beem.africa/v1/send'));
+        $beemSender = config('otp.beem_sender', env('BEEM_SENDER', 'TARIQ'));
         $otpDev = config('otp.dev_fallback', false);
 
         if ($provider === 'infobip' && $infobipApiKey && $infobipBaseUrl && $infobipFrom) {
             try {
+                $payload = [
+                    'messages' => [
+                        [
+                            'from' => $infobipFrom,
+                            'destinations' => [ [ 'to' => $phone ] ],
+                            'text' => "Your TARIQ verification code is: {$code}",
+                        ]
+                    ]
+                ];
+
                 $response = Http::withHeaders([
                     'Authorization' => 'App ' . $infobipApiKey,
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->post(rtrim($infobipBaseUrl, '/') . '/sms/2/text/advanced', [
-                    'from' => $infobipFrom,
-                    'to' => [$phone],
-                    'text' => "Your TARIQ verification code is: {$code}",
-                ]);
+                ])->post(rtrim($infobipBaseUrl, '/') . '/sms/2/text/advanced', $payload);
 
                 if ($response->successful()) {
+                    Log::info('Infobip send response', ['phone' => $phone, 'resp' => $response->body()]);
                     return response()->json(['status' => 'ok']);
                 }
 
@@ -102,6 +132,37 @@ class OtpController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'SMS provider error'], 500);
             } catch (Exception $e) {
                 Log::error('Infobip exception', ['phone' => $phone, 'error' => $e->getMessage()]);
+                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
+            }
+        }
+
+        if ($provider === 'beem' && $beemApiKey && $beemApiSecret) {
+            try {
+                $payload = [
+                    'source_addr' => $beemSender,
+                    'encoding' => 0,
+                    'schedule_time' => '',
+                    'message' => "Your TARIQ verification code is: {$code}",
+                    'recipients' => [
+                        ['recipient_id' => '1', 'dest_addr' => $phone],
+                    ],
+                ];
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Basic ' . base64_encode($beemApiKey . ':' . $beemApiSecret),
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->post(rtrim($beemBaseUrl, '/'), $payload);
+
+                if ($response->successful()) {
+                    Log::info('Beem send response', ['phone' => $phone, 'resp' => $response->body()]);
+                    return response()->json(['status' => 'ok']);
+                }
+
+                Log::warning('Beem send failed', ['phone' => $phone, 'resp' => $response->body()]);
+                return response()->json(['status' => 'error', 'message' => 'SMS provider error'], 500);
+            } catch (Exception $e) {
+                Log::error('Beem exception', ['phone' => $phone, 'error' => $e->getMessage()]);
                 return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
             }
         }
