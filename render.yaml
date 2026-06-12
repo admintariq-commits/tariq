@@ -26,6 +26,8 @@ services:
         value: debug
       - key: APP_URL
         value: 'https://tariq-1nqr.onrender.com'
+      - key: OTP_DEV
+        value: 'true'
       - key: SESSION_DRIVER
         value: file
       - key: SESSION_SECURE_COOKIE

@@ -317,14 +317,37 @@
                                 <label class="block text-slate-700 text-sm font-semibold mb-3">Region / Location *</label>
                                 <select name="region" class="w-full border border-slate-300 rounded-lg px-4 py-3 input-field focus:ring-2 focus:ring-indigo-500" required>
                                     <option value="">Select Region...</option>
-                                    <option value="Dar es Salaam" {{ old('region') === 'Dar es Salaam' ? 'selected' : '' }}>Dar es Salaam</option>
                                     <option value="Arusha" {{ old('region') === 'Arusha' ? 'selected' : '' }}>Arusha</option>
+                                    <option value="Dar es Salaam" {{ old('region') === 'Dar es Salaam' ? 'selected' : '' }}>Dar es Salaam</option>
                                     <option value="Dodoma" {{ old('region') === 'Dodoma' ? 'selected' : '' }}>Dodoma</option>
-                                    <option value="Mbeya" {{ old('region') === 'Mbeya' ? 'selected' : '' }}>Mbeya</option>
+                                    <option value="Geita" {{ old('region') === 'Geita' ? 'selected' : '' }}>Geita</option>
+                                    <option value="Iringa" {{ old('region') === 'Iringa' ? 'selected' : '' }}>Iringa</option>
+                                    <option value="Kagera" {{ old('region') === 'Kagera' ? 'selected' : '' }}>Kagera</option>
+                                    <option value="Katavi" {{ old('region') === 'Katavi' ? 'selected' : '' }}>Katavi</option>
+                                    <option value="Kigoma" {{ old('region') === 'Kigoma' ? 'selected' : '' }}>Kigoma</option>
                                     <option value="Kilimanjaro" {{ old('region') === 'Kilimanjaro' ? 'selected' : '' }}>Kilimanjaro</option>
+                                    <option value="Lindi" {{ old('region') === 'Lindi' ? 'selected' : '' }}>Lindi</option>
+                                    <option value="Manyara" {{ old('region') === 'Manyara' ? 'selected' : '' }}>Manyara</option>
+                                    <option value="Mara" {{ old('region') === 'Mara' ? 'selected' : '' }}>Mara</option>
+                                    <option value="Mbeya" {{ old('region') === 'Mbeya' ? 'selected' : '' }}>Mbeya</option>
                                     <option value="Morogoro" {{ old('region') === 'Morogoro' ? 'selected' : '' }}>Morogoro</option>
+                                    <option value="Mtwara" {{ old('region') === 'Mtwara' ? 'selected' : '' }}>Mtwara</option>
                                     <option value="Mwanza" {{ old('region') === 'Mwanza' ? 'selected' : '' }}>Mwanza</option>
+                                    <option value="Njombe" {{ old('region') === 'Njombe' ? 'selected' : '' }}>Njombe</option>
+                                    <option value="Pwani" {{ old('region') === 'Pwani' ? 'selected' : '' }}>Pwani</option>
+                                    <option value="Rukwa" {{ old('region') === 'Rukwa' ? 'selected' : '' }}>Rukwa</option>
+                                    <option value="Ruvuma" {{ old('region') === 'Ruvuma' ? 'selected' : '' }}>Ruvuma</option>
+                                    <option value="Shinyanga" {{ old('region') === 'Shinyanga' ? 'selected' : '' }}>Shinyanga</option>
+                                    <option value="Simiyu" {{ old('region') === 'Simiyu' ? 'selected' : '' }}>Simiyu</option>
+                                    <option value="Singida" {{ old('region') === 'Singida' ? 'selected' : '' }}>Singida</option>
+                                    <option value="Songwe" {{ old('region') === 'Songwe' ? 'selected' : '' }}>Songwe</option>
+                                    <option value="Tabora" {{ old('region') === 'Tabora' ? 'selected' : '' }}>Tabora</option>
                                     <option value="Tanga" {{ old('region') === 'Tanga' ? 'selected' : '' }}>Tanga</option>
+                                    <option value="Kaskazini Unguja" {{ old('region') === 'Kaskazini Unguja' ? 'selected' : '' }}>Kaskazini Unguja</option>
+                                    <option value="Kusini Unguja" {{ old('region') === 'Kusini Unguja' ? 'selected' : '' }}>Kusini Unguja</option>
+                                    <option value="Mjini Magharibi" {{ old('region') === 'Mjini Magharibi' ? 'selected' : '' }}>Mjini Magharibi</option>
+                                    <option value="Kaskazini Pemba" {{ old('region') === 'Kaskazini Pemba' ? 'selected' : '' }}>Kaskazini Pemba</option>
+                                    <option value="Kusini Pemba" {{ old('region') === 'Kusini Pemba' ? 'selected' : '' }}>Kusini Pemba</option>
                                 </select>
                                 <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
                                 <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">

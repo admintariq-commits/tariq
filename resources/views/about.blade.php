@@ -8,8 +8,9 @@
     <!-- What is TARIQ -->
     <section class="mb-8 p-6 bg-blue-50 dark:bg-blue-900 rounded-lg">
         <h2 class="text-2xl font-semibold mb-3 text-blue-900 dark:text-blue-100">What is TARIQ?</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-3">TARIQ is a **national-scale platform** for graduate tracking and employment intelligence. It monitors, analyzes, and reports on youth unemployment trends across all 31 regions of Tanzania in real-time.</p>
-        <p class="text-gray-700 dark:text-gray-300"><strong>Multi-role platform:</strong> Graduates manage their profiles and job applications. Ministries receive automated alerts for intervention. Admins oversee system data and regional analytics.</p>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">TARIQ is a national platform that helps graduates, employers, and government teams understand employment opportunities, skills demand, and regional workforce trends across Tanzania.</p>
+        <p class="text-gray-700 dark:text-gray-300 mb-3"><strong>For ordinary users:</strong> it helps graduates build a profile, explore opportunities, and understand how jobs are distributed across the country.</p>
+        <p class="text-gray-700 dark:text-gray-300"><strong>For ministries and partners:</strong> it provides analytics, alerts, and regional insights to support planning and intervention.</p>
     </section>
 
     <!-- TARIQ Acronym -->
@@ -41,7 +42,7 @@
 
     <!-- Key Features (Front & Center) -->
     <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">🎯 Platform Features</h2>
+        <h2 class="text-2xl font-semibold mb-4">🎯 What users can do on TARIQ</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-4 border-l-4 border-blue-500 bg-gray-50 dark:bg-gray-800 rounded">
                 <h3 class="font-semibold text-blue-600 dark:text-blue-400">📊 Employability Scoring</h3>
@@ -102,7 +103,7 @@
 
     <!-- Technical Stack (Bottom) -->
     <section class="mb-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <h2 class="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">Technical Stack (For Developers & Partners)</h2>
+        <h2 class="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">Technical details for developers, partners, and ministry teams</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">
             <strong>Backend:</strong> Laravel 12.x · PHP 8.2 · MySQL/SQLite<br>
             <strong>Frontend:</strong> Tailwind CSS · Alpine.js · Chart.js<br>
