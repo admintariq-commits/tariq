@@ -7,6 +7,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        // Define registrationForm BEFORE Alpine.js loads
+        function registrationForm() {
+            return {
+                currentStep: 0,
+                completionTick: 0,
+                steps: [
+                    { label: 'Step 1', title: 'Personal Info', icon: 'user' },
+                    { label: 'Step 2', title: 'Academic Info', icon: 'book' },
+                    { label: 'Step 3', title: 'Career Info', icon: 'briefcase' },
+                    { label: 'Step 4', title: 'Skills', icon: 'star' },
+                    { label: 'Step 5', title: 'Security', icon: 'lock' }
+                ],
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.remove('active');
+                        this.currentStep++;
+                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.add('active');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                },
+                progressPercent() {
+                    this.completionTick;
+                    return Math.round(((this.currentStep + 1) / this.steps.length) * 100);
+                },
+                progressLabel() {
+                    this.completionTick;
+                    return `Progress: ${this.progressPercent()}% complete`;
+                },
+                completionPercent() {
+                    this.completionTick;
+                    const form = document.getElementById('regForm');
+                    if (!form) return 0;
+                    const fields = [
+                        form.first_name,
+                        form.last_name,
+                        form.email,
+                        form.phone,
+                        form.national_id,
+                        form.gender,
+                        form.university,
+                        form.course,
+                        form.degree,
+                        form.graduation_date,
+                        form.graduation_year,
+                        form.gpa,
+                        form.region,
+                        form.employment_status,
+                        form.resume
+                    ];
+                    const total = fields.length;
+                    const filled = fields.reduce((count, field) => {
+                        if (!field) return count;
+                        if (field.type === 'file') {
+                            return count + (field.files.length ? 1 : 0);
+                        }
+                        return count + (field.value && field.value.trim() !== '' ? 1 : 0);
+                    }, 0);
+                    return Math.round((filled / total) * 100);
+                },
+                completionLabel() {
+                    return `Profile completeness: ${this.completionPercent()}%`;
+                },
+                refreshCompletion() {
+                    this.completionTick++;
+                },
+                previousStep() {
+                    if (this.currentStep > 0) {
+                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.remove('active');
+                        this.currentStep--;
+                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.add('active');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
@@ -254,22 +331,31 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-slate-900 text-xs font-semibold uppercase tracking-[0.12em] mb-3">University / Institution *</label>
-                                <select name="university" class="w-full bg-slate-50 border border-slate-300 rounded-3xl px-5 py-3 input-field focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm transition duration-200 hover:border-slate-400" required>
-                                    <option value="">Select your institution</option>
-                                    @foreach($universities as $university)
-                                        <option value="{{ $university->name }}" {{ old('university') === $university->name ? 'selected' : '' }}>{{ $university->name }}</option>
-                                    @endforeach
-                                </select>
-                                <p class="text-xs text-slate-500 mt-2">Choose your institution from the list of Tanzanian universities.</p>
+                                @if(isset($universities) && $universities->isNotEmpty())
+                                    <select name="university" class="w-full bg-slate-50 border border-slate-300 rounded-3xl px-5 py-3 input-field focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm transition duration-200 hover:border-slate-400" required>
+                                        <option value="">Select your institution</option>
+                                        @foreach($universities as $university)
+                                            <option value="{{ $university->name }}" {{ old('university') === $university->name ? 'selected' : '' }}>{{ $university->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <input type="text" name="university" value="{{ old('university') }}" placeholder="Enter your institution" class="w-full bg-slate-50 border border-slate-300 rounded-3xl px-5 py-3 input-field focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm transition duration-200 hover:border-slate-400" required>
+                                    <p class="text-xs text-slate-500 mt-2">No university list available — please type your institution.</p>
+                                @endif
                             </div>
                             <div>
                                 <label class="block text-slate-900 text-xs font-semibold uppercase tracking-[0.12em] mb-3">Course / Program *</label>
-                                <select name="course" class="w-full bg-slate-50 border border-slate-300 rounded-3xl px-5 py-3 input-field focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm transition duration-200 hover:border-slate-400" required>
-                                    <option value="">Select your course</option>
-                                    @foreach($courses as $course)
-                                        <option value="{{ $course->name }}" {{ old('course') === $course->name ? 'selected' : '' }}>{{ $course->name }}</option>
-                                    @endforeach
-                                </select>
+                                @if(isset($courses) && $courses->isNotEmpty())
+                                    <select name="course" class="w-full bg-slate-50 border border-slate-300 rounded-3xl px-5 py-3 input-field focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm transition duration-200 hover:border-slate-400" required>
+                                        <option value="">Select your course</option>
+                                        @foreach($courses as $course)
+                                            <option value="{{ $course->name }}" {{ old('course') === $course->name ? 'selected' : '' }}>{{ $course->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <input type="text" name="course" value="{{ old('course') }}" placeholder="Enter your course or program" class="w-full bg-slate-50 border border-slate-300 rounded-3xl px-5 py-3 input-field focus:outline-none focus:ring-2 focus:ring-indigo-300 shadow-sm transition duration-200 hover:border-slate-400" required>
+                                    <p class="text-xs text-slate-500 mt-2">No course list available — please type your course/program.</p>
+                                @endif
                             </div>
                             <div>
                                 <label class="block text-slate-700 text-sm font-semibold mb-3">Degree Type *</label>
@@ -612,9 +698,9 @@
             initOtpHandlers();
         }
 
-        const registrationForm = document.getElementById('regForm');
-        if (registrationForm) {
-            registrationForm.addEventListener('submit', function (event) {
+        const regFormElement = document.getElementById('regForm');
+        if (regFormElement) {
+            regFormElement.addEventListener('submit', function (event) {
                 if (!otpVerified) {
                     event.preventDefault();
                     setOtpMessage('Please verify your phone number with OTP before completing registration.', true);
@@ -622,81 +708,6 @@
                     return false;
                 }
             });
-        }
-
-        function registrationForm() {
-            return {
-                currentStep: 0,
-                completionTick: 0,
-                steps: [
-                    { label: 'Step 1', title: 'Personal Info', icon: 'user' },
-                    { label: 'Step 2', title: 'Academic Info', icon: 'book' },
-                    { label: 'Step 3', title: 'Career Info', icon: 'briefcase' },
-                    { label: 'Step 4', title: 'Skills', icon: 'star' },
-                    { label: 'Step 5', title: 'Security', icon: 'lock' }
-                ],
-                nextStep() {
-                    if (this.currentStep < this.steps.length - 1) {
-                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.remove('active');
-                        this.currentStep++;
-                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.add('active');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                },
-                progressPercent() {
-                    this.completionTick;
-                    return Math.round(((this.currentStep + 1) / this.steps.length) * 100);
-                },
-                progressLabel() {
-                    this.completionTick;
-                    return `Progress: ${this.progressPercent()}% complete`;
-                },
-                completionPercent() {
-                    this.completionTick;
-                    const form = document.getElementById('regForm');
-                    if (!form) return 0;
-                    const fields = [
-                        form.first_name,
-                        form.last_name,
-                        form.email,
-                        form.phone,
-                        form.national_id,
-                        form.gender,
-                        form.university,
-                        form.course,
-                        form.degree,
-                        form.graduation_date,
-                        form.graduation_year,
-                        form.gpa,
-                        form.region,
-                        form.employment_status,
-                        form.resume
-                    ];
-                    const total = fields.length;
-                    const filled = fields.reduce((count, field) => {
-                        if (!field) return count;
-                        if (field.type === 'file') {
-                            return count + (field.files.length ? 1 : 0);
-                        }
-                        return count + (field.value && field.value.trim() !== '' ? 1 : 0);
-                    }, 0);
-                    return Math.round((filled / total) * 100);
-                },
-                completionLabel() {
-                    return `Profile completeness: ${this.completionPercent()}%`;
-                },
-                refreshCompletion() {
-                    this.completionTick++;
-                },
-                previousStep() {
-                    if (this.currentStep > 0) {
-                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.remove('active');
-                        this.currentStep--;
-                        document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.add('active');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                }
-            }
         }
 
         // Resume validation
