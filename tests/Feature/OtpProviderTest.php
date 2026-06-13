@@ -12,7 +12,7 @@ class OtpProviderTest extends TestCase
     public function test_beem_provider_decodes_base64_secret_before_authentication(): void
     {
         Http::fake([
-            'https://apisms.beem.africa/v1/send' => Http::response([
+            'https://apiotp.beem.africa/v1/request' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -20,7 +20,8 @@ class OtpProviderTest extends TestCase
         config()->set('otp.sms_provider', 'beem');
         config()->set('otp.beem_api_key', 'test-beem-key');
         config()->set('otp.beem_api_secret', base64_encode('real-beem-secret'));
-        config()->set('otp.beem_base_url', 'https://apisms.beem.africa/v1/send');
+        config()->set('otp.beem_base_url', 'https://apiotp.beem.africa/v1/request');
+        config()->set('otp.beem_app_id', '1');
         config()->set('otp.beem_sender', 'TARIQ');
         config()->set('otp.dev_fallback', false);
 
@@ -38,7 +39,7 @@ class OtpProviderTest extends TestCase
     public function test_beem_provider_can_send_otp(): void
     {
         Http::fake([
-            'https://apisms.beem.africa/v1/send' => Http::response([
+            'https://apiotp.beem.africa/v1/request' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -46,7 +47,8 @@ class OtpProviderTest extends TestCase
         config()->set('otp.sms_provider', 'beem');
         config()->set('otp.beem_api_key', 'test-beem-key');
         config()->set('otp.beem_api_secret', 'test-beem-secret');
-        config()->set('otp.beem_base_url', 'https://apisms.beem.africa/v1/send');
+        config()->set('otp.beem_base_url', 'https://apiotp.beem.africa/v1/request');
+        config()->set('otp.beem_app_id', '1');
         config()->set('otp.beem_sender', 'TARIQ');
         config()->set('otp.dev_fallback', false);
 
@@ -59,11 +61,10 @@ class OtpProviderTest extends TestCase
         $this->assertStringContainsString('"status":"ok"', $response->getContent());
         Http::assertSentCount(1);
         Http::assertSent(function ($request) {
-            return $request->url() === 'https://apisms.beem.africa/v1/send'
+            return $request->url() === 'https://apiotp.beem.africa/v1/request'
                 && $request->header('Authorization')[0] === 'Basic ' . base64_encode('test-beem-key:test-beem-secret')
-                && $request['source_addr'] === 'TARIQ'
-                && str_contains($request['message'], 'Your TARIQ verification code is:')
-                && $request['recipients'][0]['dest_addr'] === '255682111222';
+                && $request['appId'] === '1'
+                && $request['msisdn'] === '255682111222';
         });
     }
 

@@ -101,7 +101,8 @@ class OtpController extends Controller
         $infobipFrom = config('otp.infobip_from', env('INFOBIP_FROM'));
         $beemApiKey = config('otp.beem_api_key', env('BEEM_API_KEY'));
         $beemApiSecret = $this->normalizeBeemSecret(config('otp.beem_api_secret', env('BEEM_SECRET_KEY', env('BEEM_API_SECRET'))));
-        $beemBaseUrl = config('otp.beem_base_url', env('BEEM_BASE_URL', 'https://apisms.beem.africa/v1/send'));
+        $beemBaseUrl = config('otp.beem_base_url', env('BEEM_BASE_URL', 'https://apiotp.beem.africa/v1/request'));
+        $beemAppId = config('otp.beem_app_id', env('BEEM_APP_ID', '1'));
         $beemSender = config('otp.beem_sender', env('BEEM_SENDER', 'TARIQ'));
         $otpDev = config('otp.dev_fallback', false);
 
@@ -139,13 +140,8 @@ class OtpController extends Controller
         if ($provider === 'beem' && $beemApiKey && $beemApiSecret) {
             try {
                 $payload = [
-                    'source_addr' => $beemSender,
-                    'encoding' => 0,
-                    'schedule_time' => '',
-                    'message' => "Your TARIQ verification code is: {$code}",
-                    'recipients' => [
-                        ['recipient_id' => '1', 'dest_addr' => $phone],
-                    ],
+                    'appId' => (string) $beemAppId,
+                    'msisdn' => $phone,
                 ];
 
                 $response = Http::withHeaders([
