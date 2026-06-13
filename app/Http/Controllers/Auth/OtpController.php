@@ -92,19 +92,74 @@ class OtpController extends Controller
         $otpTtl = config('otp.otp_ttl_minutes', 10);
         Cache::put('otp:'.$phone, $code, now()->addMinutes($otpTtl));
 
-        $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'twilio'));
+        $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
         $twilioSid = env('TWILIO_SID');
         $twilioToken = env('TWILIO_AUTH_TOKEN');
         $twilioFrom = env('TWILIO_FROM');
         $infobipApiKey = config('otp.infobip_api_key', env('INFOBIP_API_KEY'));
         $infobipBaseUrl = config('otp.infobip_base_url', env('INFOBIP_BASE_URL', 'https://api.infobip.com'));
         $infobipFrom = config('otp.infobip_from', env('INFOBIP_FROM'));
+        $nextsmsUsername = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
+        $nextsmsPassword = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
+        $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
+        $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'NEXTSMS'));
         $beemApiKey = config('otp.beem_api_key', env('BEEM_API_KEY'));
         $beemApiSecret = $this->normalizeBeemSecret(config('otp.beem_api_secret', env('BEEM_SECRET_KEY', env('BEEM_API_SECRET'))));
         $beemBaseUrl = config('otp.beem_base_url', env('BEEM_BASE_URL', 'https://apiotp.beem.africa/v1/request'));
         $beemAppId = config('otp.beem_app_id', env('BEEM_APP_ID', '1'));
         $beemSender = config('otp.beem_sender', env('BEEM_SENDER', 'TARIQ'));
         $otpDev = config('otp.dev_fallback', false);
+
+        if ($provider === 'nextsms' && $nextsmsUsername && $nextsmsPassword) {
+            try {
+                $to = $phone;
+                if (!str_starts_with($to, '255')) {
+                    $to = '255' . ltrim($to, '0');
+                }
+
+                $response = Http::withBasicAuth($nextsmsUsername, $nextsmsPassword)
+                    ->withHeaders([
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ])
+                    ->post($nextsmsBaseUrl, [
+                        'from' => $nextsmsSender,
+                        'to' => $to,
+                        'text' => "Your TARIQ verification code is: {$code}",
+                    ]);
+
+                if ($response->successful()) {
+                    Log::info('NextSMS send response', ['phone' => $phone, 'to' => $to, 'resp' => $response->body()]);
+                    return response()->json(['status' => 'ok']);
+                }
+
+                $respBody = $response->body();
+                Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBody]);
+
+                $details = [
+                    'provider' => 'nextsms',
+                    'http_status' => $response->status(),
+                    'response_body' => $respBody,
+                    'request' => [
+                        'from' => $nextsmsSender,
+                        'to' => $to,
+                        'text' => "Your TARIQ verification code is: {$code}",
+                        'base_url' => $nextsmsBaseUrl,
+                    ],
+                ];
+
+                $devDetails = env('APP_ENV') !== 'production';
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'SMS provider error',
+                    'details' => $devDetails ? $details : null,
+                ], 500);
+            } catch (Exception $e) {
+                Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage()]);
+                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
+            }
+        }
 
         if ($provider === 'infobip' && $infobipApiKey && $infobipBaseUrl && $infobipFrom) {
             try {

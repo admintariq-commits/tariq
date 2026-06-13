@@ -13,8 +13,12 @@ return [
     // Attempt counter TTL in minutes
     'attempt_ttl_minutes' => env('OTP_ATTEMPT_TTL_MINUTES', 30),
     // SMS provider to use for OTP delivery
-    'sms_provider' => env('SMS_PROVIDER', 'twilio'),
+    'sms_provider' => env('SMS_PROVIDER', 'nextsms'),
     'infobip_api_key' => env('INFOBIP_API_KEY'),
+    'nextsms_username' => env('NEXTSMS_USERNAME'),
+    'nextsms_password' => env('NEXTSMS_PASSWORD'),
+    'nextsms_base_url' => env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'),
+    'nextsms_sender' => env('NEXTSMS_SENDER', 'NEXTSMS'),
     'infobip_base_url' => env('INFOBIP_BASE_URL', 'https://api.infobip.com'),
     'infobip_from' => env('INFOBIP_FROM'),
     'beem_api_key' => env('BEEM_API_KEY'),
