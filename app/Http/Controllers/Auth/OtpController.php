@@ -83,57 +83,6 @@ class OtpController extends Controller
         $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'NEXTSMS'));
         $otpDev = config('otp.dev_fallback', false);
 
-        if ($provider === 'nextsms' && $nextsmsUsername && $nextsmsPassword) {
-            try {
-                $to = $phone;
-                if (!str_starts_with($to, '255')) {
-                    $to = '255' . ltrim($to, '0');
-                }
-
-                $response = Http::withBasicAuth($nextsmsUsername, $nextsmsPassword)
-                    ->withHeaders([
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ])
-                    ->post($nextsmsBaseUrl, [
-                        'from' => $nextsmsSender,
-                        'to' => $to,
-                        'text' => "Your TARIQ verification code is: {$code}",
-                    ]);
-
-                if ($response->successful()) {
-                    Log::info('NextSMS send response', ['phone' => $phone, 'to' => $to, 'resp' => $response->body()]);
-                    return response()->json(['status' => 'ok']);
-                }
-
-                $respBody = $response->body();
-                Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBody]);
-
-                $details = [
-                    'provider' => 'nextsms',
-                    'http_status' => $response->status(),
-                    'response_body' => $respBody,
-                    'request' => [
-                        'from' => $nextsmsSender,
-                        'to' => $to,
-                        'text' => "Your TARIQ verification code is: {$code}",
-                        'base_url' => $nextsmsBaseUrl,
-                    ],
-                ];
-
-                $devDetails = env('APP_ENV') !== 'production';
-
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'SMS provider error',
-                    'details' => $devDetails ? $details : null,
-                ], 500);
-            } catch (Exception $e) {
-                Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
-            }
-        }
-
         // Only NextSMS provider is supported now
         if ($provider === 'nextsms' && $nextsmsUsername && $nextsmsPassword) {
             try {
