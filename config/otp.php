@@ -20,7 +20,7 @@ return [
     'nextsms_base_url' => env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'),
     'nextsms_sender' => env('NEXTSMS_SENDER', 'NEXTSMS'),
     // Developer fallback: if true, return codes in API responses (useful for testing)
-    'dev_fallback' => env('OTP_DEV', false),
+    'dev_fallback' => env('OTP_DEV', 'false') === 'true',
     // Email alerting for abuse attempts
     'alert_enabled' => env('OTP_ALERT_ENABLED', true),
     'alert_threshold' => env('OTP_ALERT_THRESHOLD', 3), // Send alert after N blocked send attempts or N failed verify attempts
