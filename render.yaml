@@ -13,7 +13,6 @@ services:
         touch database/database.sqlite
       fi
       chmod -R 775 database storage bootstrap/cache
-      php artisan config:cache
       php artisan optimize:clear
     envVars:
       - key: APP_ENV
@@ -55,4 +54,4 @@ services:
       - key: ADMIN_EMAIL
         value: 'admin@tariq.go.tz'
     startCommand: |
-      sh -lc "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
+      sh -lc "/usr/local/bin/docker-entrypoint.sh"
