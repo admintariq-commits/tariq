@@ -14,7 +14,7 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
   export DATABASE_URL="$DB_URL"
   export DB_URL="$DB_URL"
 
-  eval "$(php -r '
+  php -r '
     $url = getenv("DATABASE_URL") ?: getenv("DB_URL");
     if ($url === false) {
       return;
@@ -31,13 +31,18 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
     ];
     foreach ($mapping as $key => $env) {
       if (!empty($parts[$key])) {
-        printf("export %s=%s\n", $env, escapeshellarg($parts[$key]));
+        printf("%s=%s\n", $env, str_replace("\n", "\\n", $parts[$key]));
       }
     }
     if (!empty($parts["path"])) {
-      printf("export DB_DATABASE=%s\n", escapeshellarg(ltrim($parts["path"], "/")));
+      printf("DB_DATABASE=%s\n", ltrim($parts["path"], "/"));
     }
-  '")"
+  ' > /tmp/render_db_env
+
+  if [ -f /tmp/render_db_env ]; then
+    . /tmp/render_db_env
+    rm -f /tmp/render_db_env
+  fi
 
   # Ensure DB_CONNECTION is pgsql and DB_PORT is set in .env if it exists.
   if grep -q "^DB_CONNECTION=" .env; then
