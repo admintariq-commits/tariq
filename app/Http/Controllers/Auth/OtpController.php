@@ -11,24 +11,7 @@ use Exception;
 
 class OtpController extends Controller
 {
-    private function normalizeBeemSecret($secret)
-    {
-        if (!is_string($secret) || trim($secret) === '') {
-            return $secret;
-        }
-
-        $candidate = trim($secret);
-        if (!preg_match('/^[A-Za-z0-9+\/]+={0,2}$/', $candidate) || (strlen($candidate) % 4) !== 0) {
-            return $secret;
-        }
-
-        $decoded = base64_decode($candidate, true);
-        if ($decoded === false) {
-            return $secret;
-        }
-
-        return base64_encode($decoded) === $candidate ? $decoded : $secret;
-    }
+    // (Removed Beem/Infobip/Twilio helpers) OTP will use NextSMS as the only provider.
 
     /**
      * Send email alert for abuse attempts if threshold exceeded
@@ -92,22 +75,12 @@ class OtpController extends Controller
         $otpTtl = config('otp.otp_ttl_minutes', 10);
         Cache::put('otp:'.$phone, $code, now()->addMinutes($otpTtl));
 
+        // Use NextSMS as the only provider by default
         $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
-        $twilioSid = env('TWILIO_SID');
-        $twilioToken = env('TWILIO_AUTH_TOKEN');
-        $twilioFrom = env('TWILIO_FROM');
-        $infobipApiKey = config('otp.infobip_api_key', env('INFOBIP_API_KEY'));
-        $infobipBaseUrl = config('otp.infobip_base_url', env('INFOBIP_BASE_URL', 'https://api.infobip.com'));
-        $infobipFrom = config('otp.infobip_from', env('INFOBIP_FROM'));
         $nextsmsUsername = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
         $nextsmsPassword = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
         $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
         $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'NEXTSMS'));
-        $beemApiKey = config('otp.beem_api_key', env('BEEM_API_KEY'));
-        $beemApiSecret = $this->normalizeBeemSecret(config('otp.beem_api_secret', env('BEEM_SECRET_KEY', env('BEEM_API_SECRET'))));
-        $beemBaseUrl = config('otp.beem_base_url', env('BEEM_BASE_URL', 'https://apiotp.beem.africa/v1/request'));
-        $beemAppId = config('otp.beem_app_id', env('BEEM_APP_ID', '1'));
-        $beemSender = config('otp.beem_sender', env('BEEM_SENDER', 'TARIQ'));
         $otpDev = config('otp.dev_fallback', false);
 
         if ($provider === 'nextsms' && $nextsmsUsername && $nextsmsPassword) {
@@ -161,80 +134,54 @@ class OtpController extends Controller
             }
         }
 
-        if ($provider === 'infobip' && $infobipApiKey && $infobipBaseUrl && $infobipFrom) {
+        // Only NextSMS provider is supported now
+        if ($provider === 'nextsms' && $nextsmsUsername && $nextsmsPassword) {
             try {
-                $payload = [
-                    'messages' => [
-                        [
-                            'from' => $infobipFrom,
-                            'destinations' => [ [ 'to' => $phone ] ],
-                            'text' => "Your TARIQ verification code is: {$code}",
-                        ]
-                    ]
-                ];
-
-                $response = Http::withHeaders([
-                    'Authorization' => 'App ' . $infobipApiKey,
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ])->post(rtrim($infobipBaseUrl, '/') . '/sms/2/text/advanced', $payload);
-
-                if ($response->successful()) {
-                    Log::info('Infobip send response', ['phone' => $phone, 'resp' => $response->body()]);
-                    return response()->json(['status' => 'ok']);
+                $to = $phone;
+                if (!str_starts_with($to, '255')) {
+                    $to = '255' . ltrim($to, '0');
                 }
 
-                Log::warning('Infobip send failed', ['phone' => $phone, 'resp' => $response->body()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider error'], 500);
-            } catch (Exception $e) {
-                Log::error('Infobip exception', ['phone' => $phone, 'error' => $e->getMessage()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
-            }
-        }
-
-        if ($provider === 'beem' && $beemApiKey && $beemApiSecret) {
-            try {
-                $payload = [
-                    'appId' => (string) $beemAppId,
-                    'msisdn' => $phone,
-                ];
-
-                $response = Http::withHeaders([
-                    'Authorization' => 'Basic ' . base64_encode($beemApiKey . ':' . $beemApiSecret),
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ])->post(rtrim($beemBaseUrl, '/'), $payload);
-
-                if ($response->successful()) {
-                    Log::info('Beem send response', ['phone' => $phone, 'resp' => $response->body()]);
-                    return response()->json(['status' => 'ok']);
-                }
-
-                Log::warning('Beem send failed', ['phone' => $phone, 'resp' => $response->body()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider error'], 500);
-            } catch (Exception $e) {
-                Log::error('Beem exception', ['phone' => $phone, 'error' => $e->getMessage()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
-            }
-        }
-
-        if ($twilioSid && $twilioToken && $twilioFrom) {
-            try {
-                $body = "Your TARIQ verification code is: {$code}";
-                $response = Http::withBasicAuth($twilioSid, $twilioToken)
-                    ->asForm()
-                    ->post("https://api.twilio.com/2010-04-01/Accounts/{$twilioSid}/Messages.json", [
-                        'From' => $twilioFrom,
-                        'To' => $phone,
-                        'Body' => $body,
+                $response = Http::withBasicAuth($nextsmsUsername, $nextsmsPassword)
+                    ->withHeaders([
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ])
+                    ->post($nextsmsBaseUrl, [
+                        'from' => $nextsmsSender,
+                        'to' => $to,
+                        'text' => "Your TARIQ verification code is: {$code}",
                     ]);
+
                 if ($response->successful()) {
+                    Log::info('NextSMS send response', ['phone' => $phone, 'to' => $to, 'resp' => $response->body()]);
                     return response()->json(['status' => 'ok']);
                 }
-                Log::warning('Twilio send failed', ['resp' => $response->body()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider error'], 500);
+
+                $respBody = $response->body();
+                Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBody]);
+
+                $details = [
+                    'provider' => 'nextsms',
+                    'http_status' => $response->status(),
+                    'response_body' => $respBody,
+                    'request' => [
+                        'from' => $nextsmsSender,
+                        'to' => $to,
+                        'text' => "Your TARIQ verification code is: {$code}",
+                        'base_url' => $nextsmsBaseUrl,
+                    ],
+                ];
+
+                $devDetails = env('APP_ENV') !== 'production';
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'SMS provider error',
+                    'details' => $devDetails ? $details : null,
+                ], 500);
             } catch (Exception $e) {
-                Log::error('Twilio exception', ['error' => $e->getMessage()]);
+                Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage()]);
                 return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
             }
         }

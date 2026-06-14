@@ -14,19 +14,12 @@ return [
     'attempt_ttl_minutes' => env('OTP_ATTEMPT_TTL_MINUTES', 30),
     // SMS provider to use for OTP delivery
     'sms_provider' => env('SMS_PROVIDER', 'nextsms'),
-    'infobip_api_key' => env('INFOBIP_API_KEY'),
+    // NextSMS provider configuration (kept as the only provider)
     'nextsms_username' => env('NEXTSMS_USERNAME'),
     'nextsms_password' => env('NEXTSMS_PASSWORD'),
     'nextsms_base_url' => env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'),
     'nextsms_sender' => env('NEXTSMS_SENDER', 'NEXTSMS'),
-    'infobip_base_url' => env('INFOBIP_BASE_URL', 'https://api.infobip.com'),
-    'infobip_from' => env('INFOBIP_FROM'),
-    'beem_api_key' => env('BEEM_API_KEY'),
-    'beem_api_secret' => env('BEEM_SECRET_KEY', env('BEEM_API_SECRET')),
-    'beem_base_url' => env('BEEM_BASE_URL', 'https://apiotp.beem.africa/v1/request'),
-    'beem_app_id' => env('BEEM_APP_ID', '1'),
-    'beem_sender' => env('BEEM_SENDER', 'TARIQ'),
-    // Developer fallback: if true, return codes in API responses
+    // Developer fallback: if true, return codes in API responses (useful for testing)
     'dev_fallback' => env('OTP_DEV', false),
     // Email alerting for abuse attempts
     'alert_enabled' => env('OTP_ALERT_ENABLED', true),

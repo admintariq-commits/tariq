@@ -28,13 +28,7 @@ services:
       - key: OTP_DEV
         value: 'false'
       - key: SMS_PROVIDER
-        value: 'infobip'
-      - key: INFOBIP_API_KEY
-        value: '7706195a2dec6be5acfc4828b0f41cd2-fa2f05d9-a603-48ce-9d60-a7b08c7f83a7'
-      - key: INFOBIP_BASE_URL
-        value: 'https://qwe862.api.infobip.com'
-      - key: INFOBIP_FROM
-        value: '+447491163443'
+        value: 'nextsms'
       - key: SESSION_DRIVER
         value: file
       - key: SESSION_SECURE_COOKIE
