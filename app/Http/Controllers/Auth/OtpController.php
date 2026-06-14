@@ -122,16 +122,22 @@ class OtpController extends Controller
                     ],
                 ];
 
-                $devDetails = env('APP_ENV') !== 'production';
-
+                // Always show details for debugging NextSMS issues
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'SMS provider error',
-                    'details' => $devDetails ? $details : null,
+                    'message' => 'NextSMS provider error (HTTP ' . $response->status() . ')',
+                    'details' => $details,
                 ], 500);
             } catch (Exception $e) {
-                Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage()]);
-                return response()->json(['status' => 'error', 'message' => 'SMS provider exception'], 500);
+                Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'NextSMS provider exception: ' . $e->getMessage(),
+                    'details' => [
+                        'error' => $e->getMessage(),
+                        'type' => get_class($e),
+                    ]
+                ], 500);
             }
         }
 
