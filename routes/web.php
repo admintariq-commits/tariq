@@ -79,6 +79,26 @@ Route::post('/graduate/register', [RegisterController::class, 'registerGraduate'
 Route::post('/otp/send', [OtpController::class, 'send'])->name('otp.send');
 Route::post('/otp/verify', [OtpController::class, 'verify'])->name('otp.verify');
 
+// Debug endpoint - shows what OTP config is available (for troubleshooting)
+Route::get('/otp/debug', function () {
+    $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
+    $username = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
+    $password = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
+    $baseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
+    $sender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'NEXTSMS'));
+    $devMode = config('otp.dev_fallback', env('OTP_DEV', false));
+    
+    return response()->json([
+        'provider' => $provider,
+        'username' => $username ? '✓ SET (' . strlen($username) . ' chars)' : '✗ NOT SET',
+        'password' => $password ? '✓ SET (' . strlen($password) . ' chars)' : '✗ NOT SET',
+        'base_url' => $baseUrl,
+        'sender' => $sender,
+        'dev_mode' => $devMode ? 'ENABLED (returns codes)' : 'DISABLED',
+        'app_env' => env('APP_ENV'),
+    ]);
+})->name('otp.debug');
+
 // Temporary dev-only test route to trigger OTP send without CSRF (only in non-production)
 if (env('APP_ENV') !== 'production') {
     Route::get('/otp/send-test/{phone}', function ($phone) {
