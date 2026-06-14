@@ -40,9 +40,11 @@ class RegisterController extends Controller
     {
         $validated = $request->validated();
 
-        // Ensure phone OTP was verified in session
+        // Ensure phone OTP was verified in session (skip in local dev)
         $phoneKey = preg_replace('/\s+/', '', $request->phone);
-        if (!session('otp_verified_'.$phoneKey)) {
+        $isLocalDev = env('APP_ENV') === 'local' || env('APP_ENV') === 'development';
+        
+        if (!$isLocalDev && !session('otp_verified_'.$phoneKey)) {
             return back()->withErrors(['phone' => 'Phone number not verified. Please verify with OTP before completing registration.'])->withInput();
         }
 

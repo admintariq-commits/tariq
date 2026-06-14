@@ -94,6 +94,13 @@ if (env('APP_ENV') !== 'production') {
         \Illuminate\Support\Facades\Cache::forget('otp:attempts:'.$phoneKey);
         return response()->json(['status' => 'cleared']);
     })->name('otp.clear');
+
+    Route::get('/artisan/config-clear', function () {
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        return response()->json(['status' => 'config cleared']);
+    })->name('artisan.config-clear');
 }
 
 // Academic verification (before registration or standalone)
