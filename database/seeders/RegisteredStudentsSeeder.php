@@ -27,13 +27,26 @@ class RegisteredStudentsSeeder extends Seeder
             return;
         }
 
+        // Check if we already have graduates seeded (idempotent)
+        $existingCount = Graduate::count();
+        if ($existingCount >= 120) {
+            $this->command->info('Graduate seeding already completed (found ' . $existingCount . ' graduates). Skipping.');
+            return;
+        }
+
         for ($i = 1; $i <= 120; $i++) {
             $first = $faker->firstName;
             $last = $faker->lastName;
+            $email = $faker->unique()->safeEmail;
+
+            // Skip if this user email already exists
+            if (User::where('email', $email)->exists()) {
+                continue;
+            }
 
             $user = User::create([
                 'name' => $first . ' ' . $last,
-                'email' => $faker->unique()->safeEmail,
+                'email' => $email,
                 'password' => Hash::make('password123'),
                 'role_id' => $graduateRole->id,
             ]);
