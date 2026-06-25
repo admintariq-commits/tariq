@@ -79,28 +79,42 @@ class OtpController extends Controller
         $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
         $nextsmsUsername = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
         $nextsmsPassword = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
+        $nextsmsApiToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
         $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
-        $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'NEXTSMS'));
+        $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
+
         $otpDev = config('otp.dev_fallback', false);
 
-        // Only NextSMS provider is supported now
-        if ($provider === 'nextsms' && $nextsmsUsername && $nextsmsPassword) {
+        $to = $phone;
+        if (!str_starts_with($to, '255')) {
+            $to = '255' . ltrim($to, '0');
+        }
+
+        // If developer fallback is enabled explicitly, return code for local/dev testing and skip SMS providers.
+        if ($otpDev) {
+            Log::info('OTP dev-fallback used for phone', ['phone'=>$phone, 'code'=>$code]);
+            return response()->json(['status' => 'ok', 'code' => $code, 'dev' => true]);
+        }
+
+        if ($provider === 'nextsms' && ($nextsmsApiToken || ($nextsmsUsername && $nextsmsPassword))) {
             try {
-                $to = $phone;
-                if (!str_starts_with($to, '255')) {
-                    $to = '255' . ltrim($to, '0');
+                $request = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ]);
+
+                if ($nextsmsApiToken) {
+                    $request = $request->withToken($nextsmsApiToken);
+                } else {
+                    $request = $request->withBasicAuth($nextsmsUsername, $nextsmsPassword);
                 }
 
-                $response = Http::withBasicAuth($nextsmsUsername, $nextsmsPassword)
-                    ->withHeaders([
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ])
-                    ->post($nextsmsBaseUrl, [
-                        'from' => $nextsmsSender,
-                        'to' => $to,
-                        'text' => "Your TARIQ verification code is: {$code}",
-                    ]);
+                $response = $request->post($nextsmsBaseUrl, [
+                    'from' => $nextsmsSender,
+                    'to' => $to,
+                    'text' => "Your TARIQ verification code is: {$code}",
+                    'reference' => 'tariq-otp-' . now()->format('YmdHis'),
+                ]);
 
                 if ($response->successful()) {
                     Log::info('NextSMS send response', ['phone' => $phone, 'to' => $to, 'resp' => $response->body()]);
@@ -118,11 +132,11 @@ class OtpController extends Controller
                         'from' => $nextsmsSender,
                         'to' => $to,
                         'text' => "Your TARIQ verification code is: {$code}",
+                        'reference' => 'tariq-otp-' . now()->format('YmdHis'),
                         'base_url' => $nextsmsBaseUrl,
                     ],
                 ];
 
-                // Always show details for debugging NextSMS issues
                 return response()->json([
                     'status' => 'error',
                     'message' => 'NextSMS provider error (HTTP ' . $response->status() . ')',
@@ -141,14 +155,9 @@ class OtpController extends Controller
             }
         }
 
-        // If developer fallback is enabled explicitly, return code for local/dev testing
-        if ($otpDev) {
-            Log::info('OTP dev-fallback used for phone', ['phone'=>$phone, 'code'=>$code]);
-            return response()->json(['status' => 'ok', 'code' => $code, 'dev' => true]);
-        }
 
         // Otherwise do not expose codes and require provider configuration
-        Log::warning('OTP send attempted but no provider configured', ['phone' => $phone]);
+        Log::warning('OTP send attempted but no provider configured', ['phone' => $phone, 'provider' => $provider]);
         return response()->json(['status' => 'error', 'message' => 'OTP provider not configured'], 422);
     }
 
