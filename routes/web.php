@@ -84,17 +84,34 @@ Route::get('/otp/debug', function () {
     $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
     $username = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
     $password = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
+    $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
     $baseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
-    $sender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
+    $sender = config('otp.nextsms_sender', env('OTP_SENDER', 'UniMessage'));
     $devMode = config('otp.dev_fallback', env('OTP_DEV', false));
-    
+    $testPhones = config('otp.test_phones', []);
+    if (!is_array($testPhones)) {
+        $testPhones = array_values(array_filter(array_map(static function ($value) {
+            $value = trim((string) $value);
+            return $value !== '' ? $value : null;
+        }, explode(',', (string) $testPhones)), static function ($value) {
+            return $value !== null;
+        }));
+    }
+
+    $authMethod = $nextsmsToken ? 'token' : (($username && $password) ? 'basic_auth' : 'none');
+
     return response()->json([
         'provider' => $provider,
+        'auth_method' => $authMethod,
+        'api_token' => $nextsmsToken ? '✓ SET (' . strlen($nextsmsToken) . ' chars)' : '✗ NOT SET',
         'username' => $username ? '✓ SET (' . strlen($username) . ' chars)' : '✗ NOT SET',
         'password' => $password ? '✓ SET (' . strlen($password) . ' chars)' : '✗ NOT SET',
         'base_url' => $baseUrl,
         'sender' => $sender,
         'dev_mode' => $devMode ? 'ENABLED (returns codes)' : 'DISABLED',
+        'test_phones' => $testPhones,
+        'env_otp_test_phones' => env('OTP_TEST_PHONES'),
+        'env_otp_test_phone' => env('OTP_TEST_PHONE'),
         'app_env' => env('APP_ENV'),
     ]);
 })->name('otp.debug');
