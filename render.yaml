@@ -27,6 +27,8 @@ services:
         value: 'https://tariq-1nqr.onrender.com'
       - key: OTP_DEV
         value: 'false'
+      - key: OTP_COOLDOWN_SECONDS
+        value: '60'
       - key: OTP_TEST_PHONE
         value: '255626522599'
       - key: OTP_TEST_PHONES

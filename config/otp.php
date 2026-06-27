@@ -5,7 +5,7 @@ return [
     // Window (seconds) during which sends are counted
     'send_window_seconds' => env('OTP_SEND_WINDOW_SECONDS', 15 * 60),
     // Cooldown (seconds) applied after exceeding sends
-    'cooldown_seconds' => env('OTP_COOLDOWN_SECONDS', 15 * 60),
+    'cooldown_seconds' => env('OTP_COOLDOWN_SECONDS', 60),
     // OTP Time To Live in minutes
     'otp_ttl_minutes' => env('OTP_TTL_MINUTES', 10),
     // Max verification attempts before lockout
