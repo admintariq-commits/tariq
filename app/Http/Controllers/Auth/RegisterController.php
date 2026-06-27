@@ -40,11 +40,13 @@ class RegisterController extends Controller
     {
         $validated = $request->validated();
 
-        // Ensure phone OTP was verified in session (skip in local dev)
+        // Determine if OTP verification should be skipped.
+        // It's skipped only if the app is local AND the OTP dev mode is explicitly disabled.
+        // This allows testing the full OTP flow locally when OTP_DEV=true.
         $phoneKey = preg_replace('/\s+/', '', $request->phone);
-        $isLocalDev = env('APP_ENV') === 'local' || env('APP_ENV') === 'development';
-        
-        if (!$isLocalDev && !session('otp_verified_'.$phoneKey)) {
+        $isLocalAndOtpDisabled = in_array(env('APP_ENV'), ['local', 'development']) && !config('otp.dev_fallback');
+
+        if (!$isLocalAndOtpDisabled && !session('otp_verified_'.$phoneKey)) {
             return back()->withErrors(['phone' => 'Phone number not verified. Please verify with OTP before completing registration.'])->withInput();
         }
 

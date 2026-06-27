@@ -161,9 +161,9 @@ class OtpController extends Controller
 
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'NextSMS provider error (HTTP ' . $response->status() . ')',
+                    'message' => $details['response_body']['message'] ?? 'NextSMS provider error (HTTP ' . $response->status() . ')',
                     'details' => $details,
-                ], 500);
+                ], $response->status());
             } catch (Exception $e) {
                 Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
                 return response()->json([

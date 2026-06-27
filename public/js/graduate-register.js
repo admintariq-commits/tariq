@@ -200,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.details) {
                     errorMessage += '\n' + JSON.stringify(data.details, null, 2);
                 }
-                alert(errorMessage);
                 if (otpResult) {
                     otpResult.textContent = errorMessage;
                     otpResult.classList.remove('text-emerald-600');
