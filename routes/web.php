@@ -99,8 +99,8 @@ Route::get('/otp/debug', function () {
     ]);
 })->name('otp.debug');
 
-// Temporary dev-only test route to trigger OTP send without CSRF (only in non-production)
-if (env('APP_ENV') !== 'production') {
+// Temporary test route to trigger OTP send without CSRF for local/dev or a configured hosted test phone list
+if (env('APP_ENV') !== 'production' || env('OTP_TEST_PHONES') || env('OTP_TEST_PHONE')) {
     Route::get('/otp/send-test/{phone}', function ($phone) {
         request()->merge(['phone' => $phone]);
         return app(\App\Http\Controllers\Auth\OtpController::class)->send(request());

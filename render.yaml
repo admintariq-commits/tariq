@@ -27,6 +27,10 @@ services:
         value: 'https://tariq-1nqr.onrender.com'
       - key: OTP_DEV
         value: 'false'
+      - key: OTP_TEST_PHONE
+        value: '255626522599'
+      - key: OTP_TEST_PHONES
+        value: '255626522599'
       - key: SMS_PROVIDER
         value: 'nextsms'
       - key: SESSION_DRIVER

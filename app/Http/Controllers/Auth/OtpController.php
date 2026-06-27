@@ -36,10 +36,21 @@ class OtpController extends Controller
             Log::error('Failed to send abuse alert', ['error' => $e->getMessage()]);
         }
     }
+    private function normalizePhone($phone)
+    {
+        $phone = preg_replace('/\s+/', '', (string) $phone);
+        $phone = ltrim($phone, '+');
+        if (!str_starts_with($phone, '255')) {
+            $phone = '255' . ltrim($phone, '0');
+        }
+
+        return $phone;
+    }
+
     public function send(Request $request)
     {
         $request->validate([ 'phone' => 'required' ]);
-        $phone = preg_replace('/\\s+/', '', $request->phone);
+        $phone = $this->normalizePhone($request->phone);
 
         // Basic per-phone send rate limiting (in addition to route throttle)
         $sendKey = 'otp:send_count:'.$phone;
@@ -84,15 +95,26 @@ class OtpController extends Controller
         $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
 
         $otpDev = config('otp.dev_fallback', false);
+        $rawTestPhones = config('otp.test_phones', config('otp.test_phone', env('OTP_TEST_PHONE')));
+        if (!is_array($rawTestPhones)) {
+            $rawTestPhones = array_values(array_filter(array_map(static function ($value) {
+                $value = trim((string) $value);
+                return $value !== '' ? $value : null;
+            }, explode(',', (string) $rawTestPhones)), static function ($value) {
+                return $value !== null;
+            }));
+        }
+        $normalizedTestPhones = array_map(function ($value) {
+            return $this->normalizePhone($value);
+        }, $rawTestPhones);
 
         $to = $phone;
-        if (!str_starts_with($to, '255')) {
-            $to = '255' . ltrim($to, '0');
-        }
+        $useDevFallback = $otpDev || in_array($to, $normalizedTestPhones, true);
 
-        // If developer fallback is enabled explicitly, return code for local/dev testing and skip SMS providers.
-        if ($otpDev) {
-            Log::info('OTP dev-fallback used for phone', ['phone'=>$phone, 'code'=>$code]);
+        // If developer fallback is enabled explicitly, or the phone matches one of the configured test numbers,
+        // return code for safe testing and skip SMS providers.
+        if ($useDevFallback) {
+            Log::info('OTP dev-fallback used for phone', ['phone'=>$phone, 'code'=>$code, 'test_phones'=>$normalizedTestPhones]);
             return response()->json(['status' => 'ok', 'code' => $code, 'dev' => true]);
         }
 

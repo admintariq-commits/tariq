@@ -68,4 +68,54 @@ class OtpProviderTest extends TestCase
         });
     }
 
+    public function test_configured_test_phone_uses_dev_fallback_without_sending_sms(): void
+    {
+        Http::fake([
+            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+                'status' => 'success',
+            ], 200),
+        ]);
+
+        config()->set('otp.sms_provider', 'nextsms');
+        config()->set('otp.nextsms_username', 'test-nextsms-user');
+        config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.dev_fallback', false);
+        config()->set('otp.test_phones', ['255626522599']);
+
+        $controller = new OtpController();
+        $request = new Request(['phone' => '255626522599']);
+
+        $response = app()->call([$controller, 'send'], ['request' => $request]);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('"status":"ok"', $response->getContent());
+        $this->assertStringContainsString('"dev":true', $response->getContent());
+        Http::assertNothingSent();
+    }
+
+    public function test_comma_separated_test_phones_use_dev_fallback_without_sending_sms(): void
+    {
+        Http::fake([
+            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+                'status' => 'success',
+            ], 200),
+        ]);
+
+        config()->set('otp.sms_provider', 'nextsms');
+        config()->set('otp.nextsms_username', 'test-nextsms-user');
+        config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.dev_fallback', false);
+        config()->set('otp.test_phones', ['255626522599', '255712345678']);
+
+        $controller = new OtpController();
+        $request = new Request(['phone' => '255712345678']);
+
+        $response = app()->call([$controller, 'send'], ['request' => $request]);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('"status":"ok"', $response->getContent());
+        $this->assertStringContainsString('"dev":true', $response->getContent());
+        Http::assertNothingSent();
+    }
+
 }

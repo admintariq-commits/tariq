@@ -23,6 +23,13 @@ return [
 
     // Developer fallback: if true, return codes in API responses (useful for testing)
     'dev_fallback' => env('OTP_DEV', 'false') === 'true',
+    // Optional comma-separated test phones that should always use dev fallback for safe hosted testing
+    'test_phones' => array_values(array_filter(array_map(static function ($value) {
+        $value = trim((string) $value);
+        return $value !== '' ? $value : null;
+    }, explode(',', env('OTP_TEST_PHONES', env('OTP_TEST_PHONE', '')))), static function ($value) {
+        return $value !== null;
+    })),
     // Email alerting for abuse attempts
     'alert_enabled' => env('OTP_ALERT_ENABLED', true),
     'alert_threshold' => env('OTP_ALERT_THRESHOLD', 3), // Send alert after N blocked send attempts or N failed verify attempts
