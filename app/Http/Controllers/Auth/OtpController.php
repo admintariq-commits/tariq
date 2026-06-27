@@ -143,13 +143,14 @@ class OtpController extends Controller
                     return response()->json(['status' => 'ok']);
                 }
 
-                $respBody = $response->body();
-                Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBody]);
+                $respBodyArray = $response->json();
+                $respBodyString = $response->body();
+                Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBodyString]);
 
                 $details = [
                     'provider' => 'nextsms',
                     'http_status' => $response->status(),
-                    'response_body' => $respBody,
+                    'response_body' => $respBodyArray ?? $respBodyString,
                     'request' => [
                         'from' => $nextsmsSender,
                         'to' => $to,
@@ -161,7 +162,7 @@ class OtpController extends Controller
 
                 return response()->json([
                     'status' => 'error',
-                    'message' => $details['response_body']['message'] ?? 'NextSMS provider error (HTTP ' . $response->status() . ')',
+                    'message' => $respBodyArray['message'] ?? 'NextSMS provider error (HTTP ' . $response->status() . ')',
                     'details' => $details,
                 ], $response->status());
             } catch (Exception $e) {
