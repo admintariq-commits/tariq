@@ -20,6 +20,7 @@ class OtpProviderTest extends TestCase
         config()->set('otp.sms_provider', 'nextsms');
         config()->set('otp.nextsms_username', 'test-nextsms-user');
         config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.nextsms_api_token', null);
         config()->set('otp.dev_fallback', false);
 
         $controller = new OtpController();
@@ -51,6 +52,7 @@ class OtpProviderTest extends TestCase
         config()->set('otp.sms_provider', 'nextsms');
         config()->set('otp.nextsms_username', 'test-nextsms-user');
         config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.nextsms_api_token', null);
         config()->set('otp.nextsms_sender', 'UniMessageID');
         config()->set('otp.dev_fallback', false);
 
@@ -79,6 +81,7 @@ class OtpProviderTest extends TestCase
         config()->set('otp.sms_provider', 'nextsms');
         config()->set('otp.nextsms_username', 'test-nextsms-user');
         config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.nextsms_api_token', null);
         config()->set('otp.dev_fallback', false);
         config()->set('otp.test_phones', ['255626522599']);
 
@@ -104,11 +107,39 @@ class OtpProviderTest extends TestCase
         config()->set('otp.sms_provider', 'nextsms');
         config()->set('otp.nextsms_username', 'test-nextsms-user');
         config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.nextsms_api_token', null);
         config()->set('otp.dev_fallback', false);
         config()->set('otp.test_phones', ['255626522599', '255712345678']);
 
         $controller = new OtpController();
         $request = new Request(['phone' => '255712345678']);
+
+        $response = app()->call([$controller, 'send'], ['request' => $request]);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('"status":"ok"', $response->getContent());
+        $this->assertStringContainsString('"dev":true', $response->getContent());
+        Http::assertNothingSent();
+    }
+
+    public function test_nextsms_auth_failure_uses_dev_fallback_when_enabled(): void
+    {
+        Http::fake([
+            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+                'success' => false,
+                'status' => 403,
+                'message' => 'Not Authorized',
+            ], 403),
+        ]);
+
+        config()->set('otp.sms_provider', 'nextsms');
+        config()->set('otp.nextsms_username', 'test-nextsms-user');
+        config()->set('otp.nextsms_password', 'test-nextsms-pass');
+        config()->set('otp.nextsms_api_token', null);
+        config()->set('otp.dev_fallback', true);
+
+        $controller = new OtpController();
+        $request = new Request(['phone' => '255682111222']);
 
         $response = app()->call([$controller, 'send'], ['request' => $request]);
 

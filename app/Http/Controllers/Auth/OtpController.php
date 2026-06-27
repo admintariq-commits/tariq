@@ -147,6 +147,16 @@ class OtpController extends Controller
                 $respBodyString = $response->body();
                 Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBodyString]);
 
+                if ($useDevFallback && in_array($response->status(), [401, 403], true)) {
+                    Log::warning('NextSMS auth failed; using dev fallback', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBodyString]);
+                    return response()->json([
+                        'status' => 'ok',
+                        'code' => $code,
+                        'dev' => true,
+                        'message' => 'NextSMS authentication failed; dev fallback active',
+                    ]);
+                }
+
                 $details = [
                     'provider' => 'nextsms',
                     'http_status' => $response->status(),
