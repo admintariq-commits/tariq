@@ -120,6 +120,34 @@ document.addEventListener('DOMContentLoaded', function () {
     locateUser();
     const verifyUrl = modal.dataset.otpVerifyUrl;
     const csrfToken = modal.dataset.csrfToken;
+    async function autoVerifyDevOtp(phone, code) {
+        if (!verifyBtn || !otpResult || !submitBtn) return;
+
+        verifyBtn.disabled = true;
+        otpResult.textContent = 'Auto-verifying dev OTP...';
+        otpResult.classList.remove('text-red-600', 'text-emerald-600');
+
+        const response = await fetch(verifyUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: JSON.stringify({ phone: phone, code: code })
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            otpResult.textContent = 'Phone verified ✓';
+            otpResult.classList.add('text-emerald-600');
+            submitBtn.disabled = false;
+            if (otpInput) otpInput.disabled = true;
+            if (sendBtn) sendBtn.disabled = true;
+        } else {
+            otpResult.textContent = 'Auto-verification failed: ' + (data.message || 'Unknown error');
+            otpResult.classList.add('text-red-600');
+            if (verifyBtn) verifyBtn.disabled = false; // Allow manual retry
+        }
+    }
+
 
     if (sendBtn && phoneInput && sendUrl) {
         sendBtn.addEventListener('click', async function () {
@@ -149,6 +177,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             if (data.status === 'ok') {
+                // If in dev mode with a code, auto-verify it.
+                if (data.dev && data.code) {
+                    otpNotice.classList.remove('hidden');
+                    otpNotice.textContent = 'Dev mode: OTP received, auto-verifying...';
+                    autoVerifyDevOtp(phone, data.code);
+                    return; // Stop further execution
+                }
                 if (otpInput) otpInput.disabled = false;
                 if (verifyBtn) verifyBtn.disabled = false;
                 if (otpResult) {
@@ -161,7 +196,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     otpNotice.textContent = data.dev && data.code ? 'OTP sent (dev code: ' + data.code + ')' : 'OTP sent — check your SMS messages.';
                 }
             } else {
-                alert(data.message || 'Failed to send OTP');
+                let errorMessage = data.message || 'Failed to send OTP';
+                if (data.details) {
+                    errorMessage += '\n' + JSON.stringify(data.details, null, 2);
+                }
+                alert(errorMessage);
+                if (otpResult) {
+                    otpResult.textContent = errorMessage;
+                    otpResult.classList.remove('text-emerald-600');
+                    otpResult.classList.add('text-red-600');
+                }
             }
         });
     }
