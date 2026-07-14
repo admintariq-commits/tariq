@@ -44,6 +44,44 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
     rm -f /tmp/render_db_env
   fi
 
+  echo "DATABASE_URL=$DATABASE_URL"
+  echo "DB_URL=$DB_URL"
+  echo "DB_HOST=$DB_HOST"
+  echo "DB_PORT=$DB_PORT"
+  echo "DB_DATABASE=$DB_DATABASE"
+
+  if [ -f .env ]; then
+    php -r '
+      $envPath = ".env";
+      $contents = file($envPath, FILE_IGNORE_NEW_LINES);
+      $updates = [
+          "DB_CONNECTION" => getenv("DB_CONNECTION"),
+          "DB_HOST" => getenv("DB_HOST"),
+          "DB_PORT" => getenv("DB_PORT"),
+          "DB_DATABASE" => getenv("DB_DATABASE"),
+          "DB_USERNAME" => getenv("DB_USERNAME"),
+          "DB_PASSWORD" => getenv("DB_PASSWORD"),
+      ];
+      foreach ($updates as $key => $value) {
+          if ($value === false) {
+              continue;
+          }
+          $found = false;
+          foreach ($contents as &$line) {
+              if (strpos($line, $key . "=") === 0) {
+                  $line = $key . "=" . $value;
+                  $found = true;
+                  break;
+              }
+          }
+          if (! $found) {
+              $contents[] = $key . "=" . $value;
+          }
+      }
+      file_put_contents($envPath, implode("\n", $contents) . "\n");
+    '
+  fi
+
   # Ensure DB_CONNECTION is pgsql and DB_PORT is set in .env if it exists.
   if grep -q "^DB_CONNECTION=" .env; then
     sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=pgsql/' .env
@@ -62,6 +100,21 @@ mkdir -p database
 if [ "$(grep -E '^DB_CONNECTION=' .env | cut -d'=' -f2)" = "sqlite" ]; then
   touch database/database.sqlite
   chmod 777 database/database.sqlite
+fi
+
+echo "Waiting for DB_HOST=$DB_HOST to resolve..."
+RETRY_DNS=0
+until [ $RETRY_DNS -ge 30 ]; do
+  if getent hosts "$DB_HOST" >/dev/null 2>&1; then
+    echo "DB_HOST resolved: $DB_HOST"
+    break
+  fi
+  RETRY_DNS=$((RETRY_DNS + 1))
+  echo "Waiting for DB_HOST DNS resolution ($RETRY_DNS/30)..."
+  sleep 2
+done
+if [ $RETRY_DNS -ge 30 ]; then
+  echo "ERROR: DB_HOST did not resolve after 30 attempts: $DB_HOST"
 fi
 
 php artisan key:generate --ansi --force
