@@ -86,118 +86,69 @@ class OtpController extends Controller
         $otpTtl = config('otp.otp_ttl_minutes', 10);
         Cache::put('otp:'.$phone, $code, now()->addMinutes($otpTtl));
 
-        // Use NextSMS as the only provider by default
-        $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
         $nextsmsUsername = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
         $nextsmsPassword = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
-        $nextsmsApiToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
+        $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
         $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
         $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
+        $devFallback = config('otp.dev_fallback', env('OTP_DEV', false));
+        $testPhones = config('otp.test_phones', env('OTP_TEST_PHONES', env('OTP_TEST_PHONE', [])));
 
-        $otpDev = config('otp.dev_fallback', false);
-        $rawTestPhones = config('otp.test_phones', config('otp.test_phone', env('OTP_TEST_PHONE')));
-        if (!is_array($rawTestPhones)) {
-            $rawTestPhones = array_values(array_filter(array_map(static function ($value) {
+        if (!is_array($testPhones)) {
+            $testPhones = array_values(array_filter(array_map(static function ($value) {
                 $value = trim((string) $value);
                 return $value !== '' ? $value : null;
-            }, explode(',', (string) $rawTestPhones)), static function ($value) {
+            }, explode(',', (string) $testPhones)), static function ($value) {
                 return $value !== null;
             }));
         }
-        $normalizedTestPhones = array_map(function ($value) {
-            return $this->normalizePhone($value);
-        }, $rawTestPhones);
 
-        $to = $phone;
-        $useDevFallback = $otpDev || in_array($to, $normalizedTestPhones, true);
+        $testPhones = array_map([$this, 'normalizePhone'], $testPhones);
 
-        // If developer fallback is enabled explicitly, or the phone matches one of the configured test numbers,
-        // return code for safe testing and skip SMS providers.
-        if ($useDevFallback) {
-            Log::info('OTP dev-fallback used for phone', ['phone'=>$phone, 'code'=>$code, 'test_phones'=>$normalizedTestPhones]);
-            return response()->json(['status' => 'ok', 'code' => $code, 'dev' => true]);
+        if ($devFallback || in_array($phone, $testPhones, true)) {
+            return response()->json(['status' => 'ok', 'dev' => true, 'code' => $code]);
         }
 
-        if ($provider === 'nextsms' && ($nextsmsApiToken || ($nextsmsUsername && $nextsmsPassword))) {
-            try {
-                $request = Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ]);
+        if (!$nextsmsBaseUrl || !$nextsmsSender || (!$nextsmsToken && !($nextsmsUsername && $nextsmsPassword))) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'NextSMS provider is not configured properly.',
+            ], 500);
+        }
 
-                if ($nextsmsApiToken) {
-                    $request = $request->withToken($nextsmsApiToken);
-                } else {
-                    $request = $request->withBasicAuth($nextsmsUsername, $nextsmsPassword);
-                }
+        try {
+            $client = Http::withHeaders(['Accept' => 'application/json']);
 
-                $response = $request->post($nextsmsBaseUrl, [
-                    'from' => $nextsmsSender,
-                    'to' => $to,
-                    'text' => "Your TARIQ verification code is: {$code}",
-                    'reference' => 'tariq-otp-' . now()->format('YmdHis'),
-                ]);
-
-                if ($response->successful()) {
-                    Log::info('NextSMS send response', ['phone' => $phone, 'to' => $to, 'resp' => $response->body()]);
-                    return response()->json(['status' => 'ok']);
-                }
-
-                $respBodyArray = $response->json();
-                $respBodyString = $response->body();
-                Log::warning('NextSMS send failed', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBodyString]);
-
-                if ($useDevFallback && in_array($response->status(), [401, 403], true)) {
-                    Log::warning('NextSMS auth failed; using dev fallback', ['phone' => $phone, 'to' => $to, 'status' => $response->status(), 'resp' => $respBodyString]);
-                    return response()->json([
-                        'status' => 'ok',
-                        'code' => $code,
-                        'dev' => true,
-                        'message' => 'NextSMS authentication failed; dev fallback active',
-                    ]);
-                }
-
-                $details = [
-                    'provider' => 'nextsms',
-                    'http_status' => $response->status(),
-                    'response_body' => $respBodyArray ?? $respBodyString,
-                    'request' => [
-                        'from' => $nextsmsSender,
-                        'to' => $to,
-                        'text' => "Your TARIQ verification code is: {$code}",
-                        'reference' => 'tariq-otp-' . now()->format('YmdHis'),
-                        'base_url' => $nextsmsBaseUrl,
-                    ],
-                ];
-
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $respBodyArray['message'] ?? 'NextSMS provider error (HTTP ' . $response->status() . ')',
-                    'details' => $details,
-                ], $response->status());
-            } catch (Exception $e) {
-                Log::error('NextSMS exception', ['phone' => $phone, 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'NextSMS provider exception: ' . $e->getMessage(),
-                    'details' => [
-                        'error' => $e->getMessage(),
-                        'type' => get_class($e),
-                    ]
-                ], 500);
+            if ($nextsmsToken) {
+                $client = $client->withToken($nextsmsToken);
+            } else {
+                $client = $client->withBasicAuth($nextsmsUsername, $nextsmsPassword);
             }
+
+            $response = $client->post($nextsmsBaseUrl, [
+                'from' => $nextsmsSender,
+                'to' => $phone,
+                'text' => "Your TARIQ verification code is: {$code}",
+            ]);
+
+            if ($response->successful()) {
+                return response()->json(['status' => 'ok']);
+            }
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'NextSMS Error: ' . $response->status(),
+                'details' => $response->json(),
+            ], $response->status());
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
-
-
-        // Otherwise do not expose codes and require provider configuration
-        Log::warning('OTP send attempted but no provider configured', ['phone' => $phone, 'provider' => $provider]);
-        return response()->json(['status' => 'error', 'message' => 'OTP provider not configured'], 422);
     }
 
     public function verify(Request $request)
     {
-        $request->validate([ 'phone' => 'required', 'code' => 'required' ]);
-        $phone = preg_replace('/\s+/', '', $request->phone);
+        $request->validate(['phone' => 'required', 'code' => 'required']);
+        $phone = $this->normalizePhone($request->phone);
         // Limit verification attempts per phone to prevent brute force
         $attemptsKey = 'otp:attempts:'.$phone;
         $maxAttempts = config('otp.max_attempts', 5);

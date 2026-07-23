@@ -96,7 +96,35 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslmode' => env('DB_SSLMODE', 'require'),
+            'options' => array_filter([
+                PDO::ATTR_CASE => PDO::CASE_NATURAL,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_ORACLE_NULLS => PDO::NULL_NATURAL,
+                PDO::ATTR_STRINGIFY_FETCHES => false,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ], static function ($value) {
+                return $value !== null;
+            }),
+            'application_name' => env('APP_NAME', 'Tariq'),
+            'dsn' => function () {
+                $host = env('DB_HOST', '127.0.0.1');
+                $port = env('DB_PORT', '5432');
+                $database = env('DB_DATABASE', 'laravel');
+                $sslmode = env('DB_SSLMODE', 'require');
+                $endpoint = '';
+
+                if (preg_match('/^([^.]+)/', $host, $matches)) {
+                    $endpoint = $matches[1];
+                }
+
+                $dsn = 'pgsql:host=' . $host . ';dbname=' . $database . ';port=' . $port . ';client_encoding=utf8;sslmode=' . $sslmode;
+                if ($endpoint !== '') {
+                    $dsn .= ';options=endpoint=' . $endpoint;
+                }
+
+                return $dsn;
+            },
         ],
 
         'sqlsrv' => [

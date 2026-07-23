@@ -86,7 +86,7 @@ Route::get('/otp/debug', function () {
     $password = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
     $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
     $baseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
-    $sender = config('otp.nextsms_sender', env('OTP_SENDER', 'UniMessage'));
+    $sender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
     $devMode = config('otp.dev_fallback', env('OTP_DEV', false));
     $testPhones = config('otp.test_phones', []);
     if (!is_array($testPhones)) {

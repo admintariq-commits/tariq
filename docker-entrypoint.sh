@@ -23,6 +23,50 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
     if ($parts === false) {
       return;
     }
+
+    $host = $parts["host"] ?? "";
+    $query = [];
+    if (!empty($parts["query"])) {
+      parse_str($parts["query"], $query);
+    }
+
+    if (stripos($host, "neon.tech") !== false) {
+      $endpoint = "";
+      if (preg_match("/^([^.]+)/", $host, $matches)) {
+        $endpoint = $matches[1];
+      }
+
+      if (!isset($query["sslmode"])) {
+        $query["sslmode"] = "require";
+      }
+      if ($endpoint !== "" && empty($query["options"])) {
+        $query["options"] = "endpoint=" . $endpoint;
+      }
+
+      $newQuery = http_build_query($query, "", "&", PHP_QUERY_RFC3986);
+      $url = ($parts["scheme"] ?? "") . "://";
+      if (!empty($parts["user"])) {
+        $url .= $parts["user"];
+        if (!empty($parts["pass"])) {
+          $url .= ":" . $parts["pass"];
+        }
+        $url .= "@";
+      }
+      $url .= $host;
+      if (!empty($parts["port"])) {
+        $url .= ":" . $parts["port"];
+      }
+      if (!empty($parts["path"])) {
+        $url .= $parts["path"];
+      }
+      if ($newQuery !== "") {
+        $url .= "?" . $newQuery;
+      }
+      printf("DATABASE_URL=%s\n", $url);
+      printf("DB_URL=%s\n", $url);
+      printf("DB_SSLMODE=require\n");
+    }
+
     $mapping = [
       "host" => "DB_HOST",
       "port" => "DB_PORT",
@@ -61,6 +105,7 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
           "DB_DATABASE" => getenv("DB_DATABASE"),
           "DB_USERNAME" => getenv("DB_USERNAME"),
           "DB_PASSWORD" => getenv("DB_PASSWORD"),
+          "DB_SSLMODE" => getenv("DB_SSLMODE"),
       ];
       foreach ($updates as $key => $value) {
           if ($value === false) {

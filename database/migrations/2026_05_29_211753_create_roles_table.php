@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    // Disable transactions for this migration to avoid "current transaction is aborted" errors
+    // when running on Postgres-like providers that wrap migrations in a transaction.
+    public $withinTransaction = false;
     public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {

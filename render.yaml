@@ -50,7 +50,7 @@ services:
       - key: APP_KEY
         value: base64:7EXD3OMomubbovehVLk4WlGjzTkaZsULTBuJ8IcaL1U=
       - key: DB_SSLMODE
-        value: prefer
+        value: require
       - key: ADMIN_EMAIL
         value: 'admin@tariq.go.tz'
     startCommand: |

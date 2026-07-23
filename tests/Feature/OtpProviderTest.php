@@ -70,6 +70,36 @@ class OtpProviderTest extends TestCase
         });
     }
 
+    public function test_nextsms_api_token_is_used_for_bearer_auth(): void
+    {
+        Http::fake([
+            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+                'status' => 'success',
+            ], 200),
+        ]);
+
+        config()->set('otp.sms_provider', 'nextsms');
+        config()->set('otp.nextsms_username', null);
+        config()->set('otp.nextsms_password', null);
+        config()->set('otp.nextsms_api_token', 'test-nextsms-token');
+        config()->set('otp.dev_fallback', false);
+
+        $controller = new OtpController();
+        $request = new Request(['phone' => '255682111222']);
+
+        $response = app()->call([$controller, 'send'], ['request' => $request]);
+
+        $this->assertSame(200, $response->getStatusCode());
+        Http::assertSentCount(1);
+        Http::assertSent(function ($request) {
+            $data = $request->data();
+            return $request->url() === 'https://messaging-service.co.tz/api/sms/v1/text/single'
+                && $request->header('Authorization')[0] === 'Bearer test-nextsms-token'
+                && ($data['from'] ?? null) === 'UniMessage'
+                && ($data['to'] ?? null) === '255682111222';
+        });
+    }
+
     public function test_configured_test_phone_uses_dev_fallback_without_sending_sms(): void
     {
         Http::fake([
