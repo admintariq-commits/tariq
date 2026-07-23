@@ -261,9 +261,9 @@
                                     <div class="w-5 h-5 bg-indigo-100 rounded flex items-center justify-center"><i class="fas fa-phone text-indigo-600 text-xs"></i></div>
                                     Phone *
                                 </label>
-                                <div class="flex gap-2">
+                                <div class="flex flex-col gap-3 sm:flex-row">
                                     <input type="text" id="phoneInput" name="phone" value="{{ old('phone') }}" class="flex-1 border-2 border-slate-200 rounded-xl px-5 py-3 input-field focus:ring-0 transition hover:border-slate-300" placeholder="+255 712 345 678" required>
-                                    <button type="button" id="sendOtpBtn" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition btn-primary">Send OTP</button>
+                                    <button type="button" id="sendOtpBtn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition btn-primary">Send OTP</button>
                                 </div>
                                 <p id="otpNotice" class="text-xs text-emerald-600 mt-3 hidden flex items-center gap-1"><i class="fas fa-check-circle"></i> OTP sent (dev mode shows code).</p>
                             </div>
@@ -308,9 +308,9 @@
                                 <label class="block text-slate-800 text-sm font-bold mb-3 flex items-center gap-2">
                                     <i class="fas fa-lock text-slate-600"></i> Enter OTP
                                 </label>
-                                <div class="flex gap-2">
+                                <div class="flex flex-col gap-3 sm:flex-row">
                                     <input type="text" id="otpInput" class="flex-1 border-2 border-slate-200 rounded-xl px-5 py-3 input-field focus:ring-0 transition hover:border-slate-300" placeholder="000000" disabled>
-                                    <button type="button" id="verifyOtpBtn" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition btn-primary" disabled>Verify</button>
+                                    <button type="button" id="verifyOtpBtn" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition btn-primary" disabled>Verify</button>
                                 </div>
                                 <p id="otpResult" class="text-sm mt-3 font-medium"></p>
                             </div>
@@ -533,24 +533,24 @@
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="flex gap-3 items-center justify-between pt-8 border-t border-slate-200">
-                        <button type="button" @click="previousStep()" class="px-6 py-3 border border-slate-300 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition" :disabled="currentStep === 0" :class="{ 'opacity-50 cursor-not-allowed': currentStep === 0 }">
+                    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-slate-200">
+                        <button type="button" @click="previousStep()" class="w-full sm:w-auto px-6 py-3 border border-slate-300 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition" :disabled="currentStep === 0" :class="{ 'opacity-50 cursor-not-allowed': currentStep === 0 }">
                             <i class="fas fa-chevron-left mr-2"></i> Previous
                         </button>
                         
-                        <div class="flex gap-2">
-                            <button type="button" id="previewBtn" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-lg font-semibold hover:bg-slate-200 transition">
+                        <div class="flex flex-wrap gap-2 justify-end">
+                            <button type="button" id="previewBtn" class="w-full sm:w-auto px-6 py-3 bg-slate-100 text-slate-700 rounded-lg font-semibold hover:bg-slate-200 transition">
                                 <i class="fas fa-eye mr-2"></i> Preview
                             </button>
-                            <button type="button" @click="nextStep()" x-show="currentStep < steps.length - 1" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition btn-next">
+                            <button type="button" @click="nextStep()" x-show="currentStep < steps.length - 1" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition btn-next">
                                 Next <i class="fas fa-chevron-right ml-2"></i>
                             </button>
-                            <button type="submit" @show="currentStep === steps.length - 1" id="submitBtn" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition" :disabled="currentStep !== steps.length - 1">
+                            <button type="submit" @show="currentStep === steps.length - 1" id="submitBtn" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition" :disabled="currentStep !== steps.length - 1">
                                 <i class="fas fa-check mr-2"></i> Complete Registration
                             </button>
                         </div>
                         
-                        <a href="{{ route('login') }}" class="px-6 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition text-center">
+                        <a href="{{ route('login') }}" class="w-full sm:w-auto px-6 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition text-center">
                             Already have account?
                         </a>
                     </div>
