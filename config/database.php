@@ -107,24 +107,7 @@ return [
                 return $value !== null;
             }),
             'application_name' => env('APP_NAME', 'Tariq'),
-            'dsn' => function () {
-                $host = env('DB_HOST', '127.0.0.1');
-                $port = env('DB_PORT', '5432');
-                $database = env('DB_DATABASE', 'laravel');
-                $sslmode = env('DB_SSLMODE', 'require');
-                $endpoint = '';
-
-                if (preg_match('/^([^.]+)/', $host, $matches)) {
-                    $endpoint = $matches[1];
-                }
-
-                $dsn = 'pgsql:host=' . $host . ';dbname=' . $database . ';port=' . $port . ';client_encoding=utf8;sslmode=' . $sslmode;
-                if ($endpoint !== '') {
-                    $dsn .= ';options=endpoint=' . $endpoint;
-                }
-
-                return $dsn;
-            },
+            'dsn' => 'pgsql:host=' . env('DB_HOST', '127.0.0.1') . ';dbname=' . env('DB_DATABASE', 'laravel') . ';port=' . env('DB_PORT', '5432') . ';client_encoding=utf8;sslmode=' . env('DB_SSLMODE', 'require') . (preg_match('/^([^.]+)/', env('DB_HOST', '127.0.0.1'), $matches) ? ';options=endpoint=' . $matches[1] : ''),
         ],
 
         'sqlsrv' => [
