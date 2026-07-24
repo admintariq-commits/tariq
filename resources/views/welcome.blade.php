@@ -34,20 +34,20 @@
 </head>
 <body class="antialiased bg-slate-50 text-slate-900">
     <nav class="bg-white shadow-md fixed w-full z-20 top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-graduation-cap text-white text-lg"></i>
+                <div class="flex items-center gap-2 min-w-0">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-sm sm:text-lg"></i>
                     </div>
-                    <div>
-                        <div class="text-lg font-semibold text-slate-900">TARIQ</div>
-                        <div class="text-xs uppercase tracking-[0.24em] text-slate-500">National Graduate Hub</div>
+                    <div class="min-w-0">
+                        <div class="text-base sm:text-lg font-semibold text-slate-900 truncate">TARIQ</div>
+                        <div class="text-xs uppercase tracking-[0.24em] text-slate-500 truncate hidden sm:block">Hub</div>
                     </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('login') }}" class="text-slate-700 hover:text-purple-600 transition">Login</a>
-                    <a href="{{ route('graduate.register') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-5 py-2 rounded-full font-semibold hover:shadow-lg transition">Register</a>
+                <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                    <a href="{{ route('login') }}" class="text-xs sm:text-sm text-slate-700 hover:text-purple-600 transition whitespace-nowrap">Login</a>
+                    <a href="{{ route('graduate.register') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-full font-semibold hover:shadow-lg transition whitespace-nowrap">Register</a>
                 </div>
             </div>
         </div>
