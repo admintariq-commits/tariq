@@ -31,16 +31,8 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
     }
 
     if (stripos($host, "neon.tech") !== false) {
-      $endpoint = "";
-      if (preg_match("/^([^.]+)/", $host, $matches)) {
-        $endpoint = $matches[1];
-      }
-
       if (!isset($query["sslmode"])) {
         $query["sslmode"] = "require";
-      }
-      if ($endpoint !== "" && empty($query["options"])) {
-        $query["options"] = "endpoint=" . $endpoint;
       }
 
       $newQuery = http_build_query($query, "", "&", PHP_QUERY_RFC3986);

@@ -45,6 +45,18 @@ services:
         value: stderr
       - key: DB_CONNECTION
         value: pgsql
+      - key: DATABASE_URL
+        value: 'postgresql://neondb_owner:npg_ykgfTMnI42qV@ep-polished-butterfly-ayqfh2r6-pooler.c-5.us-east-2.aws.neon.tech/TARIQ?sslmode=require&channel_binding=require'
+      - key: DB_HOST
+        value: 'ep-polished-butterfly-ayqfh2r6-pooler.c-5.us-east-2.aws.neon.tech'
+      - key: DB_PORT
+        value: '5432'
+      - key: DB_DATABASE
+        value: 'TARIQ'
+      - key: DB_USERNAME
+        value: 'neondb_owner'
+      - key: DB_PASSWORD
+        value: 'npg_ykgfTMnI42qV'
       - key: APP_KEY
         value: base64:7EXD3OMomubbovehVLk4WlGjzTkaZsULTBuJ8IcaL1U=
       - key: DB_SSLMODE
