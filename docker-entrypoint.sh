@@ -1,19 +1,24 @@
 #!/bin/sh
 set -e
-set -u
 
 # Create .env from .env.example if it doesn't exist
 if [ ! -f .env ]; then
   cp .env.example .env
 fi
 
-# Initialize database variables
+# Initialize environment variables with safe defaults for Render and local container startup
+DB_CONNECTION="${DB_CONNECTION:-pgsql}"
 DB_HOST="${DB_HOST:-}"
 DB_PORT="${DB_PORT:-5432}"
 DB_DATABASE="${DB_DATABASE:-}"
 DB_USERNAME="${DB_USERNAME:-}"
 DB_PASSWORD="${DB_PASSWORD:-}"
-export DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD
+DATABASE_URL="${DATABASE_URL:-}"
+DB_URL="${DB_URL:-}"
+APP_ENV="${APP_ENV:-production}"
+APP_DEBUG="${APP_DEBUG:-false}"
+APP_KEY="${APP_KEY:-}"
+export DB_CONNECTION DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD DATABASE_URL DB_URL APP_ENV APP_DEBUG APP_KEY
 
 # If Render provides a database URL (DATABASE_URL or DB_URL), force PostgreSQL
 # settings in the generated .env so runtime doesn't pick up old MySQL values.
@@ -100,31 +105,35 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
       $envPath = ".env";
       $contents = file($envPath, FILE_IGNORE_NEW_LINES);
       $updates = [
-          "DB_CONNECTION" => getenv("DB_CONNECTION"),
+          "DB_CONNECTION" => getenv("DB_CONNECTION") ?: "pgsql",
           "DB_HOST" => getenv("DB_HOST"),
-          "DB_PORT" => getenv("DB_PORT"),
+          "DB_PORT" => getenv("DB_PORT") ?: "5432",
           "DB_DATABASE" => getenv("DB_DATABASE"),
           "DB_USERNAME" => getenv("DB_USERNAME"),
           "DB_PASSWORD" => getenv("DB_PASSWORD"),
-          "DB_SSLMODE" => getenv("DB_SSLMODE"),
+          "DB_SSLMODE" => getenv("DB_SSLMODE") ?: "require",
       ];
-      foreach ($updates as $key => $value) {
-          if ($value === false) {
-              continue;
-          }
-          $found = false;
-          foreach ($contents as &$line) {
-              if (strpos($line, $key . "=") === 0) {
-                  $line = $key . "=" . $value;
-                  $found = true;
-                  break;
+
+      $output = [];
+      $seenKeys = [];
+      foreach ($contents as $line) {
+          if (preg_match("/^([A-Za-z_][A-Za-z0-9_]*)=/", $line, $matches)) {
+              $key = $matches[1];
+              if (array_key_exists($key, $updates)) {
+                  continue;
               }
           }
-          if (! $found) {
-              $contents[] = $key . "=" . $value;
-          }
+          $output[] = $line;
       }
-      file_put_contents($envPath, implode("\n", $contents) . "\n");
+
+      foreach ($updates as $key => $value) {
+          if ($value === false || $value === null) {
+              continue;
+          }
+          $output[] = $key . "=" . $value;
+      }
+
+      file_put_contents($envPath, implode("\n", $output) . "\n");
     '
   fi
 
