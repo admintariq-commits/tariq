@@ -27,10 +27,6 @@ services:
         value: 'false'
       - key: OTP_COOLDOWN_SECONDS
         value: '60'
-      - key: OTP_TEST_PHONE
-        value: '255626522599'
-      - key: OTP_TEST_PHONES
-        value: '255626522599'
       - key: SMS_PROVIDER
         value: 'nextsms'
       - key: NEXTSMS_USERNAME

@@ -82,8 +82,8 @@ Route::post('/otp/verify', [OtpController::class, 'verify'])->name('otp.verify')
 // Debug endpoint - shows what OTP config is available (for troubleshooting)
 Route::get('/otp/debug', function () {
     $provider = config('otp.sms_provider', env('SMS_PROVIDER', 'nextsms'));
-    $username = config('otp.nextsms_username', env('NEXTSMS_USERNAME'));
-    $password = config('otp.nextsms_password', env('NEXTSMS_PASSWORD'));
+    $username = config('otp.nextsms_username', env('NEXTSMS_USERNAME', 'josiahmarco93.e9b')) ?: env('NEXTSMS_USERNAME', 'josiahmarco93.e9b');
+    $password = config('otp.nextsms_password', env('NEXTSMS_PASSWORD', 'prince$$127')) ?: env('NEXTSMS_PASSWORD', 'prince$$127');
     $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
     $baseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
     $sender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
