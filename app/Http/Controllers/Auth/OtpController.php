@@ -86,9 +86,9 @@ class OtpController extends Controller
         $otpTtl = config('otp.otp_ttl_minutes', 10);
         Cache::put('otp:'.$phone, $code, now()->addMinutes($otpTtl));
 
-        $nextsmsUsername = config('otp.nextsms_username', env('NEXTSMS_USERNAME', 'josiahmarco93.e9b')) ?: env('NEXTSMS_USERNAME', 'josiahmarco93.e9b');
-        $nextsmsPassword = config('otp.nextsms_password', env('NEXTSMS_PASSWORD', 'prince$$127')) ?: env('NEXTSMS_PASSWORD', 'prince$$127');
-        $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
+        $nextsmsUsername = config('otp.nextsms_username');
+        $nextsmsPassword = config('otp.nextsms_password');
+        $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN', '1ff5a7b05741bcf330c00366016cbfb6'));
         $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
         $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
         $devFallback = false;

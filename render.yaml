@@ -29,10 +29,8 @@ services:
         value: '60'
       - key: SMS_PROVIDER
         value: 'nextsms'
-      - key: NEXTSMS_USERNAME
-        value: 'josiahmarco93.e9b'
-      - key: NEXTSMS_PASSWORD
-        value: 'prince$$127'
+      - key: NEXTSMS_API_TOKEN
+        value: '1ff5a7b05741bcf330c00366016cbfb6'
       - key: NEXTSMS_SENDER
         value: 'UniMessage'
       - key: SESSION_DRIVER
