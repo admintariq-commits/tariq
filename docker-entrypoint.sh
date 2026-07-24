@@ -1,10 +1,19 @@
 #!/bin/sh
 set -e
+set -u
 
 # Create .env from .env.example if it doesn't exist
 if [ ! -f .env ]; then
   cp .env.example .env
 fi
+
+# Initialize database variables
+DB_HOST="${DB_HOST:-}"
+DB_PORT="${DB_PORT:-5432}"
+DB_DATABASE="${DB_DATABASE:-}"
+DB_USERNAME="${DB_USERNAME:-}"
+DB_PASSWORD="${DB_PASSWORD:-}"
+export DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD
 
 # If Render provides a database URL (DATABASE_URL or DB_URL), force PostgreSQL
 # settings in the generated .env so runtime doesn't pick up old MySQL values.
@@ -140,55 +149,73 @@ if [ "$(grep -E '^DB_CONNECTION=' .env | cut -d'=' -f2)" = "sqlite" ]; then
 fi
 
 echo "Waiting for DB_HOST=$DB_HOST to resolve..."
-RETRY_DNS=0
-until [ $RETRY_DNS -ge 30 ]; do
-  if getent hosts "$DB_HOST" >/dev/null 2>&1; then
-    echo "DB_HOST resolved: $DB_HOST"
-    break
+if [ -z "$DB_HOST" ]; then
+  echo "WARNING: DB_HOST is empty - skipping DNS resolution check"
+else
+  RETRY_DNS=0
+  until [ "$RETRY_DNS" -ge 30 ]; do
+    if getent hosts "$DB_HOST" >/dev/null 2>&1; then
+      echo "✓ DB_HOST resolved: $DB_HOST"
+      break
+    fi
+    RETRY_DNS=$((RETRY_DNS + 1))
+    echo "Waiting for DB_HOST DNS resolution ($RETRY_DNS/30)..."
+    sleep 2
+  done
+  if [ "$RETRY_DNS" -ge 30 ]; then
+    echo "WARNING: DB_HOST did not resolve after 30 attempts: $DB_HOST (continuing anyway)"
   fi
-  RETRY_DNS=$((RETRY_DNS + 1))
-  echo "Waiting for DB_HOST DNS resolution ($RETRY_DNS/30)..."
-  sleep 2
-done
-if [ $RETRY_DNS -ge 30 ]; then
-  echo "ERROR: DB_HOST did not resolve after 30 attempts: $DB_HOST"
 fi
 
 if [ -z "${APP_KEY:-}" ]; then
+  echo "Generating APP_KEY..."
   php artisan key:generate --ansi --force
+  echo "✓ APP_KEY generated successfully"
 else
-  echo "APP_KEY already present in the environment; skipping key generation"
+  echo "✓ APP_KEY already present in environment (skipping generation)"
 fi
 
-echo "Clearing caches..."
-php artisan config:cache
+echo "Caching configuration..."
+if php artisan config:cache 2>&1; then
+  echo "✓ Configuration cached successfully"
+else
+  echo "WARNING: config:cache failed, continuing anyway..."
+fi
 
 # Run migrations only (critical for app to start)
 echo "Starting database migrations..."
 RETRY_COUNT=0
-until php artisan migrate --force; do
+MIGRATE_SUCCESS=0
+until php artisan migrate --force 2>&1; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
-  if [ "$RETRY_COUNT" -ge 6 ]; then
-    echo "ERROR: Failed to run migrations after $RETRY_COUNT attempts."
-    echo "Continuing anyway - will attempt to start Apache..."
+  if [ "$RETRY_COUNT" -ge 3 ]; then
+    echo "WARNING: Failed to run migrations after $RETRY_COUNT attempts."
+    echo "Will start Apache anyway - database may be unavailable."
+    MIGRATE_SUCCESS=1
     break
   fi
-  echo "Database not ready yet, retrying migrations in 5 seconds... ($RETRY_COUNT/6)"
-  sleep 5
+  echo "Database not ready yet, retrying migrations in 3 seconds... ($RETRY_COUNT/3)"
+  sleep 3
 done
 
-echo "Migrations completed."
+if [ "$MIGRATE_SUCCESS" -eq 0 ]; then
+  echo "✓ Migrations completed successfully."
+fi
 
-# Try seeding but don't fail if it errors (optional)
-echo "Attempting to seed database..."
-php artisan db:seed --force 2>&1 | head -20 || true
-echo "Seeding attempt complete."
+# Try seeding but always continue regardless of result
+echo "Attempting optional database seeding..."
+if php artisan db:seed --force 2>&1 | head -10; then
+  echo "Database seeding completed successfully."
+else
+  SEED_EXIT_CODE=$?
+  echo "WARNING: Database seeding failed with exit code $SEED_EXIT_CODE (this is optional - continuing)"
+fi
 
 echo ""
 echo "=========================================="
-echo "Application initialization completed."
-echo "Starting Apache web server on port 80..."
+echo "✓ Initialization complete - starting Apache"
 echo "=========================================="
 echo ""
 
+# Start Apache and keep it running
 exec apache2-foreground
