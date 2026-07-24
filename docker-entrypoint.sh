@@ -161,15 +161,23 @@ else
 fi
 php artisan config:cache
 
+# Run migrations only (critical for app to start)
 RETRY_COUNT=0
-until php artisan migrate --force && php artisan db:seed --force; do
+until php artisan migrate --force; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
   if [ "$RETRY_COUNT" -ge 6 ]; then
-    echo "Failed to run migrations after $RETRY_COUNT attempts. Exiting."
+    echo "ERROR: Failed to run migrations after $RETRY_COUNT attempts. Exiting."
     exit 1
   fi
-  echo "Database not ready yet, retrying in 5 seconds... ($RETRY_COUNT/6)"
+  echo "Database not ready yet, retrying migrations in 5 seconds... ($RETRY_COUNT/6)"
   sleep 5
 done
+
+echo "Migrations completed successfully."
+
+# Try seeding but don't fail if it errors (optional)
+echo "Attempting to seed database..."
+php artisan db:seed --force 2>&1 | head -50 || true
+echo "Seeding complete (or skipped if errors occurred)."
 
 exec apache2-foreground
