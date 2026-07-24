@@ -15,8 +15,8 @@ return [
     // SMS provider to use for OTP delivery
     'sms_provider' => env('SMS_PROVIDER', 'nextsms'),
     // NextSMS provider configuration (kept as the default provider)
-    'nextsms_username' => env('NEXTSMS_USERNAME'),
-    'nextsms_password' => env('NEXTSMS_PASSWORD'),
+    'nextsms_username' => env('NEXTSMS_USERNAME', 'josiahmarco93.e9b'),
+    'nextsms_password' => env('NEXTSMS_PASSWORD', 'prince$$127'),
     'nextsms_api_token' => env('NEXTSMS_API_TOKEN'),
     'nextsms_base_url' => env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'),
     'nextsms_sender' => env('NEXTSMS_SENDER', 'UniMessage'),
