@@ -91,8 +91,8 @@ class OtpController extends Controller
         $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN'));
         $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
         $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
-        $devFallback = config('otp.dev_fallback', env('OTP_DEV', false));
-        $testPhones = config('otp.test_phones', env('OTP_TEST_PHONES', env('OTP_TEST_PHONE', [])));
+        $devFallback = false;
+        $testPhones = [];
 
         if (!is_array($testPhones)) {
             $testPhones = array_values(array_filter(array_map(static function ($value) {
