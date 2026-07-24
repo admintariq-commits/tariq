@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('ip_address')->nullable()->after('password');
-            $table->text('user_agent')->nullable()->after('ip_address');
-            $table->float('bot_score')->default(0)->after('user_agent'); // 0-1 score
-            $table->boolean('vpn_detected')->default(false)->after('bot_score');
-            $table->boolean('is_suspicious')->default(false)->after('vpn_detected');
-            $table->json('security_flags')->nullable()->after('is_suspicious');
-            $table->timestamp('last_login_at')->nullable()->after('security_flags');
-            $table->timestamp('last_suspicious_activity_at')->nullable()->after('last_login_at');
+            $table->string('ip_address')->nullable();
+            $table->text('user_agent')->nullable();
+            $table->float('bot_score')->default(0); // 0-1 score
+            $table->boolean('vpn_detected')->default(false);
+            $table->boolean('is_suspicious')->default(false);
+            $table->json('security_flags')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->timestamp('last_suspicious_activity_at')->nullable();
             
             $table->index('bot_score');
             $table->index('vpn_detected');
@@ -27,10 +27,10 @@ return new class extends Migration
         });
 
         Schema::table('graduates', function (Blueprint $table) {
-            $table->string('document_hash')->nullable()->after('resume_path');
-            $table->enum('document_verification_status', ['pending', 'verified', 'rejected', 'manual_review'])->default('pending')->after('document_hash');
-            $table->timestamp('document_verified_at')->nullable()->after('document_verification_status');
-            $table->string('document_verified_by')->nullable()->after('document_verified_at');
+            $table->string('document_hash')->nullable();
+            $table->enum('document_verification_status', ['pending', 'verified', 'rejected', 'manual_review'])->default('pending');
+            $table->timestamp('document_verified_at')->nullable();
+            $table->string('document_verified_by')->nullable();
             
             $table->index('document_verification_status');
         });

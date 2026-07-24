@@ -10,26 +10,26 @@ return new class extends Migration
     {
         Schema::table('graduates', function (Blueprint $table) {
             // Personal information
-            $table->string('national_id')->nullable()->after('phone');
-            $table->enum('gender', ['male', 'female', 'other'])->nullable()->after('national_id');
+            $table->string('national_id')->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
 
             // Academic information (text fields as fallback)
-            $table->string('university')->nullable()->after('university_id');
-            $table->string('course')->nullable()->after('course_id');
-            $table->enum('degree', ['diploma', 'bachelor', 'master', 'phd'])->nullable()->after('gpa');
-            $table->integer('graduation_year')->nullable()->after('graduation_date');
+            $table->string('university')->nullable();
+            $table->string('course')->nullable();
+            $table->enum('degree', ['diploma', 'bachelor', 'master', 'phd'])->nullable();
+            $table->integer('graduation_year')->nullable();
 
             // Geographic & Career information
-            $table->string('region')->nullable()->after('employment_status');
-            $table->string('job_title')->nullable()->after('region');
-            $table->integer('expected_salary')->nullable()->after('job_title');
-            $table->integer('experience_years')->nullable()->after('expected_salary');
-            $table->string('linkedin')->nullable()->after('experience_years');
+            $table->string('region')->nullable();
+            $table->string('job_title')->nullable();
+            $table->integer('expected_salary')->nullable();
+            $table->integer('experience_years')->nullable();
+            $table->string('linkedin')->nullable();
 
             // Skills & Languages
-            $table->text('languages')->nullable()->after('skills');
-            $table->text('certifications')->nullable()->after('languages');
-            $table->text('job_preferences')->nullable()->after('certifications');
+            $table->text('languages')->nullable();
+            $table->text('certifications')->nullable();
+            $table->text('job_preferences')->nullable();
         });
     }
 

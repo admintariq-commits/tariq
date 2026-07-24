@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('graduates', function (Blueprint $table) {
             if (!Schema::hasColumn('graduates', 'phone_verified')) {
-                $table->boolean('phone_verified')->default(false)->after('resume_path');
+                $table->boolean('phone_verified')->default(false);
             }
         });
     }

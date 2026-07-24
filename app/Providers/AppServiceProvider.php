@@ -73,15 +73,19 @@ class AppServiceProvider extends ServiceProvider
             if (Schema::hasTable('users') && Schema::hasTable('roles')) {
                 $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
-                User::firstOrCreate(
-                    ['email' => 'admin@tariq.go.tz'],
-                    [
-                        'name' => 'TARIQ Admin',
-                        'password' => Hash::make('Admin1234!'),
-                        'role_id' => $adminRole->id,
-                        'email_verified_at' => now(),
-                    ]
-                );
+                try {
+                    User::firstOrCreate(
+                        ['email' => 'admin@tariq.go.tz'],
+                        [
+                            'name' => 'TARIQ Admin',
+                            'password' => Hash::make('Admin1234!'),
+                            'role_id' => $adminRole->id,
+                            'email_verified_at' => now(),
+                        ]
+                    );
+                } catch (\Throwable $e) {
+                    logger()->warning('Admin bootstrap skipped due to database error: ' . $e->getMessage());
+                }
             }
         } catch (\Throwable $e) {
             // Database not available or query failed

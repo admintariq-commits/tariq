@@ -39,31 +39,40 @@ class RegisteredStudentsSeeder extends Seeder
             $last = $faker->lastName;
             $email = $faker->unique()->safeEmail;
 
-            // Skip if this user email already exists
-            if (User::where('email', $email)->exists()) {
+            try {
+                $user = User::firstOrCreate(
+                    ['email' => $email],
+                    [
+                        'name' => $first . ' ' . $last,
+                        'password' => Hash::make('password123'),
+                        'role_id' => $graduateRole->id,
+                    ]
+                );
+            } catch (\Throwable $e) {
                 continue;
             }
 
-            $user = User::create([
-                'name' => $first . ' ' . $last,
-                'email' => $email,
-                'password' => Hash::make('password123'),
-                'role_id' => $graduateRole->id,
-            ]);
+            if (Graduate::where('user_id', $user->id)->exists()) {
+                continue;
+            }
 
-            Graduate::create([
-                'user_id' => $user->id,
-                'first_name' => $first,
-                'last_name' => $last,
-                'graduation_date' => $faker->dateTimeBetween('-8 years', 'now')->format('Y-m-d'),
-                'university_id' => $faker->randomElement($universities),
-                'course_id' => $faker->randomElement($courses),
-                'gpa' => $faker->randomFloat(2, 2.0, 4.0),
-                'phone' => $faker->phoneNumber,
-                'employment_status' => $faker->randomElement(['employed', 'self_employed', 'unemployed']),
-                'graduation_year' => $faker->year(),
-                'region' => $faker->randomElement(['Dar es Salaam', 'Mwanza', 'Arusha', 'Kilimanjaro', 'Dodoma']),
-            ]);
+            try {
+                Graduate::create([
+                    'user_id' => $user->id,
+                    'first_name' => $first,
+                    'last_name' => $last,
+                    'graduation_date' => $faker->dateTimeBetween('-8 years', 'now')->format('Y-m-d'),
+                    'university_id' => $faker->randomElement($universities),
+                    'course_id' => $faker->randomElement($courses),
+                    'gpa' => $faker->randomFloat(2, 2.0, 4.0),
+                    'phone' => $faker->phoneNumber,
+                    'employment_status' => $faker->randomElement(['employed', 'self_employed', 'unemployed']),
+                    'graduation_year' => $faker->year(),
+                    'region' => $faker->randomElement(['Dar es Salaam', 'Mwanza', 'Arusha', 'Kilimanjaro', 'Dodoma']),
+                ]);
+            } catch (\Throwable $e) {
+                continue;
+            }
         }
 
         $this->command->info('Inserted 120 sample graduates.');

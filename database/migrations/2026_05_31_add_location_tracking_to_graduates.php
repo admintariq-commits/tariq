@@ -9,12 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('graduates', function (Blueprint $table) {
-            $table->decimal('latitude', 10, 7)->nullable()->after('region');
-            $table->decimal('longitude', 10, 7)->nullable()->after('latitude');
-            $table->string('detected_region')->nullable()->after('longitude');
-            $table->string('location_source')->nullable()->after('detected_region');
-            $table->boolean('region_match')->default(true)->after('location_source');
-            $table->string('location_accuracy')->nullable()->after('region_match');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('detected_region')->nullable();
+            $table->string('location_source')->nullable();
+            $table->boolean('region_match')->default(true);
+            $table->string('location_accuracy')->nullable();
 
             $table->index('detected_region');
             $table->index('region_match');

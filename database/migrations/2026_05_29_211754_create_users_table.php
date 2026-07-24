@@ -22,7 +22,7 @@ return new class extends Migration
 
         if (Schema::hasTable('users') && !Schema::hasColumn('users', 'email_verified_at')) {
             Schema::table('users', function (Blueprint $table) {
-                $table->timestamp('email_verified_at')->nullable()->after('email');
+                $table->timestamp('email_verified_at')->nullable();
             });
         }
     }

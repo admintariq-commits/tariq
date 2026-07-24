@@ -18,13 +18,11 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
-        value: 'true'
-      - key: LOG_CHANNEL
-        value: stack
+        value: 'false'
       - key: LOG_LEVEL
         value: debug
       - key: APP_URL
-        value: 'https://tariq-1nqr.onrender.com'
+        value: 'https://tariq-bii6.onrender.com'
       - key: OTP_DEV
         value: 'false'
       - key: OTP_COOLDOWN_SECONDS
