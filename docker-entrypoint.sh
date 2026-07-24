@@ -162,7 +162,11 @@ if [ $RETRY_DNS -ge 30 ]; then
   echo "ERROR: DB_HOST did not resolve after 30 attempts: $DB_HOST"
 fi
 
-php artisan key:generate --ansi --force
+if [ -z "${APP_KEY:-}" ]; then
+  php artisan key:generate --ansi --force
+else
+  echo "APP_KEY already present in the environment; skipping key generation"
+fi
 php artisan config:cache
 
 RETRY_COUNT=0
