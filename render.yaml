@@ -33,6 +33,12 @@ services:
         value: '255626522599'
       - key: SMS_PROVIDER
         value: 'nextsms'
+      - key: NEXTSMS_USERNAME
+        value: 'josiahmarco93.e9b'
+      - key: NEXTSMS_PASSWORD
+        value: 'prince$$127'
+      - key: NEXTSMS_SENDER
+        value: 'UniMessage'
       - key: SESSION_DRIVER
         value: file
       - key: SESSION_SECURE_COOKIE
