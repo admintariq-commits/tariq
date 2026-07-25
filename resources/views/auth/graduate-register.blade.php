@@ -595,6 +595,7 @@
         async function postOtpRequest(url, payload) {
             const response = await fetch(url, {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Accept': 'application/json',
