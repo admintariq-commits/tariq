@@ -12,7 +12,7 @@ class OtpProviderTest extends TestCase
     public function test_nextsms_provider_can_send_otp(): void
     {
         Http::fake([
-            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+            'https://messaging-service.co.tz/api/sms/v2/text/single' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -33,7 +33,7 @@ class OtpProviderTest extends TestCase
         Http::assertSentCount(1);
         Http::assertSent(function ($request) {
             $data = $request->data();
-            return $request->url() === 'https://messaging-service.co.tz/api/sms/v1/text/single'
+            return $request->url() === 'https://messaging-service.co.tz/api/sms/v2/text/single'
                 && $request->header('Authorization')[0] === 'Basic ' . base64_encode('test-nextsms-user:test-nextsms-pass')
                 && ($data['from'] ?? null) === 'UniMessage'
                 && ($data['to'] ?? null) === '255682111222'
@@ -44,7 +44,7 @@ class OtpProviderTest extends TestCase
     public function test_nextsms_sender_id_config_is_used(): void
     {
         Http::fake([
-            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+            'https://messaging-service.co.tz/api/sms/v2/text/single' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -53,6 +53,7 @@ class OtpProviderTest extends TestCase
         config()->set('otp.nextsms_username', 'test-nextsms-user');
         config()->set('otp.nextsms_password', 'test-nextsms-pass');
         config()->set('otp.nextsms_api_token', null);
+        config()->set('otp.nextsms_base_url', 'https://messaging-service.co.tz/api/sms/v2/text/single');
         config()->set('otp.nextsms_sender', 'UniMessageID');
         config()->set('otp.dev_fallback', false);
 
@@ -73,7 +74,7 @@ class OtpProviderTest extends TestCase
     public function test_nextsms_api_token_is_used_for_bearer_auth(): void
     {
         Http::fake([
-            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+            'https://messaging-service.co.tz/api/sms/v2/text/single' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -93,7 +94,7 @@ class OtpProviderTest extends TestCase
         Http::assertSentCount(1);
         Http::assertSent(function ($request) {
             $data = $request->data();
-            return $request->url() === 'https://messaging-service.co.tz/api/sms/v1/text/single'
+            return $request->url() === 'https://messaging-service.co.tz/api/sms/v2/text/single'
                 && $request->header('Authorization')[0] === 'Bearer test-nextsms-token'
                 && ($data['from'] ?? null) === 'UniMessage'
                 && ($data['to'] ?? null) === '255682111222';
@@ -103,7 +104,7 @@ class OtpProviderTest extends TestCase
     public function test_configured_test_phone_uses_dev_fallback_without_sending_sms(): void
     {
         Http::fake([
-            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+            'https://messaging-service.co.tz/api/sms/v2/text/single' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -129,7 +130,7 @@ class OtpProviderTest extends TestCase
     public function test_comma_separated_test_phones_use_dev_fallback_without_sending_sms(): void
     {
         Http::fake([
-            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+            'https://messaging-service.co.tz/api/sms/v2/text/single' => Http::response([
                 'status' => 'success',
             ], 200),
         ]);
@@ -155,7 +156,7 @@ class OtpProviderTest extends TestCase
     public function test_nextsms_auth_failure_uses_dev_fallback_when_enabled(): void
     {
         Http::fake([
-            'https://messaging-service.co.tz/api/sms/v1/text/single' => Http::response([
+            'https://messaging-service.co.tz/api/sms/v2/text/single' => Http::response([
                 'success' => false,
                 'status' => 403,
                 'message' => 'Not Authorized',

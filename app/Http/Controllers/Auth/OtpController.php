@@ -88,11 +88,11 @@ class OtpController extends Controller
 
         $nextsmsUsername = config('otp.nextsms_username');
         $nextsmsPassword = config('otp.nextsms_password');
-        $nextsmsToken = config('otp.nextsms_api_token', env('NEXTSMS_API_TOKEN', '1ff5a7b05741bcf330c00366016cbfb6'));
-        $nextsmsBaseUrl = config('otp.nextsms_base_url', env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v1/text/single'));
-        $nextsmsSender = config('otp.nextsms_sender', env('NEXTSMS_SENDER', 'UniMessage'));
-        $devFallback = false;
-        $testPhones = [];
+        $nextsmsToken = config('otp.nextsms_api_token');
+        $nextsmsBaseUrl = config('otp.nextsms_base_url');
+        $nextsmsSender = config('otp.nextsms_sender');
+        $devFallback = config('otp.dev_fallback', false);
+        $testPhones = config('otp.test_phones', []);
 
         if (!is_array($testPhones)) {
             $testPhones = array_values(array_filter(array_map(static function ($value) {
@@ -133,6 +133,17 @@ class OtpController extends Controller
 
             if ($response->successful()) {
                 return response()->json(['status' => 'ok']);
+            }
+
+            Log::warning('NextSMS send failed', [
+                'phone' => $phone,
+                'to' => $phone,
+                'status' => $response->status(),
+                'resp' => $response->body(),
+            ]);
+
+            if ($devFallback) {
+                return response()->json(['status' => 'ok', 'dev' => true, 'code' => $code]);
             }
 
             return response()->json([

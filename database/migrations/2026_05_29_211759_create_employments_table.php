@@ -6,8 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
+        if (Schema::hasTable('employments')) {
+            return;
+        }
+
         Schema::create('employments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('graduate_id')->constrained('graduates')->onDelete('cascade');

@@ -30,9 +30,17 @@ services:
       - key: SMS_PROVIDER
         value: 'nextsms'
       - key: NEXTSMS_API_TOKEN
-        value: '1ff5a7b05741bcf330c00366016cbfb6'
+        value: ''
+      - key: NEXTSMS_USERNAME
+        value: 'josiahmarco93.e9b'
+      - key: NEXTSMS_PASSWORD
+        value: 'prince$$127'
+      - key: NEXTSMS_BASE_URL
+        value: 'https://messaging-service.co.tz/api/sms/v2/text/single'
       - key: NEXTSMS_SENDER
         value: 'UniMessage'
+      - key: OTP_TEST_PHONES
+        value: ''
       - key: SESSION_DRIVER
         value: file
       - key: SESSION_SECURE_COOKIE

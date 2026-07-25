@@ -18,7 +18,7 @@
         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Login</button>
     </form>
     <div class="mt-4 text-sm text-center">
-        <a href="{{ url('/forgot-password') }}" class="text-blue-600 hover:underline">Forgot your password?</a>
+        <a href="{{ route('password.request') }}" class="text-blue-600 hover:underline">Forgot your password?</a>
     </div>
 </div>
 @endsection

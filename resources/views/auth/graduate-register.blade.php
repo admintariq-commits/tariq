@@ -263,9 +263,7 @@
                                 </label>
                                 <div class="flex flex-col gap-3 sm:flex-row">
                                     <input type="text" id="phoneInput" name="phone" value="{{ old('phone') }}" class="flex-1 border-2 border-slate-200 rounded-xl px-5 py-3 input-field focus:ring-0 transition hover:border-slate-300" placeholder="+255 712 345 678" required>
-                                    <button type="button" id="sendOtpBtn" class="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition btn-primary">Send OTP</button>
                                 </div>
-                                <p id="otpNotice" class="text-xs text-emerald-600 mt-3 hidden flex items-center gap-1"><i class="fas fa-check-circle"></i> OTP sent (dev mode shows code).</p>
                             </div>
                             <div class="field-group">
                                 <label class="block text-slate-800 text-sm font-bold mb-3 flex items-center gap-2">
@@ -304,16 +302,7 @@
                                 <p class="text-xs text-slate-500 mt-2"><i class="fas fa-info-circle"></i> PDF, DOC, or DOCX only. File must be under 5MB and correctly typed.</p>
                                 <p id="resumeError" class="text-xs text-red-600 mt-2 hidden"></p>
                             </div>
-                            <div class="field-group">
-                                <label class="block text-slate-800 text-sm font-bold mb-3 flex items-center gap-2">
-                                    <i class="fas fa-lock text-slate-600"></i> Enter OTP
-                                </label>
-                                <div class="flex flex-col gap-3 sm:flex-row">
-                                    <input type="text" id="otpInput" class="flex-1 border-2 border-slate-200 rounded-xl px-5 py-3 input-field focus:ring-0 transition hover:border-slate-300" placeholder="000000" disabled>
-                                    <button type="button" id="verifyOtpBtn" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition btn-primary" disabled>Verify</button>
-                                </div>
-                                <p id="otpResult" class="text-sm mt-3 font-medium"></p>
-                            </div>
+                            <!-- OTP UI removed for now; backend OTP system remains active but frontend verification is disabled -->
                         </div>
                     </div>
 
@@ -579,7 +568,10 @@
         const otpSendUrl = '{{ route('otp.send') }}';
         const otpVerifyUrl = '{{ route('otp.verify') }}';
         const csrfToken = '{{ csrf_token() }}';
-        let otpVerified = false;
+        // OTP verification is kept on the backend but frontend verification is disabled
+        // to allow registration without entering a verification code. Set to true
+        // so the form submission is not blocked here.
+        let otpVerified = true;
 
         function setOtpMessage(message, isError = false) {
             const otpResult = document.getElementById('otpResult');
@@ -693,23 +685,10 @@
             verifyOtpBtn.onclick = handleVerifyOtp;
         }
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initOtpHandlers);
-        } else {
-            initOtpHandlers();
-        }
+        // Frontend OTP handlers are intentionally not initialized so OTP UI is inactive.
 
         const regFormElement = document.getElementById('regForm');
-        if (regFormElement) {
-            regFormElement.addEventListener('submit', function (event) {
-                if (!otpVerified) {
-                    event.preventDefault();
-                    setOtpMessage('Please verify your phone number with OTP before completing registration.', true);
-                    document.getElementById('phoneInput')?.focus();
-                    return false;
-                }
-            });
-        }
+        // Do not block submission on the client — server-side OTP checks remain possible.
 
         // Resume validation
         const allowedExtensions = ['pdf', 'doc', 'docx'];

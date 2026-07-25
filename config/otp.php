@@ -17,14 +17,14 @@ return [
     // NextSMS provider configuration (kept as the default provider)
     'nextsms_username' => env('NEXTSMS_USERNAME', null),
     'nextsms_password' => env('NEXTSMS_PASSWORD', null),
-    'nextsms_api_token' => env('NEXTSMS_API_TOKEN', '1ff5a7b05741bcf330c00366016cbfb6'),
+    'nextsms_api_token' => env('NEXTSMS_API_TOKEN', null),
     'nextsms_base_url' => env('NEXTSMS_BASE_URL', 'https://messaging-service.co.tz/api/sms/v2/text/single'),
     'nextsms_sender' => env('NEXTSMS_SENDER', 'UniMessage'),
 
     // Developer fallback disabled for production; OTP should go through the real provider.
-    'dev_fallback' => false,
+    'dev_fallback' => env('OTP_DEV', false),
     // Optional comma-separated test phones that should always use dev fallback for safe hosted testing
-    'test_phones' => [],
+    'test_phones' => env('OTP_TEST_PHONES', []),
     // Email alerting for abuse attempts
     'alert_enabled' => env('OTP_ALERT_ENABLED', true),
     'alert_threshold' => env('OTP_ALERT_THRESHOLD', 3), // Send alert after N blocked send attempts or N failed verify attempts
