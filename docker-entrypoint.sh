@@ -215,25 +215,17 @@ fi
 # Run migrations only (critical for app to start)
 echo "Starting database migrations..."
 RETRY_COUNT=0
-MIGRATE_SUCCESS=0
 until php artisan migrate --force 2>&1; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
-  if [ "$RETRY_COUNT" -ge 3 ]; then
-    echo "WARNING: Failed to run migrations after $RETRY_COUNT attempts."
-    echo "Will start Apache anyway - database may be unavailable."
-    MIGRATE_SUCCESS=1
-    break
+  if [ "$RETRY_COUNT" -ge 10 ]; then
+    echo "ERROR: Failed to run migrations after $RETRY_COUNT attempts. Exiting."
+    exit 1
   fi
-  echo "Database not ready yet, retrying migrations in 3 seconds... ($RETRY_COUNT/3)"
-  sleep 3
-done
+  echo "Database not ready yet, retrying migrations in 5 seconds... ($RETRY_COUNT/10)"
+  sleep 5
+ done
 
-if [ "$MIGRATE_SUCCESS" -eq 0 ]; then
-  echo "✓ Migrations completed successfully."
-fi
-
-# Try seeding but always continue regardless of result
-echo "Attempting optional database seeding..."
+echo "✓ Migrations completed successfully."
 if php artisan db:seed --force 2>&1 | head -10; then
   echo "Database seeding completed successfully."
 else

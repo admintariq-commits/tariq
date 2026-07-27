@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     public function up(): void
     {
         if (Schema::hasTable('academic_records')) {
@@ -21,7 +23,7 @@ return new class extends Migration
             $table->string('university')->nullable();
             $table->string('course')->nullable();
             $table->string('degree')->nullable();
-            $table->year('graduation_year')->nullable();
+            $table->unsignedSmallInteger('graduation_year')->nullable();
             $table->decimal('gpa', 3, 2)->nullable();
             $table->enum('status', ['pending', 'verified', 'rejected', 'manual_review'])->default('pending');
             $table->enum('source', ['manual', 'ministry_api', 'university_api', 'cached'])->default('manual');
