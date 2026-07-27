@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -13,20 +14,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('cache_locks');
-        Schema::dropIfExists('cache');
+        DB::statement('DROP TABLE IF EXISTS cache_locks CASCADE');
+        DB::statement('DROP TABLE IF EXISTS cache CASCADE');
 
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->mediumText('value');
-            $table->bigInteger('expiration')->index();
-        });
+        DB::statement(<<<'SQL'
+CREATE TABLE cache (
+  "key" VARCHAR(255) PRIMARY KEY,
+  "value" TEXT NOT NULL,
+  "expiration" BIGINT NOT NULL
+);
+SQL
+        );
 
-        Schema::create('cache_locks', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->string('owner');
-            $table->bigInteger('expiration')->index();
-        });
+        DB::statement(<<<'SQL'
+CREATE TABLE cache_locks (
+  "key" VARCHAR(255) PRIMARY KEY,
+  "owner" VARCHAR(255) NOT NULL,
+  "expiration" BIGINT NOT NULL
+);
+SQL
+        );
     }
 
     /**
