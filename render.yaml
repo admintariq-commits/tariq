@@ -8,7 +8,7 @@ services:
     autoDeploy: true
     buildCommand: composer install --no-interaction --ignore-platform-reqs
     postBuildCommand: |
-      mkdir -p database storage/framework/sessions storage/logs bootstrap/cache
+      mkdir -p database storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache
       if [ "$DB_CONNECTION" = "sqlite" ]; then
         touch database/database.sqlite
       fi
@@ -55,6 +55,8 @@ services:
         value: pgsql
       - key: DATABASE_URL
         value: 'postgresql://neondb_owner:npg_ykgfTMnI42qV@ep-polished-butterfly-ayqfh2r6-pooler.c-5.us-east-2.aws.neon.tech/TARIQ?sslmode=require&channel_binding=require'
+      - key: DB_URL
+        value: 'postgresql://neondb_owner:npg_ykgfTMnI42qV@ep-polished-butterfly-ayqfh2r6-pooler.c-5.us-east-2.aws.neon.tech/TARIQ?sslmode=require&channel_binding=require'
       - key: DB_HOST
         value: 'ep-polished-butterfly-ayqfh2r6-pooler.c-5.us-east-2.aws.neon.tech'
       - key: DB_PORT
@@ -72,4 +74,4 @@ services:
       - key: ADMIN_EMAIL
         value: 'admin@tariq.go.tz'
     startCommand: |
-      sh -lc "/usr/local/bin/docker-entrypoint.sh"
+      /usr/local/bin/docker-entrypoint.sh

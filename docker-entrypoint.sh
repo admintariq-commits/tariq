@@ -6,6 +6,11 @@ if [ ! -f .env ]; then
   cp .env.example .env
 fi
 
+# Ensure runtime storage directories exist and are writable.
+mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs database
+chown -R www-data:www-data bootstrap/cache storage || true
+chmod -R 775 bootstrap/cache storage || true
+
 # Initialize environment variables with safe defaults for Render and local container startup
 DB_CONNECTION="${DB_CONNECTION:-pgsql}"
 DB_HOST="${DB_HOST:-}"
@@ -15,10 +20,11 @@ DB_USERNAME="${DB_USERNAME:-}"
 DB_PASSWORD="${DB_PASSWORD:-}"
 DATABASE_URL="${DATABASE_URL:-}"
 DB_URL="${DB_URL:-}"
+DB_SSLMODE="${DB_SSLMODE:-require}"
 APP_ENV="${APP_ENV:-production}"
 APP_DEBUG="${APP_DEBUG:-false}"
 APP_KEY="${APP_KEY:-}"
-export DB_CONNECTION DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD DATABASE_URL DB_URL APP_ENV APP_DEBUG APP_KEY
+export DB_CONNECTION DB_HOST DB_PORT DB_DATABASE DB_USERNAME DB_PASSWORD DATABASE_URL DB_URL DB_SSLMODE APP_ENV APP_DEBUG APP_KEY
 
 # If Render provides a database URL (DATABASE_URL or DB_URL), force PostgreSQL
 # settings in the generated .env so runtime doesn't pick up old MySQL values.
@@ -115,7 +121,6 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
       ];
 
       $output = [];
-      $seenKeys = [];
       foreach ($contents as $line) {
           if (preg_match("/^([A-Za-z_][A-Za-z0-9_]*)=/", $line, $matches)) {
               $key = $matches[1];
@@ -135,6 +140,14 @@ if [ -n "$DATABASE_URL" ] || [ -n "$DB_URL" ]; then
 
       file_put_contents($envPath, implode("\n", $output) . "\n");
     '
+
+    if [ -n "$APP_KEY" ]; then
+      if grep -q "^APP_KEY=" .env; then
+        sed -i "s|^APP_KEY=.*|APP_KEY=$APP_KEY|" .env
+      else
+        echo "APP_KEY=$APP_KEY" >> .env
+      fi
+    fi
   fi
 
   # Ensure DB_CONNECTION is pgsql and DB_PORT is set in .env if it exists.
@@ -183,6 +196,14 @@ if [ -z "${APP_KEY:-}" ]; then
 else
   echo "✓ APP_KEY already present in environment (skipping generation)"
 fi
+
+echo "Clearing stale caches before config cache..."
+php artisan config:clear --no-interaction || true
+php artisan route:clear --no-interaction || true
+php artisan view:clear --no-interaction || true
+
+echo "Checking PHP extension support..."
+php -r 'if (!extension_loaded("pdo") || !extension_loaded("pdo_pgsql")) { fwrite(STDERR, "ERROR: Required PHP extensions missing: pdo or pdo_pgsql\n"); exit(1);} print_r(PDO::getAvailableDrivers());'
 
 echo "Caching configuration..."
 if php artisan config:cache 2>&1; then
