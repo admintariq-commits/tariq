@@ -33,7 +33,8 @@
     </style>
 </head>
 <body class="antialiased bg-slate-50 text-slate-900">
-    <nav class="bg-white shadow-md fixed w-full z-20 top-0">
+    <!-- Added higher z-index to nav to ensure hero blobs don't overlay and added id to login link for testing -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-2 min-w-0">
@@ -46,8 +47,8 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-                    <a href="{{ route('login') }}" class="text-xs sm:text-sm text-slate-700 hover:text-purple-600 transition whitespace-nowrap">Login</a>
-                    <a href="{{ route('graduate.register') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-full font-semibold hover:shadow-lg transition whitespace-nowrap">Register</a>
+                    <a id="loginBtn" href="{{ route('login') }}" class="text-xs sm:text-sm text-slate-700 hover:text-purple-600 transition whitespace-nowrap">Login</a>
+                    <a href="{{ route('graduate.register') }}" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm rounded-full font-semibold">Get Started</a>
                 </div>
             </div>
         </div>
@@ -172,7 +173,7 @@
                             <p class="text-xs uppercase tracking-[0.3em] text-white/80 mb-2">Join the graduate intelligence movement</p>
                             <h2 class="text-lg md:text-xl font-bold mb-2">One platform for jobs, data, and national impact.</h2>
                             <p class="text-sm text-white/90 mb-4">TARIQ helps graduates, employers, and policymakers make faster, smarter decisions with trusted data and career matching.</p>
-                            <a href="{{ route('graduate.register') }}" class="inline-flex items-center justify-center rounded-full bg-white text-purple-700 px-5 py-1.5 text-sm font-semibold shadow-md shadow-white/20 hover:bg-white/90 transition">Start Your Profile</a>
+                            <a href="{{ route('graduate.register') }}" class="inline-flex items-center justify-center rounded-full bg-white text-purple-700 px-5 py-1.5 text-sm font-semibold shadow-md">Get Started</a>
                         </div>
                         <div class="grid gap-2 sm:grid-cols-2">
                             <div class="rounded-lg bg-white/10 p-3">
