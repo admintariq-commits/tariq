@@ -229,6 +229,56 @@
                 #regForm textarea.input-field {
                     line-height: 1.6;
                 }
+                #regForm .resume-section {
+                    width: 100%;
+                    margin-top: 1.5rem;
+                    padding: 1.25rem;
+                    border: 1px solid rgba(148,163,184,.24);
+                    border-radius: 1.25rem;
+                    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+                    box-shadow: 0 10px 30px rgba(15,23,42,.05);
+                }
+                #regForm .resume-section input[type="file"] {
+                    min-height: 4.25rem;
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    background: #ffffff;
+                    border: 2px dashed #a5b4fc !important;
+                    border-radius: 1rem !important;
+                    padding: 1rem !important;
+                }
+                #regForm .resume-section input[type="file"]:hover {
+                    border-color: #6366f1 !important;
+                    background: #eef2ff;
+                }
+                #regForm .resume-help {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: .5rem;
+                    margin-top: .65rem;
+                    color: #64748b;
+                    font-size: .78rem;
+                    line-height: 1.45;
+                }
+                #regForm .form-actions {
+                    display: grid;
+                    grid-template-columns: auto 1fr auto;
+                    align-items: center;
+                    gap: 1rem;
+                    padding-top: 1.5rem;
+                }
+                #regForm .form-actions .action-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: .65rem;
+                }
+                @media (max-width: 768px) {
+                    #regForm .form-actions { grid-template-columns: 1fr; }
+                    #regForm .form-actions .action-group { width: 100%; }
+                    #regForm .form-actions button, #regForm .form-actions a { width: 100%; }
+                }
             </style>
             <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-slate-100 form-card">
                 <form method="POST" action="{{ route('graduate.register.post') }}" class="space-y-6" enctype="multipart/form-data" id="regForm" @input="refreshCompletion()">
@@ -304,15 +354,14 @@
                             <div class="section-icon bg-amber-100"><i class="fas fa-file-pdf text-amber-600"></i></div>
                             CV & Phone Verification
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="field-group">
-                                <label class="block text-slate-800 text-sm font-bold mb-3 flex items-center gap-2">
-                                    <i class="fas fa-file text-slate-600"></i> Upload CV / Resume *
-                                </label>
-                                <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" class="w-full border-2 border-dashed border-slate-300 rounded-xl px-5 py-6 input-field focus:ring-0 transition hover:border-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" required>
-                                <p class="text-xs text-slate-500 mt-2"><i class="fas fa-info-circle"></i> PDF, DOC, or DOCX only. File must be under 5MB and correctly typed.</p>
-                                <p id="resumeError" class="text-xs text-red-600 mt-2 hidden"></p>
-                            </div>
+                        <div class="resume-section">
+                            <label class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.1em] text-slate-800">
+                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100"><i class="fas fa-file-upload text-amber-600"></i></span>
+                                Upload CV / Resume <span class="text-red-500">*</span>
+                            </label>
+                            <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" class="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-bold file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" required>
+                            <p class="resume-help"><i class="fas fa-circle-info mt-0.5 text-indigo-500"></i><span>Upload your latest CV in PDF, DOC, or DOCX format. Maximum file size: 5MB.</span></p>
+                            <p id="resumeError" class="mt-2 hidden text-xs font-semibold text-red-600"></p>
                             <!-- OTP UI removed for now; backend OTP system remains active but frontend verification is disabled -->
                         </div>
                     </div>
@@ -533,12 +582,12 @@
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-slate-200">
+                    <div class="form-actions flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-t border-slate-200">
                         <button type="button" @click="previousStep()" class="w-full sm:w-auto px-6 py-3 border border-slate-300 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition" :disabled="currentStep === 0" :class="{ 'opacity-50 cursor-not-allowed': currentStep === 0 }">
                             <i class="fas fa-chevron-left mr-2"></i> Previous
                         </button>
                         
-                        <div class="flex flex-wrap gap-2 justify-end">
+                        <div class="action-group flex flex-wrap gap-2 justify-end">
                             <button type="button" id="previewBtn" class="w-full sm:w-auto px-6 py-3 bg-slate-100 text-slate-700 rounded-lg font-semibold hover:bg-slate-200 transition">
                                 <i class="fas fa-eye mr-2"></i> Preview
                             </button>
