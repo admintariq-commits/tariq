@@ -58,12 +58,12 @@
             <div class="hero-blob bg-fuchsia-400/40 h-56 w-56 top-10 left-6"></div>
             <div class="hero-blob bg-cyan-400/35 h-72 w-72 bottom-0 right-8"></div>
             <div class="hero-blob bg-violet-500/35 h-96 w-96 top-24 right-1/2 translate-x-1/2"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative py-12 sm:py-16 md:py-20 text-center hero-shadow rounded-b-3xl">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative py-10 sm:py-14 md:py-16 text-center hero-shadow rounded-b-3xl">
                 <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-white/90 mb-4">
                     <span>🇹🇿</span> Tanzania Graduate Intelligence
                 </span>
-                <h1 class="text-4xl sm:text-5xl md:text-[56px] hero-title leading-tight mb-4">Welcome to <span class="text-pink-200">TARIQ</span> — Tanzania Graduate Intelligence</h1>
-                <p class="mx-auto max-w-3xl text-base sm:text-lg hero-subtle mb-6">A practical platform for Tanzanian graduates, employers, and government teams to understand opportunities, skills demand, and regional workforce trends.</p>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl hero-title leading-tight mb-4">Welcome to <span class="text-pink-200">TARIQ</span> — Tanzania Graduate Intelligence</h1>
+                <p class="mx-auto max-w-3xl text-sm sm:text-base hero-subtle mb-6">A practical platform for Tanzanian graduates, employers, and government teams to understand opportunities, skills demand, and regional workforce trends.</p>
                 <div class="mx-auto max-w-4xl grid gap-3 sm:grid-cols-3 mb-6 text-left">
                     <div class="rounded-lg bg-white/6 border border-white/10 p-3 backdrop-blur-xl feature-spot">
                         <div class="icon bg-white/10 text-purple-200">
@@ -110,7 +110,7 @@
             <div class="max-w-7xl mx-auto">
                 <div class="mb-6 text-center">
                     <p class="text-sm uppercase tracking-[0.3em] text-slate-500 mb-2">What TARIQ delivers</p>
-                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Powerful intelligence for graduates and employers</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Powerful intelligence for graduates and employers</h2>
                 </div>
                 <div class="grid gap-3 md:grid-cols-3">
                 <div class="feature-card rounded-lg bg-white border border-slate-200 p-4 shadow-sm">
@@ -141,23 +141,23 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="mb-6 text-center">
                     <p class="text-sm uppercase tracking-[0.3em] text-slate-500 mb-2">Milestones</p>
-                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Trusted progress across the graduate journey</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Trusted progress across the graduate journey</h2>
                 </div>
                 <div class="grid gap-4 md:grid-cols-4">
                     <div class="rounded-3xl bg-white border border-slate-200 p-6 shadow-sm">
-                        <div class="text-3xl font-extrabold text-slate-900">1250+</div>
+                        <div class="text-2xl font-extrabold text-slate-900">1250+</div>
                         <p class="mt-2 text-sm text-slate-500">Registered Graduates</p>
                     </div>
                     <div class="rounded-3xl bg-white border border-slate-200 p-6 shadow-sm">
-                        <div class="text-3xl font-extrabold text-slate-900">85%</div>
+                        <div class="text-2xl font-extrabold text-slate-900">85%</div>
                         <p class="mt-2 text-sm text-slate-500">Placement Rate</p>
                     </div>
                     <div class="rounded-3xl bg-white border border-slate-200 p-6 shadow-sm">
-                        <div class="text-3xl font-extrabold text-slate-900">30+</div>
+                        <div class="text-2xl font-extrabold text-slate-900">30+</div>
                         <p class="mt-2 text-sm text-slate-500">Growing Employer Network</p>
                     </div>
                     <div class="rounded-3xl bg-white border border-slate-200 p-6 shadow-sm">
-                        <div class="text-3xl font-extrabold text-slate-900">31</div>
+                        <div class="text-2xl font-extrabold text-slate-900">31</div>
                         <p class="mt-2 text-sm text-slate-500">Regions Covered</p>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
                     <div class="grid gap-4 lg:grid-cols-2 items-center">
                         <div>
                             <p class="text-xs uppercase tracking-[0.3em] text-white/80 mb-2">Join the graduate intelligence movement</p>
-                            <h2 class="text-lg md:text-xl font-bold mb-2">One platform for jobs, data, and national impact.</h2>
+                            <h2 class="text-base md:text-lg font-bold mb-2">One platform for jobs, data, and national impact.</h2>
                             <p class="text-sm text-white/90 mb-4">TARIQ helps graduates, employers, and policymakers make faster, smarter decisions with trusted data and career matching.</p>
                             <a href="{{ route('graduate.register') }}" class="inline-flex items-center justify-center rounded-full bg-white text-purple-700 px-5 py-1.5 text-sm font-semibold shadow-md shadow-white/20 hover:bg-white/90 transition">Start Your Profile</a>
                         </div>
