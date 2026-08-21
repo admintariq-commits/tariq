@@ -15,11 +15,13 @@
         .btn-secondary { border: 1px solid rgba(255,255,255,0.24); background: rgba(255,255,255,0.06); color: #fff; padding: 0.6rem 1.1rem; border-radius: 9999px; }
         .feature-card { transition: transform .28s ease, box-shadow .28s ease; border-left-width: 4px; }
         .feature-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 18px 40px rgba(2,6,23,0.12); }
-        .feature-spot { display:flex; gap:0.9rem; align-items:center; }
-        .feature-spot .icon { width:46px; height:46px; flex:0 0 46px; display:flex; align-items:center; justify-content:center; border-radius:12px; }
+        .feature-spot { display:flex; gap:1rem; align-items:center; min-height:82px; }
+        .feature-spot .icon { width:52px; height:52px; flex:0 0 52px; display:flex; align-items:center; justify-content:center; border-radius:14px; font-size:1.1rem; }
         .cta-primary { background: linear-gradient(90deg,#fff 0%, #f8fafc 100%); color:#5b21b6; }
         .hero-sub { color: rgba(255,255,255,0.9); }
-        .feature-spot .title { font-weight:700; }
+        .feature-spot .title { font-weight:700; font-size:0.95rem; line-height:1.25; }
+        .feature-spot .description { color:rgba(255,255,255,0.78); font-size:0.82rem; line-height:1.35; margin-top:0.25rem; }
+        .tz-brand { display:inline-flex; align-items:center; gap:0.4rem; border:1px solid rgba(91,33,182,0.14); background:#faf5ff; color:#5b21b6; border-radius:9999px; padding:0.3rem 0.65rem; font-size:0.68rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; }
         .muted { color: rgba(15,23,42,0.65); }
         @media (max-width: 640px) {
             .hero-blob { display: none; }
@@ -39,6 +41,7 @@
                         <div class="text-base sm:text-lg font-semibold text-slate-900 truncate">TARIQ</div>
                         <div class="text-xs uppercase tracking-[0.24em] text-slate-500 truncate hidden sm:block">Hub</div>
                     </div>
+                    <span class="tz-brand" title="Tanzania Graduate Intelligence"><span class="text-base leading-none">🇹🇿</span><span class="hidden sm:inline">Tanzania</span></span>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     <a href="{{ route('login') }}" class="text-xs sm:text-sm text-slate-700 hover:text-purple-600 transition whitespace-nowrap">Login</a>
@@ -54,8 +57,8 @@
             <div class="hero-blob bg-cyan-400/35 h-72 w-72 bottom-0 right-8"></div>
             <div class="hero-blob bg-violet-500/35 h-96 w-96 top-24 right-1/2 translate-x-1/2"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative py-10 sm:py-14 md:py-16 text-center hero-shadow rounded-b-3xl">
-                <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-white/90 mb-4">
-                    <span>🇹🇿</span> Tanzania Graduate Intelligence
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-5 py-2 text-sm uppercase tracking-[0.2em] text-white/95 mb-5">
+                    <span class="text-base">🇹🇿</span> Tanzania Graduate Intelligence
                 </span>
                 <h1 class="text-3xl sm:text-4xl md:text-5xl hero-title leading-tight mb-4">Welcome to <span class="text-pink-200">TARIQ</span> — Tanzania Graduate Intelligence</h1>
                 <p class="mx-auto max-w-3xl text-sm sm:text-base hero-subtle mb-6">A practical platform for Tanzanian graduates, employers, and government teams to understand opportunities, skills demand, and regional workforce trends.</p>
@@ -65,8 +68,8 @@
                             <i class="fas fa-id-badge text-white"></i>
                         </div>
                         <div>
-                            <div class="text-xs font-semibold text-white">Verified graduate profiles</div>
-                            <div class="text-2xs text-white/75 text-xs muted">Secure verification of credentials and experience</div>
+                            <div class="feature-spot title text-white">Verified graduate profiles</div>
+                            <div class="feature-spot description">Secure verification of credentials and experience</div>
                         </div>
                     </div>
                     <div class="rounded-lg bg-white/6 border border-white/10 p-3 backdrop-blur-xl feature-spot">
@@ -74,8 +77,8 @@
                             <i class="fas fa-bullseye text-white"></i>
                         </div>
                         <div>
-                            <div class="text-xs font-semibold text-white">Live employer demand insights</div>
-                            <div class="text-2xs text-white/75 text-xs muted">Real-time trends for hiring and skills gaps</div>
+                            <div class="feature-spot title text-white">Live employer demand insights</div>
+                            <div class="feature-spot description">Real-time trends for hiring and skills gaps</div>
                         </div>
                     </div>
                     <div class="rounded-lg bg-white/6 border border-white/10 p-3 backdrop-blur-xl feature-spot">
@@ -83,8 +86,8 @@
                             <i class="fas fa-map text-white"></i>
                         </div>
                         <div>
-                            <div class="text-xs font-semibold text-white">Trusted regional outcomes</div>
-                            <div class="text-2xs text-white/75 text-xs muted">Insights by region to guide local policy</div>
+                            <div class="feature-spot title text-white">Trusted regional outcomes</div>
+                            <div class="feature-spot description">Insights by region to guide local policy</div>
                         </div>
                     </div>
                 </div>
@@ -108,26 +111,26 @@
                     <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Powerful intelligence for graduates and employers</h2>
                 </div>
                 <div class="grid gap-3 md:grid-cols-3">
-                <div class="feature-card rounded-lg bg-white border border-slate-200 p-4 shadow-sm">
+                <div class="feature-card rounded-lg bg-white border border-slate-200 p-5 shadow-sm">
                     <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-2">
                         <i class="fas fa-chart-line text-lg"></i>
                     </div>
-                    <h2 class="text-base font-bold mb-1">Track Employability</h2>
-                    <p class="text-xs text-slate-600">Measure graduate readiness across skills, GPA, experience, and geography.</p>
+                    <h2 class="text-lg font-bold mb-1">Track Employability</h2>
+                    <p class="text-sm text-slate-600">Measure graduate readiness across skills, GPA, experience, and geography.</p>
                 </div>
-                <div class="feature-card rounded-lg bg-white border border-slate-200 p-4 shadow-sm">
+                <div class="feature-card rounded-lg bg-white border border-slate-200 p-5 shadow-sm">
                     <div class="w-10 h-10 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center mb-2">
                         <i class="fas fa-briefcase text-lg"></i>
                     </div>
-                    <h2 class="text-base font-bold mb-1">Smart Job Matching</h2>
-                    <p class="text-xs text-slate-600">Connect graduates with the best local and national opportunities.</p>
+                    <h2 class="text-lg font-bold mb-1">Smart Job Matching</h2>
+                    <p class="text-sm text-slate-600">Connect graduates with the best local and national opportunities.</p>
                 </div>
-                <div class="feature-card rounded-lg bg-white border border-slate-200 p-4 shadow-sm">
+                <div class="feature-card rounded-lg bg-white border border-slate-200 p-5 shadow-sm">
                     <div class="w-10 h-10 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center mb-2">
                         <i class="fas fa-map-marked-alt text-lg"></i>
                     </div>
-                    <h2 class="text-base font-bold mb-1">Regional Analysis</h2>
-                    <p class="text-xs text-slate-600">Visualize graduate supply, employer demand, and regional gaps.</p>
+                    <h2 class="text-lg font-bold mb-1">Regional Analysis</h2>
+                    <p class="text-sm text-slate-600">Visualize graduate supply, employer demand, and regional gaps.</p>
                 </div>
             </div>
         </section>
@@ -171,16 +174,16 @@
                         </div>
                         <div class="grid gap-2 sm:grid-cols-2">
                             <div class="rounded-lg bg-white/10 p-3">
-                                <p class="text-xs font-semibold">Verified graduate skills</p>
+                                <p class="text-sm font-semibold">Verified graduate skills</p>
                             </div>
                             <div class="rounded-lg bg-white/10 p-3">
-                                <p class="text-xs font-semibold">Employer-ready profiles</p>
+                                <p class="text-sm font-semibold">Employer-ready profiles</p>
                             </div>
                             <div class="rounded-lg bg-white/10 p-3">
-                                <p class="text-xs font-semibold">Regional workforce trends</p>
+                                <p class="text-sm font-semibold">Regional workforce trends</p>
                             </div>
                             <div class="rounded-lg bg-white/10 p-3">
-                                <p class="text-xs font-semibold">Policy-ready intelligence</p>
+                                <p class="text-sm font-semibold">Policy-ready intelligence</p>
                             </div>
                         </div>
                     </div>
