@@ -4,6 +4,14 @@ import { Chart, registerables } from 'chart.js';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/inter/800.css';
+import '@fontsource/inter/900.css';
+import '@fontsource/merriweather/700.css';
+import '@fontsource/merriweather/900.css';
 
 Chart.register(...registerables);
 window.Chart = Chart;
