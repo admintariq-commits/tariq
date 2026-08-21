@@ -36,12 +36,12 @@
                 <div class="rounded-[1.75rem] bg-slate-900/70 p-6 border border-white/10 shadow-lg shadow-slate-900/20 backdrop-blur">
                     <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Unemployed</p>
                     <p class="mt-3 text-4xl font-bold text-white">{{ number_format($unemployedCount) }}</p>
-                    <p class="text-slate-300 text-sm mt-2">Needs job support and placement.</p>
+                    <p class="text-slate-300 text-sm mt-2">Registered unemployed graduates.</p>
                 </div>
                 <div class="rounded-[1.75rem] bg-slate-900/70 p-6 border border-white/10 shadow-lg shadow-slate-900/20 backdrop-blur">
                     <p class="text-xs uppercase tracking-[0.24em] text-slate-300">At-Risk</p>
                     <p class="mt-3 text-4xl font-bold text-white">{{ number_format($atRiskCount) }}</p>
-                    <p class="text-slate-300 text-sm mt-2">Long-term unemployed graduates.</p>
+                    <p class="text-slate-300 text-sm mt-2">8+ month unemployment signal.</p>
                 </div>
             </div>
         </div>
@@ -171,20 +171,24 @@
 
     <div class="grid gap-6 lg:grid-cols-2 mb-8">
         <div class="bg-slate-900/95 rounded-[2rem] p-6 shadow-2xl shadow-slate-900/20 border border-white/10">
-            <h2 class="text-xl font-semibold text-white mb-4">Top At-Risk Graduates</h2>
-            @if($atRiskGraduates->isEmpty())
-                <p class="text-slate-400">No at-risk graduates have been identified yet.</p>
+            <div class="flex items-center justify-between gap-4 mb-4">
+                <div>
+                    <h2 class="text-xl font-semibold text-white">Policy Pressure by Region</h2>
+                    <p class="text-sm text-slate-400 mt-1">Aggregated signals for planning interventions.</p>
+                </div>
+                <i class="fas fa-map-location-dot text-rose-300 text-xl"></i>
+            </div>
+            @if($topUnemployedRegions->isEmpty())
+                <p class="text-slate-400">No regional unemployment data is available yet.</p>
             @else
                 <div class="space-y-3">
-                    @foreach($atRiskGraduates as $graduate)
-                        <div class="rounded-3xl bg-slate-800/80 p-4">
+                    @foreach($topUnemployedRegions as $region)
+                        <div class="rounded-2xl bg-slate-800/80 p-4">
                             <div class="flex items-center justify-between gap-3">
-                                <div>
-                                    <p class="font-semibold text-white">{{ $graduate->full_name }}</p>
-                                    <p class="text-sm text-slate-400">{{ $graduate->region ?? 'Region n/a' }} • {{ ucfirst($graduate->degree ?? 'Degree n/a') }}</p>
-                                </div>
-                                <span class="rounded-full bg-rose-100 text-rose-700 px-3 py-1 text-xs font-semibold">{{ $graduate->months_unemployed }} mo</span>
+                                <span class="font-semibold text-white">{{ $region->region ?: 'Unknown region' }}</span>
+                                <span class="rounded-full bg-rose-950 px-3 py-1 text-xs font-semibold text-rose-200">{{ number_format($region->count) }} unemployed</span>
                             </div>
+                            <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-700"><div class="h-full rounded-full bg-gradient-to-r from-rose-500 to-amber-400" style="width: {{ $unemployedCount > 0 ? min(100, round(($region->count / $unemployedCount) * 100)) : 0 }}%"></div></div>
                         </div>
                     @endforeach
                 </div>

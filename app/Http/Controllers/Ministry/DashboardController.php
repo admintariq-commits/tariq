@@ -1,54 +1,62 @@
 <?php
+
 namespace App\Http\Controllers\Ministry;
 
 use App\Http\Controllers\Controller;
-use App\Models\Graduate;
 use App\Models\Alert;
-use App\Models\University;
+use App\Models\Course;
+use App\Models\Graduate;
 use App\Models\Region;
-use Illuminate\Support\Facades\DB;
+use App\Models\University;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Models\Course;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // lists for filters
         $regions = Region::orderBy('name')->pluck('name');
         $degrees = Course::select('level')->whereNotNull('level')->groupBy('level')->orderBy('level')->pluck('level');
         if ($degrees->isEmpty()) {
             $degrees = collect(['Certificate', 'Diploma', 'Bachelor', 'Master', 'PhD']);
         }
         $universities = University::orderBy('name')->pluck('name');
-        // course list comes from master Course model for clearer program selection
         $courses = Course::orderBy('name')->pluck('name');
 
-        $graduates = Graduate::all();
+        $filters = $request->only(['region', 'degree', 'university', 'course']);
+        $query = Graduate::query();
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                $query->where($field, $value);
+            }
+        }
+
+        // Keep one filtered snapshot so every card and policy signal uses the same population.
+        $graduates = $query->get();
         $totalGraduates = $graduates->count();
-        $registeredLast30Days = $graduates->filter(fn($graduate) => $graduate->created_at && $graduate->created_at->greaterThanOrEqualTo(now()->subDays(30)))->count();
-        $unemployedCount = $graduates->where('employment_status', 'unemployed')->count();
-        $atRiskGraduates = $graduates->where('employment_status', 'unemployed')->filter(fn($graduate) => $graduate->months_unemployed >= 8)->sortByDesc(fn($graduate) => $graduate->months_unemployed)->take(5);
-        $atRiskCount = $atRiskGraduates->count();
-        $averageEmployability = round($graduates->avg(fn($graduate) => $graduate->employability_score) ?? 0);
-        $averageUnemployedEmployability = round($graduates->where('employment_status', 'unemployed')->avg(fn($graduate) => $graduate->employability_score) ?? 0);
-        $averageProfileCompletion = round($graduates->avg(fn($graduate) => $graduate->completion_percentage) ?? 0);
+        $registeredLast30Days = $graduates->filter(fn ($graduate) => $graduate->created_at && $graduate->created_at->greaterThanOrEqualTo(now()->subDays(30)))->count();
+        $unemployed = $graduates->where('employment_status', 'unemployed');
+        $unemployedCount = $unemployed->count();
+        $atRiskCount = $unemployed->filter(fn ($graduate) => $graduate->months_unemployed >= 8)->count();
+        $averageEmployability = (int) round($graduates->avg(fn ($graduate) => $graduate->employability_score) ?? 0);
+        $averageUnemployedEmployability = (int) round($unemployed->avg(fn ($graduate) => $graduate->employability_score) ?? 0);
+        $averageProfileCompletion = (int) round($graduates->avg(fn ($graduate) => $graduate->completion_percentage) ?? 0);
 
-        $topUnemployedRegions = Graduate::select('region', DB::raw('count(*) as count'))
-            ->where('employment_status', 'unemployed')
-            ->whereNotNull('region')
+        $topUnemployedRegions = $unemployed
+            ->filter(fn ($graduate) => filled($graduate->region))
             ->groupBy('region')
-            ->orderByDesc('count')
-            ->limit(5)
-            ->get();
+            ->map(fn ($items, $region) => (object) ['region' => $region, 'count' => $items->count()])
+            ->sortByDesc('count')
+            ->take(5)
+            ->values();
 
-        $mostCommonDegrees = Graduate::select('degree', DB::raw('count(*) as count'))
-            ->whereNotNull('degree')
+        $mostCommonDegrees = $graduates
+            ->filter(fn ($graduate) => filled($graduate->degree))
             ->groupBy('degree')
-            ->orderByDesc('count')
-            ->limit(5)
-            ->get();
+            ->map(fn ($items, $degree) => (object) ['degree' => $degree, 'count' => $items->count()])
+            ->sortByDesc('count')
+            ->take(5)
+            ->values();
 
         $recentAlerts = Alert::latest()->limit(5)->get();
 
@@ -62,54 +70,49 @@ class DashboardController extends Controller
             'averageProfileCompletion',
             'topUnemployedRegions',
             'mostCommonDegrees',
-            'atRiskGraduates',
-            'recentAlerts'
-            , 'regions', 'degrees', 'universities', 'courses'
+            'recentAlerts',
+            'regions',
+            'degrees',
+            'universities',
+            'courses',
+            'filters'
         ));
     }
 
     /**
-     * Export graduates list as CSV with optional filters
+     * Export a filtered, privacy-conscious graduate registry CSV.
      */
     public function exportGraduates(Request $request)
     {
         $filters = $request->only(['region', 'degree', 'university', 'course']);
-
         $query = Graduate::query();
-        if (!empty($filters['region'])) {
-            $query->where('region', $filters['region']);
-        }
-        if (!empty($filters['degree'])) {
-            $query->where('degree', $filters['degree']);
-        }
-        if (!empty($filters['course'])) {
-            $query->where('course', $filters['course']);
-        }
-        if (!empty($filters['university'])) {
-            $query->where('university', $filters['university']);
+
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                $query->where($field, $value);
+            }
         }
 
-        $fileName = 'graduates_export_' . date('Ymd_His') . '.csv';
-
+        $fileName = 'graduates_registry_export_' . date('Ymd_His') . '.csv';
         $response = new StreamedResponse(function () use ($query) {
             $handle = fopen('php://output', 'w');
-            // header row
-            fputcsv($handle, ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'University', 'Course', 'Degree', 'Region', 'Employment Status', 'Graduation Year']);
+            fputcsv($handle, [
+                'Graduate ID', 'University', 'Course', 'Degree', 'Region',
+                'Employment Status', 'Graduation Year', 'Skills', 'Verification Status'
+            ]);
 
             $query->chunk(200, function ($graduates) use ($handle) {
-                foreach ($graduates as $g) {
+                foreach ($graduates as $graduate) {
                     fputcsv($handle, [
-                        $g->id,
-                        $g->first_name,
-                        $g->last_name,
-                        $g->user->email ?? '',
-                        $g->phone,
-                        $g->university,
-                        $g->course,
-                        $g->degree,
-                        $g->region,
-                        $g->employment_status,
-                        $g->graduation_year,
+                        $graduate->id,
+                        $graduate->university,
+                        $graduate->course,
+                        $graduate->degree,
+                        $graduate->region,
+                        $graduate->employment_status,
+                        $graduate->graduation_year,
+                        $graduate->skills,
+                        $graduate->document_verification_status,
                     ]);
                 }
             });

@@ -28,7 +28,7 @@
                     <i class="fas fa-users text-blue-600 text-xl"></i>
                 </div>
             </div>
-            <div class="mt-2 text-green-600 text-sm">+12% from last month</div>
+            <div class="mt-2 text-sm {{ ($registrationChange ?? 0) >= 0 ? 'text-green-600' : 'text-red-600' }}">{{ $registrationChange === null ? 'No previous baseline' : (($registrationChange >= 0 ? '+' : '') . $registrationChange . '% vs previous 30 days') }}</div>
         </div>
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
@@ -238,7 +238,7 @@
                     <option>Last year</option>
                 </select>
             </div>
-            <canvas id="unemploymentChart" height="250" data-chart='{"labels":["Jan","Feb","Mar","Apr","May","Jun"],"data":[12,19,15,17,14,{{ $unemployed ?? 0 }}]}'></canvas>
+            <canvas id="unemploymentChart" height="250" data-chart='{"labels":{!! json_encode($unemploymentTrendLabels ?? []) !!},"data":{!! json_encode($unemploymentTrendData ?? []) !!}}'></canvas>
         </div>
 
         <!-- Regional Distribution Chart -->

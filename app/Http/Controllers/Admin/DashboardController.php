@@ -23,6 +23,18 @@ class DashboardController extends Controller
             ->filter(fn($grad) => $grad->graduation_date && now()->diffInMonths($grad->graduation_date) >= 8)
             ->count();
         $alertsSent = Alert::where('status', 'sent')->count();
+        $registeredLast30Days = Graduate::where('created_at', '>=', now()->subDays(30))->count();
+        $previous30Days = Graduate::whereBetween('created_at', [now()->subDays(60), now()->subDays(30)])->count();
+        $registrationChange = $previous30Days > 0 ? round((($registeredLast30Days - $previous30Days) / $previous30Days) * 100) : null;
+        $unemploymentTrendLabels = [];
+        $unemploymentTrendData = [];
+        for ($monthsAgo = 5; $monthsAgo >= 0; $monthsAgo--) {
+            $month = now()->startOfMonth()->subMonths($monthsAgo);
+            $unemploymentTrendLabels[] = $month->format('M');
+            $unemploymentTrendData[] = Graduate::where('employment_status', 'unemployed')
+                ->whereBetween('created_at', [$month->copy(), $month->copy()->endOfMonth()])
+                ->count();
+        }
         $regionData = Region::withCount('graduates')->get();
 
         $averageEmployability = $graduates->count() ? round($graduates->avg->employability_score, 1) : 0;
@@ -43,6 +55,7 @@ class DashboardController extends Controller
         
         return view('admin.dashboard', compact(
             'totalGraduates', 'unemployed', 'employed', 'critical', 'alertsSent', 'regionData',
+            'registeredLast30Days', 'registrationChange', 'unemploymentTrendLabels', 'unemploymentTrendData',
             'verifiedRecords', 'pendingRecords', 'rejectedRecords', 'manualReviewRecords', 
             'totalAcademicRecords', 'graduatesWithVerification',
             'averageEmployability', 'atRiskGraduates', 'highPotentialGraduates'
