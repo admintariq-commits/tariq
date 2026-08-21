@@ -36,8 +36,12 @@ class DashboardController extends Controller
                 ->count();
         }
         $regionData = Region::withCount('graduates')->get();
+        $recentGraduates = Graduate::with(['user', 'course'])->latest()->take(5)->get();
+        $recentAlerts = Alert::with(['graduate', 'type'])->latest()->take(5)->get();
+        $employmentRate = $totalGraduates > 0 ? round(($employed / $totalGraduates) * 100) : 0;
+        $unemploymentRate = $totalGraduates > 0 ? round(($unemployed / $totalGraduates) * 100) : 0;
 
-        $averageEmployability = $graduates->count() ? round($graduates->avg->employability_score, 1) : 0;
+        $averageEmployability = $graduates->count() ? round($graduates->avg('employability_score'), 1) : 0;
         $atRiskGraduates = $graduates->filter(fn($grad) => $grad->employability_score < 45)->count();
         $highPotentialGraduates = $graduates->filter(fn($grad) => $grad->employability_score >= 75)->count();
 
@@ -58,7 +62,8 @@ class DashboardController extends Controller
             'registeredLast30Days', 'registrationChange', 'unemploymentTrendLabels', 'unemploymentTrendData',
             'verifiedRecords', 'pendingRecords', 'rejectedRecords', 'manualReviewRecords', 
             'totalAcademicRecords', 'graduatesWithVerification',
-            'averageEmployability', 'atRiskGraduates', 'highPotentialGraduates'
+            'averageEmployability', 'atRiskGraduates', 'highPotentialGraduates',
+            'recentGraduates', 'recentAlerts', 'employmentRate', 'unemploymentRate'
         ));
     }
 

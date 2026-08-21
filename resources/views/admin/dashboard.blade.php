@@ -7,7 +7,7 @@
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-bold">Welcome back, {{ Auth::user()->name }}!</h1>
-                <p class="text-purple-100 mt-1">Here's what's happening with youth employment today.</p>
+                <p class="text-purple-100 mt-1">Graduate registry, verification, and national employment intelligence at a glance.</p>
             </div>
             <div class="text-right">
                 <div class="text-3xl font-bold">{{ date('F j, Y') }}</div>
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Stats Cards Row 1 -->
-    <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
@@ -34,7 +34,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm">Unemployed</p>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">Unemployed</p>
                     <p class="text-3xl font-bold text-red-600">{{ $unemployed ?? 0 }}</p>
                 </div>
                 <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
@@ -47,7 +47,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm">Employed</p>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">Employed</p>
                     <p class="text-3xl font-bold text-green-600">{{ $employed ?? 0 }}</p>
                 </div>
                 <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -60,7 +60,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm">Critical (>8 months)</p>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">Critical (>8 months)</p>
                     <p class="text-3xl font-bold text-orange-600">{{ $critical ?? 0 }}</p>
                 </div>
                 <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
@@ -73,7 +73,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm">Alerts Sent</p>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">Alerts Sent</p>
                     <p class="text-3xl font-bold text-purple-600">{{ $alertsSent ?? 0 }}</p>
                 </div>
                 <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -86,7 +86,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-gray-500 text-sm">Average Employability</p>
+                    <p class="text-gray-500 dark:text-gray-300 text-sm">Average Employability</p>
                     <p class="text-3xl font-bold text-indigo-600">{{ $averageEmployability ?? 0 }}%</p>
                 </div>
                 <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
@@ -98,7 +98,7 @@
     </div>
 
     <!-- Academic Verification Stats Row -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5 card-hover">
             <div class="flex items-center justify-between">
                 <div>
@@ -260,7 +260,7 @@
             </div>
             <div class="space-y-3">
                 @php
-                    $recentGrads = App\Models\Graduate::with('user')->latest()->take(5)->get();
+                    $recentGrads = $recentGraduates ?? collect();
                 @endphp
                 @foreach($recentGrads as $grad)
                 <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -270,7 +270,7 @@
                         </div>
                         <div>
                             <p class="font-semibold">{{ $grad->first_name }} {{ $grad->last_name }}</p>
-                            <p class="text-xs text-gray-500">{{ $grad->course->name ?? 'No course' }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-300">{{ $grad->course->name ?? 'No course' }}</p>
                         </div>
                     </div>
                     <div>
@@ -294,7 +294,7 @@
             </div>
             <div class="space-y-3">
                 @php
-                    $recentAlerts = App\Models\Alert::with('graduate')->latest()->take(5)->get();
+                    $recentAlerts = $recentAlerts ?? collect();
                 @endphp
                 @forelse($recentAlerts as $alert)
                 <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -304,7 +304,7 @@
                         </div>
                         <div>
                             <p class="font-semibold">{{ $alert->graduate->full_name ?? 'Unknown' }}</p>
-                            <p class="text-xs text-gray-500">{{ $alert->type->name ?? 'Alert' }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-300">{{ $alert->type->name ?? 'Alert' }}</p>
                         </div>
                     </div>
                     <div>
