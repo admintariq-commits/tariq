@@ -1,3 +1,11 @@
+FROM node:22-alpine AS frontend
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY resources ./resources
+COPY vite.config.js ./
+RUN npm run build
+
 FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
@@ -24,6 +32,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www/html/
+COPY --from=frontend /app/public/build /var/www/html/public/build
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 WORKDIR /var/www/html
 

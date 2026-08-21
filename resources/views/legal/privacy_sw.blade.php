@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Sera ya Faragha - TARIQ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>body{font-family:Inter,ui-sans-serif,system-ui,sans-serif}</style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div class="max-w-4xl mx-auto p-6">

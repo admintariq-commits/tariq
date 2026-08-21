@@ -324,6 +324,5 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 <script src="{{ asset('js/admin-dashboard.js') }}" defer></script>
 @endsection
