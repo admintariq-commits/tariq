@@ -145,34 +145,41 @@
     <div class="registration-page min-h-screen px-4 py-10 sm:px-6 lg:px-8" x-data="registrationForm()">
         <div class="registration-shell">
             <!-- Header -->
-            <div class="text-center mb-10">
-                <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div class="mb-8 text-center">
+                <div class="mb-4 flex items-center justify-center sm:justify-between">
+                    <a href="{{ url('/') }}" class="registration-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+                    <span class="hidden text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 sm:inline">Tanzania Graduate Registry</span>
+                </div>
+                <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
                     <i class="fas fa-graduation-cap text-white text-4xl"></i>
                 </div>
-                <h1 class="text-5xl font-bold text-slate-900 mb-2">Graduate Registration</h1>
+                <h1 class="text-4xl font-bold text-slate-900 mb-2 sm:text-5xl">Graduate Registration</h1>
                 <p class="text-slate-600 text-lg">Join TARIQ and unlock career opportunities</p>
             </div>
 
             <!-- Progress Indicator -->
             <div class="mb-12 bg-white rounded-2xl p-8 shadow-lg border border-slate-100">
                 <div class="step-indicator">
-                    <template x-for="(step, index) in steps" :key="index">
-                        <div class="step-item" style="flex: 1;">
-                            <div class="step-number" :class="{ 'active': currentStep === index, 'completed': currentStep > index }">
-                                <template x-if="currentStep > index">
-                                    <i class="fas fa-check text-sm"></i>
-                                </template>
-                                <template x-if="currentStep <= index">
-                                    <span x-text="index + 1"></span>
-                                </template>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider" x-text="step.label"></p>
-                                <p class="text-sm font-semibold text-slate-800" x-text="step.title"></p>
-                            </div>
-                            <div class="step-line" :class="{ 'active': currentStep > index }" x-show="index < steps.length - 1"></div>
-                        </div>
-                    </template>
+                    <div class="step-item" style="flex: 1;">
+                        <div class="step-number" :class="{ 'active': currentStep === 0, 'completed': currentStep > 0 }"><span x-show="currentStep <= 0">1</span><i x-show="currentStep > 0" class="fas fa-check text-sm"></i></div>
+                        <div class="flex-1"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Step 1</p><p class="text-sm font-semibold text-slate-800">Personal Info</p></div><div class="step-line" :class="{ 'active': currentStep > 0 }"></div>
+                    </div>
+                    <div class="step-item" style="flex: 1;">
+                        <div class="step-number" :class="{ 'active': currentStep === 1, 'completed': currentStep > 1 }"><span x-show="currentStep <= 1">2</span><i x-show="currentStep > 1" class="fas fa-check text-sm"></i></div>
+                        <div class="flex-1"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Step 2</p><p class="text-sm font-semibold text-slate-800">Academic Info</p></div><div class="step-line" :class="{ 'active': currentStep > 1 }"></div>
+                    </div>
+                    <div class="step-item" style="flex: 1;">
+                        <div class="step-number" :class="{ 'active': currentStep === 2, 'completed': currentStep > 2 }"><span x-show="currentStep <= 2">3</span><i x-show="currentStep > 2" class="fas fa-check text-sm"></i></div>
+                        <div class="flex-1"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Step 3</p><p class="text-sm font-semibold text-slate-800">Career Info</p></div><div class="step-line" :class="{ 'active': currentStep > 2 }"></div>
+                    </div>
+                    <div class="step-item" style="flex: 1;">
+                        <div class="step-number" :class="{ 'active': currentStep === 3, 'completed': currentStep > 3 }"><span x-show="currentStep <= 3">4</span><i x-show="currentStep > 3" class="fas fa-check text-sm"></i></div>
+                        <div class="flex-1"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Step 4</p><p class="text-sm font-semibold text-slate-800">Skills</p></div><div class="step-line" :class="{ 'active': currentStep > 3 }"></div>
+                    </div>
+                    <div class="step-item" style="flex: 1;">
+                        <div class="step-number" :class="{ 'active': currentStep === 4, 'completed': currentStep > 4 }"><span x-show="currentStep <= 4">5</span><i x-show="currentStep > 4" class="fas fa-check text-sm"></i></div>
+                        <div class="flex-1"><p class="text-xs font-bold uppercase tracking-wider text-slate-500">Step 5</p><p class="text-sm font-semibold text-slate-800">Security</p></div>
+                    </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-3 mt-4">
                     <div class="progress-pill">
@@ -288,6 +295,16 @@
                     width: min(100%, 1120px);
                     margin-inline: auto;
                 }
+                .registration-home {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: .5rem;
+                    color: #4338ca;
+                    font-size: .9rem;
+                    font-weight: 700;
+                    transition: color .2s ease;
+                }
+                .registration-home:hover { color: #1d4ed8; }
                 .registration-page {
                     width: 100%;
                     min-height: 100vh;
