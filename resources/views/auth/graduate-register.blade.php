@@ -17,8 +17,24 @@
                     { label: 'Step 4', title: 'Skills', icon: 'star' },
                     { label: 'Step 5', title: 'Security', icon: 'lock' }
                 ],
+                validateCurrentStep() {
+                    const section = document.querySelector(`.form-section[data-step="${this.currentStep}"]`);
+                    const fields = section ? [...section.querySelectorAll('[required]')] : [];
+                    if (this.currentStep === 0) {
+                        const resume = document.getElementById('resume');
+                        if (resume) fields.push(resume);
+                    }
+                    const invalid = fields.find((field) => !field.checkValidity());
+                    if (invalid) {
+                        invalid.classList.add('validation-error');
+                        invalid.reportValidity();
+                        setTimeout(() => invalid.classList.remove('validation-error'), 500);
+                        return false;
+                    }
+                    return true;
+                },
                 nextStep() {
-                    if (this.currentStep < this.steps.length - 1) {
+                    if (this.currentStep < this.steps.length - 1 && this.validateCurrentStep()) {
                         document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.remove('active');
                         this.currentStep++;
                         document.querySelector(`.form-section[data-step="${this.currentStep}"]`).classList.add('active');
@@ -136,12 +152,34 @@
         .completion-pill { display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(16, 185, 129, 0.1); color: #0f766e; border-radius: 9999px; padding: 0.75rem 1rem; font-size: 0.95rem; margin-top: 1rem; margin-left: 1rem; }
         .completion-pill strong { color: #115e59; }
         
-        .validation-error { animation: shake 0.4s ease-out; }
+        .validation-error { animation: shake 0.4s ease-out; border-color: #f472b6 !important; box-shadow: 0 0 0 3px rgba(244,114,182,.25) !important; }
+        body { background: #020617 !important; color: #e2e8f0; }
+        .registration-page { background: radial-gradient(circle at 15% 15%, rgba(79,70,229,.18), transparent 35%), radial-gradient(circle at 90% 85%, rgba(217,70,239,.14), transparent 38%), #020617; }
+        .registration-shell { max-width: 900px; }
+        .registration-home { color: #a5b4fc; }
+        .registration-home:hover { color: #ffffff; }
+        .registration-shell h1, .registration-shell h2, .registration-shell h3 { color: #f8fafc !important; }
+        .registration-shell p, .registration-shell label { color: #94a3b8; }
+        .registration-shell > .bg-white, .registration-shell .form-card { background: rgba(15,23,42,.88) !important; border-color: rgba(99,102,241,.28) !important; box-shadow: 0 30px 90px rgba(0,0,0,.35); }
+        .registration-shell .bg-white:not(.form-card) { background: rgba(15,23,42,.82) !important; border-color: rgba(99,102,241,.25) !important; }
+        .step-number { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+        .step-item p { color: #94a3b8 !important; }
+        .step-item p:last-child { color: #e2e8f0 !important; }
+        .step-line { background: #334155; }
+        #regForm .field-group, #regForm .resume-section { background: rgba(15,23,42,.68) !important; border-color: rgba(99,102,241,.22) !important; }
+        #regForm input:not([type="file"]), #regForm select, #regForm textarea, #regForm .input-field { background: #020617 !important; color: #f8fafc !important; border-color: #334155 !important; }
+        #regForm input::placeholder { color: #64748b; }
+        #regForm .resume-note { border-color: rgba(99,102,241,.24); }
+        #regForm .resume-section input[type="file"] { background: #020617 !important; border-color: #6366f1 !important; }
+        #regForm .resume-help, #regForm .resume-note p { color: #94a3b8 !important; }
+        #regForm .section-title { background: rgba(99,102,241,.12); }
+        #regForm .section-title h3 { color: #f8fafc !important; }
+        #regForm .form-actions { border-color: #334155; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-blue-50">
+<body class="bg-slate-950">
     <div class="registration-page min-h-screen px-4 py-10 sm:px-6 lg:px-8" x-data="registrationForm()">
         <div class="registration-shell">
             <!-- Header -->
