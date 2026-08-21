@@ -7,7 +7,11 @@
     <title>TARIQ - Graduate Employment Intelligence System</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS: use the application's .dark class for theme switching. -->
+    <script>
+        tailwind = window.tailwind || {};
+        tailwind.config = { darkMode: 'class' };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for interactivity -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -17,7 +21,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f3f4f6; color: #111827; }
+        body.dark { background-color: #111827; color: #e5e7eb; }
+        body.dark main { background-color: #1a1a2e; color: #e5e7eb; }
+        body.dark main .bg-blue-50 { background-color: #172554; }
+        body.dark main .bg-purple-50 { background-color: #2e1065; }
+        body.dark main .bg-pink-50 { background-color: #500724; }
+        body.dark main .bg-green-50 { background-color: #052e16; }
+        body.dark main .bg-orange-50 { background-color: #431407; }
+        body.dark main .bg-red-50 { background-color: #450a0a; }
+        body.dark main .bg-gray-50, body.dark main .bg-gray-100 { background-color: #1f2937; }
+        body.dark main .text-gray-600, body.dark main .text-gray-700, body.dark main .text-gray-800 { color: #d1d5db; }
+        body.dark main .text-gray-500 { color: #9ca3af; }
+        body.dark main .border-gray-200 { border-color: #374151; }
         .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.2); }
