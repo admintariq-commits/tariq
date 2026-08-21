@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" role="img" aria-labelledby="title desc">
+  <title id="title">Flag of Tanzania</title>
+  <desc id="desc">Green and blue fields separated by a black diagonal band bordered in yellow.</desc>
+  <path fill="#1EB53A" d="M0 0h120L0 80z"/>
+  <path fill="#00A3DD" d="M120 0v80H0z"/>
+  <path fill="#FCD116" d="M0 67.5 120 0v8.2L0 75.7zM0 4.3 120 71.8V80L0 12.5z"/>
+  <path fill="#000" d="M0 12.5 120 80v-8.2L0 4.3zM0 67.5 120 0v8.2L0 75.7z"/>
+</svg>

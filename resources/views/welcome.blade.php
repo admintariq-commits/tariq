@@ -22,6 +22,8 @@
         .feature-spot .title { font-weight:700; font-size:0.95rem; line-height:1.25; }
         .feature-spot .description { color:rgba(255,255,255,0.78); font-size:0.82rem; line-height:1.35; margin-top:0.25rem; }
         .tz-brand { display:inline-flex; align-items:center; gap:0.4rem; border:1px solid rgba(91,33,182,0.14); background:#faf5ff; color:#5b21b6; border-radius:9999px; padding:0.3rem 0.65rem; font-size:0.68rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; }
+        .tz-flag { width:1.35rem; height:0.9rem; object-fit:cover; border-radius:0.18rem; box-shadow:0 1px 3px rgba(15,23,42,0.24); }
+        .tz-flag-hero { width:1.3rem; height:0.86rem; object-fit:cover; border-radius:0.16rem; box-shadow:0 1px 3px rgba(15,23,42,0.22); }
         .muted { color: rgba(15,23,42,0.65); }
         @media (max-width: 640px) {
             .hero-blob { display: none; }
@@ -41,7 +43,7 @@
                         <div class="text-base sm:text-lg font-semibold text-slate-900 truncate">TARIQ</div>
                         <div class="text-xs uppercase tracking-[0.24em] text-slate-500 truncate hidden sm:block">Hub</div>
                     </div>
-                    <span class="tz-brand" title="Tanzania Graduate Intelligence"><span class="text-base leading-none">🇹🇿</span><span class="hidden sm:inline">Tanzania</span></span>
+                    <span class="tz-brand" title="Tanzania Graduate Intelligence"><img class="tz-flag" src="{{ asset('images/tanzania-flag.svg') }}" alt="Tanzania flag"><span class="hidden sm:inline">Tanzania</span></span>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     <a href="{{ route('login') }}" class="text-xs sm:text-sm text-slate-700 hover:text-purple-600 transition whitespace-nowrap">Login</a>
@@ -58,7 +60,7 @@
             <div class="hero-blob bg-violet-500/35 h-96 w-96 top-24 right-1/2 translate-x-1/2"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative py-10 sm:py-14 md:py-16 text-center hero-shadow rounded-b-3xl">
                 <span class="inline-flex items-center gap-2 rounded-full bg-white/15 px-5 py-2 text-sm uppercase tracking-[0.2em] text-white/95 mb-5">
-                    <span class="text-base">🇹🇿</span> Tanzania Graduate Intelligence
+                    <img class="tz-flag-hero" src="{{ asset('images/tanzania-flag.svg') }}" alt="Tanzania flag"> Tanzania Graduate Intelligence
                 </span>
                 <h1 class="text-3xl sm:text-4xl md:text-5xl hero-title leading-tight mb-4">Welcome to <span class="text-pink-200">TARIQ</span> — Tanzania Graduate Intelligence</h1>
                 <p class="mx-auto max-w-3xl text-sm sm:text-base hero-subtle mb-6">A practical platform for Tanzanian graduates, employers, and government teams to understand opportunities, skills demand, and regional workforce trends.</p>
