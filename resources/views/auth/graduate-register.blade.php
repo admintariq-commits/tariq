@@ -101,6 +101,18 @@
         
         .input-field { transition: all 0.3s ease; }
         .input-field:focus { outline: none; border-color: #4f46e5 !important; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important; }
+        #regForm input:not([type="file"]), #regForm select, #regForm textarea { width: 100%; min-height: 3rem; border: 1px solid #cbd5e1 !important; border-radius: 0.75rem !important; padding: 0.75rem 1rem !important; background: #f8fafc; color: #0f172a; }
+        #regForm input:not([type="file"]):focus, #regForm select:focus, #regForm textarea:focus { background: #ffffff; border-color: #4f46e5 !important; outline: none; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14) !important; }
+        #regForm .field-group { border-radius: 1rem; padding: 0.85rem 1rem; }
+        #regForm .grid { row-gap: 1rem; column-gap: 1rem; }
+        @media (max-width: 640px) {
+            .step-indicator { gap: 0.5rem; }
+            .step-item { gap: 0.45rem; }
+            .step-number { width: 38px; height: 38px; }
+            .step-item p { font-size: 0.68rem; }
+            .progress-pill, .completion-pill { width: 100%; margin-left: 0; justify-content: space-between; }
+            #regForm input:not([type="file"]), #regForm select, #regForm textarea { min-height: 2.875rem; }
+        }
         
         .form-card { background: rgba(255,255,255,0.96); border: 1px solid rgba(99,102,241,0.14); box-shadow: 0 45px 120px rgba(15, 23, 42, 0.08); backdrop-filter: blur(10px); }
         
@@ -180,10 +192,10 @@
             <!-- Main Form Card -->
             <style>
                 #regForm .field-group {
-                    padding: 1rem;
+                    padding: 0.85rem 1rem;
                     background-color: #fbfcfe;
                     border: 1px solid rgba(148,163,184,.18);
-                    border-radius: 1.5rem;
+                    border-radius: 1rem;
                     transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
                 }
                 #regForm .field-group:hover {
@@ -200,10 +212,11 @@
                 }
                 #regForm .input-field {
                     width: 100%;
+                    min-height: 3rem;
                     background-color: #f8fafc;
                     border: 1px solid #cbd5e1;
-                    border-radius: 1.5rem;
-                    padding: 1rem 1.25rem;
+                    border-radius: 0.75rem;
+                    padding: 0.75rem 1rem;
                     color: #0f172a;
                     box-shadow: inset 0 1px 2px rgba(15,23,42,.04);
                     transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
