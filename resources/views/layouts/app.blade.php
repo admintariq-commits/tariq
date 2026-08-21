@@ -9,8 +9,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <!-- Tailwind CSS: use the application's .dark class for theme switching. -->
     <script>
-        tailwind = window.tailwind || {};
-        tailwind.config = { darkMode: 'class' };
+        window.tailwind = window.tailwind || {};
+        window.tailwind.config = { darkMode: 'class' };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine.js for interactivity -->
@@ -45,7 +45,7 @@
         .dark .border-gray-200 { border-color: #374151; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900" x-data="{ sidebarOpen: true, darkMode: localStorage.getItem('darkMode') === 'true' }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
+<body class="bg-gray-100 dark:bg-gray-900" x-data="{ sidebarOpen: true, darkMode: localStorage.getItem('darkMode') === null ? true : localStorage.getItem('darkMode') === 'true' }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))">
 
     <!-- ========== TOP NAVBAR ========== -->
     <nav class="bg-white dark:bg-gray-800 shadow-lg fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-700">
