@@ -142,8 +142,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-blue-50">
-    <div class="min-h-screen py-12 px-4" x-data="registrationForm()">
-        <div class="max-w-4xl mx-auto">
+    <div class="registration-page min-h-screen px-4 py-10 sm:px-6 lg:px-8" x-data="registrationForm()">
+        <div class="registration-shell">
             <!-- Header -->
             <div class="text-center mb-10">
                 <div class="w-20 h-20 bg-gradient-to-br from-indigo-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -252,6 +252,16 @@
                     border-color: #6366f1 !important;
                     background: #eef2ff;
                 }
+                #regForm .resume-grid {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1.55fr) minmax(220px, .85fr);
+                    gap: 1.25rem;
+                    align-items: stretch;
+                }
+                #regForm .resume-note {
+                    border-left: 1px solid rgba(148,163,184,.25);
+                    padding: .25rem 0 .25rem 1.25rem;
+                }
                 #regForm .resume-help {
                     display: flex;
                     align-items: flex-start;
@@ -274,13 +284,25 @@
                     justify-content: center;
                     gap: .65rem;
                 }
+                .registration-shell {
+                    width: min(100%, 1120px);
+                    margin-inline: auto;
+                }
+                .registration-page {
+                    width: 100%;
+                    min-height: 100vh;
+                    overflow-x: hidden;
+                }
                 @media (max-width: 768px) {
+                    #regForm .resume-grid { grid-template-columns: 1fr; }
+                    #regForm .resume-note { border-left: 0; border-top: 1px solid rgba(148,163,184,.25); padding: 1rem 0 0; }
                     #regForm .form-actions { grid-template-columns: 1fr; }
                     #regForm .form-actions .action-group { width: 100%; }
                     #regForm .form-actions button, #regForm .form-actions a { width: 100%; }
+                    .registration-shell { width: 100%; }
                 }
             </style>
-            <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-slate-100 form-card">
+            <div class="form-card w-full rounded-3xl border border-slate-100 bg-white p-6 shadow-2xl sm:p-8 md:p-12">
                 <form method="POST" action="{{ route('graduate.register.post') }}" class="space-y-6" enctype="multipart/form-data" id="regForm" @input="refreshCompletion()">
                     @csrf
 
@@ -355,13 +377,22 @@
                             CV & Phone Verification
                         </h3>
                         <div class="resume-section">
-                            <label class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.1em] text-slate-800">
-                                <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100"><i class="fas fa-file-upload text-amber-600"></i></span>
-                                Upload CV / Resume <span class="text-red-500">*</span>
-                            </label>
-                            <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" class="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-bold file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" required>
-                            <p class="resume-help"><i class="fas fa-circle-info mt-0.5 text-indigo-500"></i><span>Upload your latest CV in PDF, DOC, or DOCX format. Maximum file size: 5MB.</span></p>
-                            <p id="resumeError" class="mt-2 hidden text-xs font-semibold text-red-600"></p>
+                            <div class="resume-grid">
+                                <div>
+                                    <label class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.1em] text-slate-800">
+                                        <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100"><i class="fas fa-file-upload text-amber-600"></i></span>
+                                        Upload CV / Resume <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" class="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-bold file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" required>
+                                    <p class="resume-help"><i class="fas fa-circle-info mt-0.5 text-indigo-500"></i><span>PDF, DOC, or DOCX only. Maximum file size: 5MB.</span></p>
+                                    <p id="resumeError" class="mt-2 hidden text-xs font-semibold text-red-600"></p>
+                                </div>
+                                <div class="resume-note">
+                                    <div class="mb-2 flex items-center gap-2 text-sm font-bold text-slate-800"><i class="fas fa-shield-halved text-indigo-500"></i><span>Why we request your CV</span></div>
+                                    <p class="text-sm leading-6 text-slate-600">Your CV helps TARIQ verify your experience and build a more accurate graduate employment profile for skills and policy intelligence.</p>
+                                    <div class="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-slate-500"><span class="rounded-full bg-white px-3 py-1 shadow-sm">Secure upload</span><span class="rounded-full bg-white px-3 py-1 shadow-sm">5MB maximum</span></div>
+                                </div>
+                            </div>
                             <!-- OTP UI removed for now; backend OTP system remains active but frontend verification is disabled -->
                         </div>
                     </div>
@@ -582,7 +613,7 @@
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="form-actions flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-t border-slate-200">
+                    <div class="form-actions mt-10 flex flex-col gap-3 border-t border-slate-200 pb-2 md:flex-row md:items-center md:justify-between">
                         <button type="button" @click="previousStep()" class="w-full sm:w-auto px-6 py-3 border border-slate-300 rounded-lg text-slate-700 font-semibold hover:bg-slate-50 transition" :disabled="currentStep === 0" :class="{ 'opacity-50 cursor-not-allowed': currentStep === 0 }">
                             <i class="fas fa-chevron-left mr-2"></i> Previous
                         </button>
