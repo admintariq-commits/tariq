@@ -31,6 +31,14 @@
     <main class="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden px-4 py-10 sm:px-6 lg:px-8">
         <div class="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl"></div>
         <div class="pointer-events-none absolute -right-24 bottom-8 h-80 w-80 rounded-full bg-fuchsia-600/10 blur-3xl"></div>
+        <aside class="absolute left-5 top-1/2 hidden w-56 -translate-y-1/2 rounded-2xl border border-slate-700 bg-slate-900/80 p-4 shadow-xl backdrop-blur lg:block">
+            <div class="mb-3 flex items-center gap-2 text-slate-200">
+                <i class="fas fa-circle-info text-indigo-400"></i>
+                <span class="font-semibold">About TARIQ</span>
+            </div>
+            <p class="text-xs leading-5 text-slate-400">TARIQ v4.0 is Tanzania's Graduate Employment Intelligence System for trusted registry data, skills visibility, and policy-ready workforce insight.</p>
+            <div class="mt-4 flex items-center gap-2 border-t border-slate-700 pt-3 text-xs text-slate-500"><i class="fas fa-database"></i><span>Tanzania Graduate Registry</span></div>
+        </aside>
         <div class="relative w-full max-w-md">
             <div class="mb-7 text-center">
                 <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-blue-500 text-white shadow-xl shadow-indigo-950/40">
@@ -38,6 +46,10 @@
                 </div>
                 <h1 class="text-3xl font-extrabold tracking-tight text-white">TARIQ</h1>
                 <p class="mt-1 text-sm text-slate-400">Graduate Employment Intelligence System</p>
+            </div>
+            <div class="mb-6 rounded-2xl border border-slate-700 bg-slate-900/75 p-4 text-left shadow-lg backdrop-blur lg:hidden">
+                <div class="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-200"><i class="fas fa-circle-info text-indigo-400"></i><span>About TARIQ</span></div>
+                <p class="text-xs leading-5 text-slate-400">TARIQ v4.0 · Tanzania Graduate Registry and Employment Intelligence.</p>
             </div>
             @yield('content')
         </div>
