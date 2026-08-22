@@ -155,7 +155,19 @@
         .validation-error { animation: shake 0.4s ease-out; border-color: #f472b6 !important; box-shadow: 0 0 0 3px rgba(244,114,182,.25) !important; }
         body { background: #020617 !important; color: #e2e8f0; }
         .registration-page { background: radial-gradient(circle at 15% 15%, rgba(79,70,229,.18), transparent 35%), radial-gradient(circle at 90% 85%, rgba(217,70,239,.14), transparent 38%), #020617; }
-        .registration-shell { max-width: 900px; }
+        .registration-shell { width: min(100%, 560px); max-width: 560px; }
+        .registration-shell .form-card { padding: 0 !important; border-radius: 1.05rem !important; overflow: hidden; }
+        #regForm { gap: 0 !important; }
+        #regForm .form-section { padding: 1.25rem 1.35rem; }
+        #regForm .form-section.active { min-height: 245px; }
+        #regForm .section-title { margin: -1.25rem -1.35rem 1.15rem; padding: 1.1rem 1.35rem; border-radius: 0; }
+        #regForm .section-title h2 { font-size: 1.05rem; margin-bottom: .25rem; }
+        #regForm .section-title p { margin-left: 0; font-size: .78rem; }
+        #regForm .grid { gap: .75rem; }
+        #regForm .field-group { padding: .7rem .8rem; border-radius: .8rem; }
+        #regForm .field-group label { margin-bottom: .45rem; font-size: .66rem; }
+        #regForm .field-group input, #regForm .field-group select, #regForm .field-group textarea { min-height: 2.45rem; padding: .55rem .7rem !important; font-size: .78rem; border-radius: .62rem !important; }
+        #regForm .form-actions { margin: 0; padding: .85rem 1.35rem; background: rgba(2,6,23,.35); }
         .registration-home { color: #a5b4fc; }
         .registration-home:hover { color: #ffffff; }
         .registration-shell h1, .registration-shell h2, .registration-shell h3 { color: #f8fafc !important; }
@@ -278,34 +290,29 @@
                     width: 100%;
                     margin-top: 1.5rem;
                     padding: 1.25rem;
-                    border: 1px solid rgba(148,163,184,.24);
+                    border: 1px solid rgba(99,102,241,.3);
                     border-radius: 1.25rem;
-                    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-                    box-shadow: 0 10px 30px rgba(15,23,42,.05);
+                    background: linear-gradient(145deg, rgba(30,41,59,.96), rgba(15,23,42,.94));
+                    box-shadow: 0 20px 50px rgba(2,6,23,.28);
                 }
-                #regForm .resume-section input[type="file"] {
-                    min-height: 4.25rem;
-                    display: flex;
-                    align-items: center;
-                    width: 100%;
-                    background: #ffffff;
-                    border: 2px dashed #a5b4fc !important;
-                    border-radius: 1rem !important;
-                    padding: 1rem !important;
-                }
-                #regForm .resume-section input[type="file"]:hover {
-                    border-color: #6366f1 !important;
-                    background: #eef2ff;
-                }
+                #regForm .resume-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
+                #regForm .resume-kicker { margin-bottom: .35rem; color: #a5b4fc !important; font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+                #regForm .resume-title { color: #f8fafc !important; font-size: 1.05rem; font-weight: 800; }
+                #regForm .resume-subtitle { margin-top: .35rem; color: #94a3b8 !important; font-size: .82rem; line-height: 1.5; }
+                #regForm .resume-badge { display: inline-flex; align-items: center; gap: .4rem; flex-shrink: 0; border: 1px solid rgba(129,140,248,.35); border-radius: 9999px; padding: .45rem .7rem; color: #c7d2fe; font-size: .72rem; font-weight: 700; }
+                #regForm .resume-dropzone { display: flex; min-height: 10rem; cursor: pointer; flex-direction: column; align-items: center; justify-content: center; border: 1.5px dashed rgba(129,140,248,.7); border-radius: 1rem; background: rgba(2,6,23,.45); padding: 1.5rem; text-align: center; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+                #regForm .resume-dropzone:hover, #regForm .resume-dropzone.dragover { border-color: #d946ef; background: rgba(79,70,229,.14); transform: translateY(-1px); }
+                #regForm .resume-icon { display: flex; height: 2.8rem; width: 2.8rem; align-items: center; justify-content: center; border-radius: .85rem; background: linear-gradient(135deg, #4f46e5, #c026d3); color: white; box-shadow: 0 10px 25px rgba(79,70,229,.35); }
+                #regForm .resume-drop-title { margin-top: .8rem; color: #e2e8f0; font-size: .95rem; }
+                #regForm .resume-drop-title strong { color: #c4b5fd; }
+                #regForm .resume-drop-copy { margin-top: .35rem; color: #64748b; font-size: .75rem; }
+                #regForm .resume-file-state { display: flex; align-items: center; gap: .6rem; margin-top: .75rem; border: 1px solid rgba(52,211,153,.3); border-radius: .75rem; background: rgba(16,185,129,.08); padding: .65rem .8rem; color: #bbf7d0; font-size: .82rem; }
+                #regForm .resume-file-ready { margin-left: auto; color: #6ee7b7; font-size: .7rem; font-weight: 800; text-transform: uppercase; }
                 #regForm .resume-grid {
                     display: grid;
                     grid-template-columns: minmax(0, 1.55fr) minmax(220px, .85fr);
                     gap: 1.25rem;
                     align-items: stretch;
-                }
-                #regForm .resume-note {
-                    border-left: 1px solid rgba(148,163,184,.25);
-                    padding: .25rem 0 .25rem 1.25rem;
                 }
                 #regForm .resume-help {
                     display: flex;
@@ -349,8 +356,11 @@
                     overflow-x: hidden;
                 }
                 @media (max-width: 768px) {
-                    #regForm .resume-grid { grid-template-columns: 1fr; }
-                    #regForm .resume-note { border-left: 0; border-top: 1px solid rgba(148,163,184,.25); padding: 1rem 0 0; }
+                    #regForm .resume-heading { flex-direction: column; }
+                    #regForm .form-section { padding: 1rem; }
+                    #regForm .section-title { margin: -1rem -1rem 1rem; padding: 1rem; }
+                    #regForm .form-actions { padding: .85rem 1rem; }
+                    #regForm .resume-badge { align-self: flex-start; }
                     #regForm .form-actions { grid-template-columns: 1fr; }
                     #regForm .form-actions .action-group { width: 100%; }
                     #regForm .form-actions button, #regForm .form-actions a { width: 100%; }
@@ -432,22 +442,22 @@
                             CV & Phone Verification
                         </h3>
                         <div class="resume-section">
-                            <div class="resume-grid">
+                            <div class="resume-heading">
                                 <div>
-                                    <label class="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.1em] text-slate-800">
-                                        <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100"><i class="fas fa-file-upload text-amber-600"></i></span>
-                                        Upload CV / Resume <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" class="input-field file:mr-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-bold file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" required>
-                                    <p class="resume-help"><i class="fas fa-circle-info mt-0.5 text-indigo-500"></i><span>PDF, DOC, or DOCX only. Maximum file size: 5MB.</span></p>
-                                    <p id="resumeError" class="mt-2 hidden text-xs font-semibold text-red-600"></p>
+                                    <p class="resume-kicker">Step 1 requirement</p>
+                                    <h4 class="resume-title"><i class="fas fa-file-shield text-indigo-300"></i> Add your CV / Resume <span class="text-fuchsia-300">*</span></h4>
+                                    <p class="resume-subtitle">This helps us understand your skills and build a trusted graduate profile.</p>
                                 </div>
-                                <div class="resume-note">
-                                    <div class="mb-2 flex items-center gap-2 text-sm font-bold text-slate-800"><i class="fas fa-shield-halved text-indigo-500"></i><span>Why we request your CV</span></div>
-                                    <p class="text-sm leading-6 text-slate-600">Your CV helps TARIQ verify your experience and build a more accurate graduate employment profile for skills and policy intelligence.</p>
-                                    <div class="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-slate-500"><span class="rounded-full bg-white px-3 py-1 shadow-sm">Secure upload</span><span class="rounded-full bg-white px-3 py-1 shadow-sm">5MB maximum</span></div>
-                                </div>
+                                <span class="resume-badge"><i class="fas fa-lock"></i> Secure</span>
                             </div>
+                            <label for="resume" class="resume-dropzone" id="resumeDropzone">
+                                <span class="resume-icon"><i class="fas fa-cloud-arrow-up"></i></span>
+                                <span class="resume-drop-title" id="resumeFileTitle">Drop your CV here or <strong>choose a file</strong></span>
+                                <span class="resume-drop-copy">PDF, DOC, or DOCX · Maximum 5MB</span>
+                                <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" class="sr-only" required>
+                            </label>
+                            <div id="resumeFileState" class="resume-file-state hidden"><i class="fas fa-file-lines"></i><span id="resumeFileName"></span><span class="resume-file-ready">Ready</span></div>
+                            <p id="resumeError" class="mt-3 hidden text-xs font-semibold text-rose-300"></p>
                             <!-- OTP UI removed for now; backend OTP system remains active but frontend verification is disabled -->
                         </div>
                     </div>
@@ -840,29 +850,52 @@
         const allowedExtensions = ['pdf', 'doc', 'docx'];
         const resumeInput = document.getElementById('resume');
         const resumeError = document.getElementById('resumeError');
-        resumeInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (!file) {
-                resumeError.classList.add('hidden');
-                resumeError.textContent = '';
-                return;
-            }
+        const resumeDropzone = document.getElementById('resumeDropzone');
+        const resumeFileState = document.getElementById('resumeFileState');
+        const resumeFileName = document.getElementById('resumeFileName');
+        const resumeFileTitle = document.getElementById('resumeFileTitle');
+        function clearResumeState() {
+            if (resumeFileState) resumeFileState.classList.add('hidden');
+            if (resumeFileName) resumeFileName.textContent = '';
+            if (resumeFileTitle) resumeFileTitle.innerHTML = 'Drop your CV here or <strong>choose a file</strong>';
+        }
+        function validateResumeFile(file) {
+            if (!file) { clearResumeState(); return false; }
             const extension = file.name.split('.').pop().toLowerCase();
             if (!allowedExtensions.includes(extension)) {
                 resumeError.classList.remove('hidden');
                 resumeError.textContent = 'Invalid file type. Only PDF, DOC, and DOCX are allowed.';
-                this.value = '';
-                return;
+                resumeInput.value = '';
+                clearResumeState();
+                return false;
             }
             if (file.size > 5 * 1024 * 1024) {
                 resumeError.classList.remove('hidden');
                 resumeError.textContent = 'File is too large. Maximum size is 5MB.';
-                this.value = '';
-                return;
+                resumeInput.value = '';
+                clearResumeState();
+                return false;
             }
             resumeError.classList.add('hidden');
             resumeError.textContent = '';
-        });
+            if (resumeFileName) resumeFileName.textContent = file.name;
+            if (resumeFileTitle) resumeFileTitle.innerHTML = '<strong>CV selected</strong>';
+            if (resumeFileState) resumeFileState.classList.remove('hidden');
+            return true;
+        }
+        resumeInput.addEventListener('change', function() { validateResumeFile(this.files[0]); });
+        if (resumeDropzone) {
+            ['dragenter', 'dragover'].forEach((eventName) => resumeDropzone.addEventListener(eventName, (event) => { event.preventDefault(); resumeDropzone.classList.add('dragover'); }));
+            ['dragleave', 'drop'].forEach((eventName) => resumeDropzone.addEventListener(eventName, (event) => { event.preventDefault(); resumeDropzone.classList.remove('dragover'); }));
+            resumeDropzone.addEventListener('drop', (event) => {
+                const file = event.dataTransfer.files[0];
+                if (!file) return;
+                const transfer = new DataTransfer();
+                transfer.items.add(file);
+                resumeInput.files = transfer.files;
+                validateResumeFile(file);
+            });
+        }
 
         function setLocationStatus(message, isError = false) {
             const status = document.getElementById('locationStatus');
